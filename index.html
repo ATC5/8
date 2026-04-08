@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المسابقة الكبرى - الجولة الأولى</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
+
+        body {
+            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
+            background: linear-gradient(-45deg, #0f1016, #1a1b26, #0f172a, #000000);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; overflow-x: hidden; padding: 40px 0; box-sizing: border-box;
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* === قائمة التنقل الجانبية (الجولات) === */
+        .sidebar {
+            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+            background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px);
+            border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px;
+            padding: 20px 15px; display: flex; flex-direction: column; gap: 15px;
+            z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent;
+            padding: 15px 20px; font-family: 'Tajawal', sans-serif; font-size: 1.2rem;
+            font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+            text-align: center; text-decoration: none;
+        }
+
+        .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #d4af37, #b8860b); color: #000;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transform: scale(1.05);
+        }
+
+        .side-logo { position: absolute; top: 50px; width: 15vw; max-width: 140px; min-width: 90px; height: auto; z-index: 100; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); }
+        .logo-right { right: 180px; } 
+        .logo-left { left: 40px; }
+
+        .main-container {
+            text-align: center; background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(25px);
+            padding: 40px 50px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.15);
+            width: 85%; max-width: 1000px; z-index: 10; margin-right: 120px; 
+        }
+
+        h1 { font-size: 3rem; margin-top: 0; color: #d4af37; font-weight: 900; }
+        .subtitle { font-size: 1.3rem; color: #94a3b8; margin-bottom: 20px; }
+
+        /* === منطقة السؤال والجواب === */
+        .q-container { background: rgba(0, 0, 0, 0.6); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px; margin: 15px 0; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s;}
+        .glowing { background: rgba(212, 175, 55, 0.08) !important; border: 2px solid #d4af37 !important; transform: scale(1.02); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        
+        #question-number { font-size: 1.3rem; color: #d4af37; font-weight: 900; margin-bottom: 15px; display: none; background: rgba(212, 175, 55, 0.1); padding: 5px 20px; border-radius: 50px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        #question-box { font-size: 2.1rem; font-weight: 700; color: #f8fafc; transition: all 0.3s; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        #answer-text { font-size: 1.6rem; color: #4ade80; font-weight: 900; margin-top: 20px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.2); display: none; width: 90%; }
+
+        /* === الأزرار === */
+        .controls { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+        .action-btn { border: none; padding: 15px 40px; font-size: 1.5rem; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-family: 'Tajawal', sans-serif;}
+        #draw-btn { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
+        #draw-btn:hover { transform: translateY(-5px); background: linear-gradient(135deg, #f5d76e, #d4af37); }
+        #draw-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        #ans-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; }
+        #ans-btn:hover { transform: translateY(-5px); background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 40px 0 30px 0; }
+        .scoreboard-title { font-size: 1.8rem; color: #d4af37; margin-bottom: 25px; font-weight: 700; }
+
+        #scoreboard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .student-card { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; padding: 15px; }
+        .student-name { font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px; }
+        .score-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 5px; border-radius: 10px; }
+        .score-btn { width: 35px; height: 35px; border-radius: 50%; border: none; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+        .btn-plus { background: #d4af37; color: #000; }
+        .btn-minus { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .score-value { font-size: 1.6rem; font-weight: 900; color: #fbd786; }
+        
+        /* أنيميشن الجواب */
+        .slide-up { animation: slideUp 0.5s ease forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1200px) { .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 20px; } .main-container { margin-right: 0; } .logo-right { right: 40px; } }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="index.html" class="nav-btn active">الجولة الأولى (الأسئلة)</a>
+        <a href="round2.html" class="nav-btn">الجولة الثانية (الصور)</a>
+        <a href="round3.html" class="nav-btn">الجولة الثالثة (النهائي)</a>
+        <button class="nav-btn" onclick="resetScores()" style="font-size: 0.9rem; color: #ef4444; border-top: 1px solid #444; margin-top: 10px;">تصفير النقاط</button>
+    </div>
+
+    <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
+    <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
+
+    <div class="main-container">
+        <h1>مسابقة هندسة الملاحة والتوجيه</h1>
+        <div class="subtitle">الجولة الأولى: تحدي الأسئلة السريعة العشوائية</div>
+        
+        <div class="q-container" id="q-container">
+            <div id="question-number"></div>
+            <div id="question-box">اضغط لبدء الجولة...</div>
+            <div id="answer-text"></div>
+        </div>
+
+        <div class="controls">
+            <button id="draw-btn" class="action-btn" onclick="drawQuestion()">اسحب سؤالاً</button>
+            <button id="ans-btn" class="action-btn" onclick="showAnswer()">إظهار الجواب</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="scoreboard-title">📊 نقاط المتسابقين</div>
+        <div id="scoreboard"></div>
+    </div>
+
+    <script>
+        const tickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+        tickSound.volume = 0.5; winSound.volume = 0.8;
+
+        const students = ["يوسف سداد", "زينب طاهر", "ساره ولام", "سارة ابراهيم", "اشرقت قيس", "قاسم", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
+        let scores = JSON.parse(localStorage.getItem('contestScores')) || new Array(students.length).fill(0);
+
+        function renderScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = ''; 
+            students.forEach((name, index) => {
+                board.innerHTML += `
+                    <div class="student-card">
+                        <div class="student-name">${name}</div>
+                        <div class="score-controls">
+                            <button class="score-btn btn-minus" onclick="changeScore(${index}, -1)">-</button>
+                            <span class="score-value" id="score-${index}">${scores[index]}</span>
+                            <button class="score-btn btn-plus" onclick="changeScore(${index}, 1)">+</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function changeScore(index, delta) {
+            scores[index] += delta; 
+            if(scores[index] < 0) scores[index] = 0; 
+            document.getElementById(`score-${index}`).innerText = scores[index];
+            localStorage.setItem('contestScores', JSON.stringify(scores));
+        }
+
+        function resetScores() {
+            if(confirm("هل أنت متأكد من تصفير جميع نقاط الطلاب للبدء من جديد؟")) {
+                scores = new Array(students.length).fill(0);
+                localStorage.setItem('contestScores', JSON.stringify(scores));
+                renderScoreboard();
+            }
+        }
+
+        window.onload = renderScoreboard;
+
+        // مصفوفة الأسئلة مع أرقامها (ID) وأجوبتها النموذجية
+        let questions = [
+            { id: 1, q: "هل كل الطائرات تحتاج إلى مدرج حتى تقلع؟", a: "لا، المروحيات والطائرات العمودية (VTOL) لا تحتاج." },
+            { id: 2, q: "هل يعتمد الطيار على بصره فقط أثناء الطيران؟", a: "لا، يعتمد بشكل أساسي على أجهزة الملاحة والطيران الآلي." },
+            { id: 3, q: "هل جميع الطائرات تحلق على نفس الارتفاع؟", a: "لا، يعتمد على نوع الطائرة والضغط الجوي والمسار المخصص." },
+            { id: 4, q: "إذا كان الجو صافياً، هل الطيران دائمًا آمن 100%؟", a: "لا، قد تواجه الطائرة مطبات هوائية صافية (CAT)." },
+            { id: 5, q: "هل تصبح الطائرة أبطأ إذا ارتفعت أكثر في الغلاف الجوي؟", a: "بالعكس، الهواء الخفيف يقلل الاحتكاك فتطير أسرع." },
+            { id: 6, q: "إذا انطفأ محرك واحد، هل تسقط الطائرة فورًا؟", a: "لا، الطائرات التجارية مصممة للطيران بأمان بمحرك واحد." },
+            { id: 7, q: "هل تستهلك الطائرة وقوداً أكثر وقت الإقلاع أم أثناء التحليق؟", a: "وقت الإقلاع يستهلك أقصى طاقة ووقود." },
+            { id: 8, q: "هل جميع الطائرات تطير بنفس السرعة؟", a: "لا، السرعات تختلف حسب التصميم (تجارية، حربية، خفيفة)." },
+            { id: 9, q: "هل يمكن للطائرة أن تطير بدون استخدام الرادار؟", a: "نعم، باستخدام أنظمة بديلة مثل GPS والملاحة بالقصور الذاتي." },
+            { id: 10, q: "ما هو الفرق بين الملاحة (Navigation) والتوجيه (Guidance)؟", a: "الملاحة: معرفة أين أنت. التوجيه: معرفة كيف تصل للهدف." },
+            { id: 11, q: "هل تحتاج الطائرة إلى الهواء (الغلاف الجوي) حتى تتمكن من الطيران؟", a: "نعم، لتوليد قوة الرفع (Lift) عبر الأجنحة." },
+            { id: 12, q: "هل يمكن للطائرة أن تطير بدون أجنحة؟", a: "لا، الأجنحة أساسية لتوليد قوة الرفع." },
+            { id: 13, q: "أيهما أثقل: طائرة فارغة أم طائرة مليئة بالركاب؟", a: "بالتأكيد المليئة بالركاب والوقود والبضائع." },
+            { id: 14, q: "هل تطير الطائرة أسرع في حالة الصعود أم في حالة الهبوط؟", a: "في حالة الهبوط (بسبب تأثير الجاذبية)." },
+            { id: 15, q: "إذا تم تكبير حجم الأجنحة، هل تصبح الطائرة دائمًا أفضل؟", a: "لا، الحجم الكبير يزيد من الوزن وقوة السحب (Drag)." },
+            { id: 16, q: "إذا فقدت الطائرة الاتصال اللاسلكي، هل تسقط مباشرة؟", a: "لا، الطيار الآلي والأنظمة الملاحية تبقيها محلقة." },
+            { id: 17, q: "ما هي القوى التي تساعد الطائرة على البقاء ثابتة في الجو؟", a: "قوة الرفع (Lift) والدفع (Thrust) تعاكس الوزن والسحب." },
+            { id: 18, q: "لماذا تحلق الطائرات التجارية على ارتفاعات عالية جداً؟", a: "لتجنب الطقس السيء وتقليل مقاومة الهواء وتوفير الوقود." },
+            { id: 19, q: "إذا كانت الطائرة على ارتفاع عالٍ، هل يمكننا فتح الأبواب؟", a: "لا، بسبب فرق الضغط الهائل بين الداخل والخارج." },
+            { id: 20, q: "ما اسم الجزء في الطائرة الذي يساعدها على الارتفاع؟", a: "الروافع (Elevators) الموجودة في الذيل." },
+            { id: 21, q: "ما اسم الشخص الذي يراقب حركة الطائرات من الأرض؟", a: "المراقب الجوي (Air Traffic Controller)." },
+            { id: 22, q: "اشرح باختصار: كيف تطير الطائرة؟", a: "المحرك يدفعها للأمام، والهواء يمر فوق الجناح ليولد قوة الرفع." },
+            { id: 23, q: "ما اسم المكان المخصص الذي تقلع منه الطائرة؟", a: "المدرج (Runway)." },
+            { id: 24, q: "ما اسم الجهاز الأساسي الذي يحدد اتجاه الطائرة؟", a: "البوصلة (Compass) أو نظام الجيروسكوب." },
+            { id: 25, q: "ما هو المصطلح الإنجليزي لجناح الطائرة؟", a: "Wing." },
+            { id: 26, q: "بشكل عام، أيهما أسرع: الطائرة أم السيارة؟", a: "الطائرة أسرع بكثير." },
+            { id: 27, q: "ماذا يحدث إذا نفد الوقود؟ هل تسقط الطائرة مباشرة؟", a: "لا، تنزلق تدريجياً (Gliding) حتى تجد مكاناً للهبوط." },
+            { id: 28, q: "ما الذي يساعد الطائرة على البقاء متزنة أفقياً في الجو؟", a: "الجنيحات (Ailerons) والموازنات في الذيل." },
+            { id: 29, q: "هل تستطيع الطائرة التجارية التوقف في الجو مثل المروحية؟", a: "لا، يجب أن تستمر بالحركة لتوليد قوة الرفع." },
+            { id: 30, q: "لماذا تمتلك الطائرة جناحين وليس جناحاً واحداً فقط؟", a: "للحفاظ على توازن الطائرة أفقياً على جانبي مركز الثقل." },
+            { id: 31, q: "إذا كانت سرعة الرياح صفراً، هل يتطابق الاتجاه مع المسار؟", a: "نعم، يتطابق الـ Heading مع الـ Track لعدم وجود انحراف." },
+            { id: 32, q: "هل أقصر طريق بين نقطتين على الأرض دائمًا خط مستقيم؟", a: "لا، هو المسار الدائري العظيم (Great Circle) بسبب كروية الأرض." },
+            { id: 33, q: "هل الخرائط الجوية التي يستخدمها الطيار مطابقة لخرائط Google؟", a: "لا، الخرائط الجوية مخصصة وتحتوي على مسارات ومحطات ملاحية." },
+            { id: 34, q: "هل يمكن أن تضيع الطائرة إذا تعطل نظام VOR الملاحي؟", a: "لا، هناك أنظمة بديلة تعوضه مثل الـ GPS." },
+            { id: 35, q: "هل أنظمة الرادار موجودة داخل الطائرة أم على الأرض فقط؟", a: "في كلاهما (رادار للطقس بالطائرة، ورادار مراقبة بالأرض)." },
+            { id: 36, q: "في الطيران الحديث، هل تعتمد الملاحة أكثر على النظر أم الأجهزة؟", a: "تعتمد بشكل كبير جداً على الأجهزة (IFR)." },
+            { id: 37, q: "هل يستطيع الطيار معرفة موقعه الدقيق بدون أي جهاز ملاحي؟", a: "صعب جداً، إلا بتمييز التضاريس والمعالم البصرية نهاراً." },
+            { id: 38, q: "هل تعتمد الملاحة الجوية على معالم الأرض أم على الأقمار؟", a: "في وقتنا الحالي، الاعتماد الأكبر على الأقمار الصناعية (GPS)." },
+            { id: 39, q: "هل يتغير الاتجاه (Heading) الخاص بالطائرة أثناء الرحلة؟", a: "نعم، يتغير لمواجهة تأثير الرياح وتصحيح مسارها." },
+            { id: 40, q: "هل تقاس سرعة الطائرة بالنسبة للهواء أم بالنسبة للأرض؟", a: "تقاس بالاثنين: السرعة الجوية (Airspeed) والأرضية (Groundspeed)." },
+            { id: 41, q: "أيهما الأهم: معرفة الموقع الحالي أم معرفة الاتجاه؟", a: "كلاهما مكمل للآخر للملاحة الصحيحة." },
+            { id: 42, q: "إذا عرفت موقعك الحالي، هل يمكنك الوصول للهدف بدون توجيه؟", a: "لا، التوجيه هو من يعطيك الزاوية والمسار الصحيح للوصول." },
+            { id: 43, q: "ما هو الطيار الآلي (Autopilot) وما وظيفته؟", a: "نظام كمبيوتر يحافظ على مسار وارتفاع وسرعة الطائرة آلياً." },
+            { id: 44, q: "هل يعمل الطيار الآلي بدون أي تدخل أو مراقبة بشرية؟", a: "لا، الطيار البشري يبرمجه ويراقبه ويتدخل في حالات الطوارئ." },
+            { id: 45, q: "هل تحتاج الطائرة إلى التوازن الجوي أكثر أم إلى السرعة؟", a: "إلى السرعة، لأن السرعة هي التي تولد قوة الرفع والتوازن." },
+            { id: 46, q: "هل يعتمد نظام التوجيه (Guidance) على الماضي أم الحاضر؟", a: "يعتمد على الحاضر (الموقع) للوصول إلى المستقبل (الهدف)." },
+            { id: 47, q: "ما هو الفرق الدقيق بين التحكم (Control) والتوجيه (Guidance)؟", a: "التوجيه يخبرك (أين تذهب)، والتحكم هو تطبيق القوة للذهاب هناك." }
+        ];
+
+        let isSpinning = false;
+
+        function drawQuestion() {
+            if (isSpinning || questions.length === 0) return;
+            isSpinning = true;
+            
+            const btn = document.getElementById('draw-btn');
+            const qContainer = document.getElementById('q-container');
+            const box = document.getElementById('question-box');
+            const qNumber = document.getElementById('question-number');
+            const aText = document.getElementById('answer-text');
+            const ansBtn = document.getElementById('ans-btn');
+
+            // تجهيز الشاشة لحركة الدوران
+            btn.disabled = true; 
+            qContainer.classList.remove('glowing'); 
+            box.style.color = "#94a3b8"; 
+            qNumber.style.display = 'none';
+            aText.style.display = 'none';
+            ansBtn.style.display = 'none';
+            aText.classList.remove('slide-up');
+
+            let counter = 0;
+            const shuffleInterval = setInterval(() => {
+                // عرض سؤال عشوائي لتأثير الروليت
+                box.innerText = questions[Math.floor(Math.random() * questions.length)].q;
+                counter++; 
+                tickSound.currentTime = 0; 
+                tickSound.play().catch(e=>{});
+
+                if (counter > 40) {
+                    clearInterval(shuffleInterval);
+                    
+                    // اختيار السؤال النهائي العشوائي
+                    const finalIndex = Math.floor(Math.random() * questions.length);
+                    const finalData = questions[finalIndex];
+                    
+                    // عرض النتيجة
+                    qNumber.innerText = `السؤال رقم (${finalData.id})`;
+                    qNumber.style.display = 'inline-block';
+                    
+                    box.innerText = `❓ ${finalData.q}`; 
+                    box.style.color = "#f8fafc";
+                    qContainer.classList.add('glowing'); 
+                    
+                    // تحضير الجواب (بدون إظهاره بعد)
+                    aText.innerText = `✅ الجواب: ${finalData.a}`;
+                    ansBtn.style.display = 'inline-block';
+                    
+                    winSound.currentTime = 0; 
+                    winSound.play().catch(e=>{});
+                    
+                    // إزالة السؤال من المصفوفة حتى لا يتكرر
+                    questions.splice(finalIndex, 1);
+                    
+                    if(questions.length === 0) { 
+                        btn.innerText = "انتهت جميع الأسئلة!"; 
+                    } else { 
+                        btn.disabled = false; 
+                        btn.innerText = `اسحب سؤالاً آخر (${questions.length} متبقي)`; 
+                    }
+                    isSpinning = false;
+                }
+            }, 60);
+        }
+
+        function showAnswer() {
+            const aText = document.getElementById('answer-text');
+            aText.classList.add('slide-up');
+            aText.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

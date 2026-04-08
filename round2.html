@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المسابقة الكبرى - الجولة الثانية (عشوائي)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
+        body { margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff; background: linear-gradient(-45deg, #0f1016, #1a1b26, #0f172a, #000000); background-size: 400% 400%; animation: gradientBG 15s ease infinite; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; padding: 40px 0; box-sizing: border-box; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* === قائمة التنقل الجانبية === */
+        .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .nav-btn { background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent; padding: 15px 20px; font-family: 'Tajawal', sans-serif; font-size: 1.2rem; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
+        .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
+        .nav-btn.active { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
+
+        /* === الشعارات الجانبية === */
+        .side-logo { position: absolute; top: 50px; width: 15vw; max-width: 140px; min-width: 90px; height: auto; z-index: 100; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); }
+        .logo-right { right: 180px; } .logo-left { left: 40px; }
+
+        .main-container { text-align: center; background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(25px); padding: 40px 50px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.15); width: 85%; max-width: 1000px; z-index: 10; margin-right: 120px; }
+        h1 { font-size: 3rem; margin-top: 0; color: #d4af37; font-weight: 900; }
+        .subtitle { font-size: 1.3rem; color: #94a3b8; margin-bottom: 20px; }
+
+        /* === صندوق عرض الصور التفاعلي === */
+        #image-box { width: 100%; height: 400px; background: rgba(0, 0, 0, 0.7); border-radius: 25px; border: 2px solid rgba(212, 175, 55, 0.2); margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
+        #display-img { max-width: 95%; max-height: 95%; object-fit: contain; display: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .placeholder-text { font-size: 1.8rem; color: #94a3b8; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+
+        /* === قسم السؤال والجواب === */
+        .qa-container { background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); min-height: 80px; display: none; }
+        #question-text { font-size: 1.5rem; color: #f8fafc; font-weight: 700; margin-bottom: 10px; }
+        #answer-text { font-size: 1.4rem; color: #4ade80; font-weight: 900; display: none; }
+
+        /* === الأزرار === */
+        .controls { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+        .action-btn { border: none; padding: 15px 40px; font-size: 1.4rem; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-family: 'Tajawal', sans-serif;}
+        #draw-btn { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
+        #draw-btn:hover { transform: translateY(-5px); background: linear-gradient(135deg, #f5d76e, #d4af37); }
+        #draw-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
+        #ans-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; }
+        #ans-btn:hover { transform: translateY(-5px); background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 40px 0 30px 0; }
+        .scoreboard-title { font-size: 1.8rem; color: #d4af37; margin-bottom: 25px; font-weight: 700; }
+        #scoreboard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .student-card { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; padding: 15px; }
+        .student-name { font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 12px; }
+        .score-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 5px; border-radius: 10px; }
+        .score-btn { width: 32px; height: 32px; border-radius: 50%; border: none; font-size: 1.3rem; font-weight: bold; cursor: pointer; }
+        .btn-plus { background: #d4af37; color: #000; }
+        .btn-minus { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .score-value { font-size: 1.5rem; font-weight: 900; color: #fbd786; }
+
+        .img-anim { animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="index.html" class="nav-btn">الجولة الأولى (الأسئلة)</a>
+        <a href="round2.html" class="nav-btn active">الجولة الثانية (الصور)</a>
+        <a href="round3.html" class="nav-btn">الجولة الثالثة (النهائية)</a>
+    </div>
+
+    <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
+    <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
+
+    <div class="main-container">
+        <h1>مسابقة الملاحة - الجولة الثانية</h1>
+        <div class="subtitle">تحدي التعرف العشوائي على الصور</div>
+        
+        <div id="image-box">
+            <div class="placeholder-text" id="placeholder">جاهزون؟ اضغط لعرض الصورة الأولى</div>
+            <img id="display-img" src="" alt="صورة الجولة">
+        </div>
+
+        <div class="qa-container" id="qa-box">
+            <div id="question-text"></div>
+            <div id="answer-text"></div>
+        </div>
+        
+        <div class="controls">
+            <button id="draw-btn" class="action-btn" onclick="showNextRandomImage()">اعرض صورة عشوائية</button>
+            <button id="ans-btn" class="action-btn" onclick="showAnswer()">إظهار الجواب</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="scoreboard-title">📊 لوحة النقاط التراكمية</div>
+        <div id="scoreboard"></div>
+    </div>
+
+    <script>
+        const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+        winSound.volume = 0.8;
+
+        const students = ["يوسف سداد", "زينب طاهر", "ساره ولام", "سارة ابراهيم", "اشرقت قيس", "قاسم", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
+        let scores = JSON.parse(localStorage.getItem('contestScores')) || new Array(students.length).fill(0);
+
+        function renderScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = ''; 
+            students.forEach((name, index) => {
+                board.innerHTML += `
+                    <div class="student-card">
+                        <div class="student-name">${name}</div>
+                        <div class="score-controls">
+                            <button class="score-btn btn-minus" onclick="changeScore(${index}, -1)">-</button>
+                            <span class="score-value" id="score-${index}">${scores[index]}</span>
+                            <button class="score-btn btn-plus" onclick="changeScore(${index}, 1)">+</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function changeScore(index, delta) {
+            scores[index] += delta; 
+            if(scores[index] < 0) scores[index] = 0; 
+            document.getElementById(`score-${index}`).innerText = scores[index];
+            localStorage.setItem('contestScores', JSON.stringify(scores));
+        }
+
+        // === نظام الصور والأسئلة المرتبطة بها ===
+      let imagePool = [
+           
+            { src: "IMG/2", q: "شنو الخطأ بالصورة", a: "اتجاه البوصله بالعكس" },
+           
+            { src: "IMG/4", q: "ما اسم هذا الجزء باللون البرتقالي وماهي وظيفته", a: "rudder يتحكم  بحركة مقدمة الطائرة يمين ويسار بدون ميلان الاجنحه" },
+            { src: "IMG/5", q: "هل هذا الجناح متحرك ام ثابت", a: "متحرك" },
+            { src: "IMG/6", q: "ما اسم الجناح باللون الاخضر", a: "Elevator" },
+            { src: "IMG/7", q: "ما وظيفة هذا المقود", a: "يتحكم بميلان وصعود الطائرة فقط" },
+            { src: "IMG/8", q: "كم عدد الاقمار الصناعية للGPS ", a: "24" },
+            { src: "IMG/9", q: "كم نوع مدار رئيسي للأقمار الصناعية؟", a: "3 مدارات رئيسية" },
+            { src: "IMG/10", q: "هل كل الطائرات تطير بنفس الارتفاع", a: " لا, كل طائرة لها ارتفاع حسب الرحلة" },
+            { src: "IMG/11", q: "ما اسم هذا المطار؟", a: "مطار بغداد الدولي" },
+            { src: "IMG/12", q: "ماذا تسمى هذه الخطوط التي خلف الطائرة في السماء؟", a: " آثار التكثف (Contrails) الناتجة عن بخار الماء من محركات الطائرة" },
+            { src: "IMG/13", q: "ما وظيفة هذا الجهاز؟", a: "استقبال وإرسال الإشارات من وإلى الأقمار الصناعية (الاتصالات والملاحة)" },
+            { src: "IMG/14", q: "لماذا لا تصطدم الطائرات ببعضها؟", a: "بسبب وجود الرقابة الجوية (ATC)" },
+            { src: "IMG/15", q: "كم تستغرق الأرض للدوران حول نفسها", a: "24 ساعة" },
+            { src: "IMG/16", q: "ماذا تعني كلمة Navigation؟", a: "تحديد الموقع والاتجاه والوصول إلى الهدف" },
+            { src: "IMG/17", q: "ما اسم هذا الجهاز؟", a: "الصندوق الاسود" },
+            { src: "IMG/18", q: "ماذا تُسمى هذه الحالة التي تتعرض لها الطائرة؟ ", a: " الاضطرابات الجوية" },
+            { src: "IMG/19", q: "متى أول مرة هبط الإنسان على القمر", a: "أول هبوط على القمر كان سنة 1969 في مهمة أبولو 11 " },
+            { src: "IMG/20", q: "من أين يستمد هذا القمر الصناعي الملاحي طاقته؟", a: "من الشمس (الألواح الشمسية)" }
+        ];
+
+        // دالة لخلط المصفوفة العشوائية
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        shuffleArray(imagePool);
+        let currentIndex = 0;
+
+       function showNextRandomImage() {
+            if (currentIndex >= imagePool.length) {
+                document.getElementById('draw-btn').innerText = "اكتملت جميع الصور! 🎓";
+                document.getElementById('draw-btn').disabled = true;
+                document.getElementById('ans-btn').style.display = 'none';
+                return;
+            }
+
+            const currentData = imagePool[currentIndex];
+            const imgElement = document.getElementById('display-img');
+            const placeholder = document.getElementById('placeholder');
+            const btn = document.getElementById('draw-btn');
+            const qaBox = document.getElementById('qa-box');
+            const qText = document.getElementById('question-text');
+            const aText = document.getElementById('answer-text');
+
+            placeholder.style.display = 'none';
+            qaBox.style.display = 'block';
+            
+            // نخفي الصورة مؤقتاً لحد ما نلكى الامتداد الصحيح
+            imgElement.style.display = 'none'; 
+
+            // --- الطريقة الاحترافية والمضمونة للبحث عن الصورة ---
+            const extensions = ['.jpg', '.png', '.jpeg', '.webp', '.gif', '.JPG', '.PNG'];
+            let extIndex = 0;
+            
+            // هذا السطر يمسح أي امتداد مكتوب بالغلط بالمصفوفة (حتى لو نسيت تمسح .PNG من الصورة الأولى راح يعالجه)
+            let cleanSrc = currentData.src.replace(/\.[a-zA-Z0-9]+$/, ''); 
+
+            // دالة للبحث بالذاكرة
+            function tryLoadImage() {
+                if (extIndex < extensions.length) {
+                    let testImg = new Image(); // إنشاء صورة وهمية للفحص
+                    testImg.onload = function() {
+                        // ممتاز! لقينا الامتداد الصحيح، هسه نعرضها بالشاشة
+                        imgElement.src = testImg.src;
+                        
+                        // تفعيل الأنيميشن
+                        imgElement.classList.remove('img-anim');
+                        void imgElement.offsetWidth; 
+                        imgElement.classList.add('img-anim');
+                        imgElement.style.display = 'block';
+                    };
+                    testImg.onerror = function() {
+                        // إذا فشل هذا الامتداد، جرب اللي بعده فوراً
+                        extIndex++;
+                        tryLoadImage();
+                    };
+                    // جرب الامتداد الحالي
+                    testImg.src = cleanSrc + extensions[extIndex];
+                } else {
+                    console.error("الصورة غير موجودة بجميع الامتدادات: " + cleanSrc);
+                }
+            }
+            
+            // شغل عملية البحث
+            tryLoadImage(); 
+            // -------------------------------------------------------------
+
+            qText.innerText = `❓ ${currentData.q}`;
+            aText.innerText = `✅ الجواب: ${currentData.a}`;
+            aText.style.display = 'none';
+            document.getElementById('ans-btn').style.display = 'inline-block';
+
+            winSound.currentTime = 0;
+            winSound.play().catch(e=>{});
+
+            currentIndex++;
+            btn.innerText = `الصورة التالية (${currentIndex}/20)`;
+            
+            if(currentIndex === 20) {
+                btn.style.background = "linear-gradient(135deg, #4ade80, #22c55e)";
+            }
+        }
+        
+
+        // دالة إظهار الجواب
+        function showAnswer() {
+            document.getElementById('answer-text').style.display = 'block';
+        }
+
+        window.onload = renderScoreboard;
+    </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المسابقة الكبرى - سباق التوجيه الحاسم</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
+        
+        body {
+            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
+            background: radial-gradient(circle at top, #1e1b4b 0%, #020617 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            min-height: 100vh; overflow: hidden; padding: 20px 0; box-sizing: border-box;
+            transition: transform 0.1s;
+        }
+
+        /* تأثير النجوم المتحركة بالخلفية */
+        .stars { 
+            position: absolute; top: -100%; left: 0; width: 100%; height: 200%; pointer-events: none; z-index: 0; 
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), 
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), 
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), 
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)); 
+            background-repeat: repeat; background-size: 200px 200px; opacity: 0.6; 
+            animation: moveStars 15s linear infinite;
+        }
+        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(50%); } }
+
+        /* اهتزاز الشاشة عند الانطلاق */
+        .shake { animation: screenShake 0.3s ease-in-out; }
+        @keyframes screenShake { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(2px, -2px); } 50% { transform: translate(-2px, 2px); } 75% { transform: translate(2px, 2px); } }
+
+        /* القائمة الجانبية */
+        .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .nav-btn { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; border: 1px solid transparent; padding: 15px 20px; font-family: 'Tajawal', sans-serif; font-size: 1.1rem; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
+        .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
+        .nav-btn.active { background: linear-gradient(135deg, #f59e0b, #b45309); color: #000; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.5); transform: scale(1.05); }
+
+        .side-logo { position: absolute; top: 30px; width: 12vw; max-width: 120px; z-index: 100; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+        .logo-right { right: 150px; } .logo-left { left: 40px; }
+
+        /* العنوان الرئيسي */
+        .header-container { text-align: center; z-index: 10; margin-right: 120px; margin-bottom: 20px; }
+        h1 { font-size: 2.8rem; margin: 0; color: #fbd786; font-weight: 900; text-shadow: 0 0 30px rgba(245, 158, 11, 0.6); letter-spacing: 1px; }
+        .subtitle { font-size: 1.2rem; color: #94a3b8; margin-top: 5px; font-weight: 700; }
+
+        /* منطقة السباق */
+        .race-arena {
+            width: 85%; max-width: 1100px; height: 65vh; margin-right: 120px;
+            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px;
+            position: relative; display: flex; justify-content: space-evenly;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.6);
+            z-index: 5; overflow: hidden; backdrop-filter: blur(5px);
+        }
+
+        .finish-line {
+            position: absolute; top: 50px; left: 0; width: 100%; height: 8px;
+            background: repeating-linear-gradient(90deg, #4ade80, #4ade80 20px, transparent 20px, transparent 40px);
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.9); z-index: 1; opacity: 0.9;
+        }
+        .finish-text { position: absolute; top: 15px; width: 100%; text-align: center; color: #4ade80; font-weight: 900; font-size: 1.4rem; letter-spacing: 3px; text-shadow: 0 0 15px rgba(74, 222, 128, 0.8); z-index: 2;}
+
+        .lane {
+            position: relative; width: 28%; height: 100%;
+            border-left: 2px dashed rgba(255, 255, 255, 0.08); border-right: 2px dashed rgba(255, 255, 255, 0.08);
+            display: flex; flex-direction: column; align-items: center;
+            background: linear-gradient(0deg, rgba(255,255,255,0.02), transparent);
+        }
+
+        .rocket-wrapper {
+            position: absolute; bottom: 130px;
+            transition: bottom 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .rocket-body {
+            width: 55px; height: 100px; background: #e2e8f0;
+            border-radius: 50% 50% 15% 15%; position: relative;
+            box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.1);
+        }
+        .rocket-body::before { content: ''; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); width: 18px; height: 18px; background: #020617; border: 4px solid #cbd5e1; border-radius: 50%; box-shadow: inset 0 0 5px rgba(255,255,255,0.5); }
+        
+        .rank-1 .rocket-body { background: linear-gradient(135deg, #fef08a, #ca8a04); box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 25px rgba(253, 224, 71, 0.4); }
+        .rank-1 .rocket-body::before { border-color: #fef08a; }
+        .rank-2 .rocket-body { background: linear-gradient(135deg, #f1f5f9, #94a3b8); box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 25px rgba(226, 232, 240, 0.4); }
+        .rank-2 .rocket-body::before { border-color: #f1f5f9; }
+        .rank-3 .rocket-body { background: linear-gradient(135deg, #fed7aa, #c2410c); box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 25px rgba(253, 186, 116, 0.4); }
+        .rank-3 .rocket-body::before { border-color: #fed7aa; }
+
+        .engine-flame {
+            width: 35px; height: 60px; background: linear-gradient(180deg, #fbd786, #ef4444, transparent);
+            border-radius: 50%; margin-top: -8px; display: none; box-shadow: 0 0 30px rgba(239, 68, 68, 1);
+        }
+        .moving .engine-flame { display: block; animation: flamePulse 0.1s infinite alternate; }
+        .moving .rocket-body { animation: shakeRocket 0.1s infinite; }
+
+        @keyframes flamePulse { 0% { transform: scaleY(1) scaleX(0.9); opacity: 0.8; } 100% { transform: scaleY(1.4) scaleX(1.1); opacity: 1; } }
+        @keyframes shakeRocket { 0% { transform: translateX(1.5px); } 50% { transform: translateX(-1.5px); } 100% { transform: translateX(1.5px); } }
+
+        .launchpad {
+            position: absolute; bottom: 0; width: 100%; height: 110px;
+            background: linear-gradient(0deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.4), transparent);
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+            border-top: 2px solid rgba(255,255,255,0.15); z-index: 5; padding-bottom: 15px;
+        }
+        .player-name { font-size: 1.5rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 5px; }
+        .player-rank { font-size: 1rem; font-weight: 700; padding: 4px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .badge-1 { background: rgba(202, 138, 4, 0.25); color: #fde047; border: 1px solid #ca8a04; }
+        .badge-2 { background: rgba(148, 163, 184, 0.25); color: #e2e8f0; border: 1px solid #94a3b8; }
+        .badge-3 { background: rgba(194, 65, 12, 0.25); color: #fdba74; border: 1px solid #c2410c; }
+
+        /* لوحة تحكم المقدم */
+        .admin-controls {
+            width: 85%; max-width: 1100px; margin-right: 120px; margin-top: 20px;
+            background: rgba(15, 23, 42, 0.85); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px; display: flex; justify-content: center; gap: 25px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+        }
+
+        .btn-launch {
+            background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #334155; color: #fff;
+            padding: 12px 30px; font-size: 1.1rem; font-family: 'Tajawal', sans-serif; font-weight: 700;
+            border-radius: 15px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; overflow: hidden;
+        }
+        .btn-launch::after { content: 'Key ' attr(data-key); position: absolute; top: -10px; right: -10px; background: rgba(255,255,255,0.2); font-size: 0.7rem; padding: 15px 10px 5px 15px; border-radius: 50%; transform: rotate(45deg); font-weight: 900; }
+        .btn-launch:hover { background: #334155; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+        .btn-launch:active { transform: translateY(1px); }
+        .btn-launch:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(1); }
+        
+        .btn-launch.btn-gold { border-color: rgba(202, 138, 4, 0.5); }
+        .btn-launch.btn-gold:hover { background: rgba(202, 138, 4, 0.2); border-color: #fde047; box-shadow: 0 10px 25px rgba(202, 138, 4, 0.3); }
+        
+        .btn-launch.btn-silver { border-color: rgba(148, 163, 184, 0.5); }
+        .btn-launch.btn-silver:hover { background: rgba(148, 163, 184, 0.2); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(148, 163, 184, 0.3); }
+        
+        .btn-launch.btn-bronze { border-color: rgba(194, 65, 12, 0.5); }
+        .btn-launch.btn-bronze:hover { background: rgba(194, 65, 12, 0.2); border-color: #fdba74; box-shadow: 0 10px 25px rgba(194, 65, 12, 0.3); }
+
+        /* ================= شاشة التتويج النهائية ================= */
+        #fireworks-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 2000; animation: fadeInOverlay 1s; backdrop-filter: blur(10px);
+        }
+        @keyframes fadeInOverlay { from { opacity: 0; backdrop-filter: blur(0); } to { opacity: 1; backdrop-filter: blur(10px); } }
+
+        .championship-title { font-size: 4rem; color: #fff; font-weight: 900; margin-bottom: 60px; text-shadow: 0 0 30px rgba(255,255,255,0.6); animation: scaleTitle 1.5s ease-out; }
+        @keyframes scaleTitle { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .final-podium { display: flex; justify-content: center; align-items: flex-end; gap: 25px; height: 350px; position: relative; z-index: 10; }
+
+        .podium-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            padding: 25px 20px; border-radius: 25px 25px 0 0; width: 240px;
+            animation: slideUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(150px);
+            position: relative; box-shadow: inset 0 10px 30px rgba(255,255,255,0.2);
+        }
+
+        .gold-podium { background: linear-gradient(to top, rgba(202, 138, 4, 0.9), rgba(253, 224, 71, 0.3)); border: 4px solid #fde047; border-bottom: none; height: 340px; animation-delay: 1.5s; box-shadow: 0 0 60px rgba(202, 138, 4, 0.8); z-index: 3;}
+        .silver-podium { background: linear-gradient(to top, rgba(148, 163, 184, 0.9), rgba(226, 232, 240, 0.3)); border: 4px solid #e2e8f0; border-bottom: none; height: 260px; animation-delay: 1s; z-index: 2;}
+        .bronze-podium { background: linear-gradient(to top, rgba(194, 65, 12, 0.9), rgba(253, 186, 116, 0.3)); border: 4px solid #fdba74; border-bottom: none; height: 190px; animation-delay: 0.5s; z-index: 1;}
+        
+        .medal-icon { font-size: 4.5rem; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); margin-bottom: 15px; line-height: 1; }
+        .podium-name { font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.8); text-align: center; }
+        .podium-title { font-size: 1.3rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-top: 8px; letter-spacing: 1px;}
+        
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* قصاصات الورق (Confetti) */
+        .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; z-index: 5; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <div class="sidebar">
+        <a href="index.html" class="nav-btn">الجولة الأولى (الأسئلة)</a>
+        <a href="round2.html" class="nav-btn">الجولة الثانية (الصور)</a>
+        <a href="#" class="nav-btn active">🚀 سباق التوجيه الحاسم</a>
+    </div>
+
+    <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
+    <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
+
+    <div class="header-container">
+        <h1>🚀 سباق الصواريخ الحاسم 🚀</h1>
+        <div class="subtitle">المتأهلون الثلاثة للنهائي.. من سيصل إلى الهدف أولاً؟ (استخدم الأرقام 1, 2, 3 للإطلاق)</div>
+    </div>
+
+    <div class="race-arena">
+        <div class="finish-text">🏁 خط النهاية (الهدف) 🏁</div>
+        <div class="finish-line"></div>
+        
+        <div class="lane" id="lane-0">
+            <div class="rocket-wrapper rank-1" id="rocket-0">
+                <div class="rocket-body"></div>
+                <div class="engine-flame"></div>
+            </div>
+            <div class="launchpad">
+                <div class="player-name" id="name-0">---</div>
+                <div class="player-rank badge-1">المركز الأول (مبدئياً)</div>
+            </div>
+        </div>
+
+        <div class="lane" id="lane-1">
+            <div class="rocket-wrapper rank-2" id="rocket-1">
+                <div class="rocket-body"></div>
+                <div class="engine-flame"></div>
+            </div>
+            <div class="launchpad">
+                <div class="player-name" id="name-1">---</div>
+                <div class="player-rank badge-2">المركز الثاني (مبدئياً)</div>
+            </div>
+        </div>
+
+        <div class="lane" id="lane-2">
+            <div class="rocket-wrapper rank-3" id="rocket-2">
+                <div class="rocket-body"></div>
+                <div class="engine-flame"></div>
+            </div>
+            <div class="launchpad">
+                <div class="player-name" id="name-2">---</div>
+                <div class="player-rank badge-3">المركز الثالث (مبدئياً)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-controls">
+        <button class="btn-launch btn-gold" onclick="launchRocket(0)" id="btn-0" data-key="1">
+            <span>🚀 انطلاق</span><span id="btn-name-0" style="color:#fde047; font-size: 1.2rem;">الطالب 1</span>
+        </button>
+        <button class="btn-launch btn-silver" onclick="launchRocket(1)" id="btn-1" data-key="2">
+            <span>🚀 انطلاق</span><span id="btn-name-1" style="color:#e2e8f0; font-size: 1.2rem;">الطالب 2</span>
+        </button>
+        <button class="btn-launch btn-bronze" onclick="launchRocket(2)" id="btn-2" data-key="3">
+            <span>🚀 انطلاق</span><span id="btn-name-2" style="color:#fdba74; font-size: 1.2rem;">الطالب 3</span>
+        </button>
+    </div>
+
+    <div id="fireworks-overlay">
+        <div class="championship-title">🏆 أبطال هندسة الملاحة والتوجيه 2026 🏆</div>
+        
+        <div class="final-podium">
+            <div class="podium-item silver-podium">
+                <div class="medal-icon">🥈</div>
+                <div class="podium-name" id="final-2nd">---</div>
+                <div class="podium-title">المركز الثاني</div>
+            </div>
+            
+            <div class="podium-item gold-podium">
+                <div class="medal-icon">🥇</div>
+                <div class="podium-name" id="final-1st" style="font-size: 2.5rem; color: #fde047;">---</div>
+                <div class="podium-title" style="color:#fde047; font-size: 1.5rem;">البطل الأول</div>
+            </div>
+
+            <div class="podium-item bronze-podium">
+                <div class="medal-icon">🥉</div>
+                <div class="podium-name" id="final-3rd">---</div>
+                <div class="podium-title">المركز الثالث</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const launchSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'); 
+        const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
+        launchSound.volume = 0.6; winSound.volume = 0.9;
+
+        const allStudents = ["يوسف سداد", "زينب طاهر", "ساره ولام", "سارة ابراهيم", "اشرقت قيس", "قاسم", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
+        let allScores = JSON.parse(localStorage.getItem('contestScores')) || new Array(allStudents.length).fill(0);
+
+        let combined = allStudents.map((name, index) => {
+            return { name: name, score: allScores[index] };
+        });
+
+        combined.sort((a, b) => b.score - a.score);
+        let top3 = combined.slice(0, 3);
+
+        function setupRaceArena() {
+            top3.forEach((player, index) => {
+                document.getElementById(`name-${index}`).innerText = player.name;
+                document.getElementById(`btn-name-${index}`).innerText = player.name;
+            });
+        }
+
+        let rocketPositions = [0, 0, 0];
+        const stepsToWin = 8; 
+        let isRaceOver = false;
+
+        // دعم اختصارات الكيبورد (1, 2, 3)
+        document.addEventListener('keydown', (e) => {
+            if (isRaceOver) return;
+            if (e.key === '1') launchRocket(0);
+            if (e.key === '2') launchRocket(1);
+            if (e.key === '3') launchRocket(2);
+        });
+
+        function launchRocket(playerIndex) {
+            if (isRaceOver) return;
+
+            rocketPositions[playerIndex]++;
+            launchSound.currentTime = 0; 
+            launchSound.play().catch(e => {});
+
+            // اهتزاز الشاشة
+            document.body.classList.remove('shake');
+            void document.body.offsetWidth; // Trigger reflow
+            document.body.classList.add('shake');
+
+            let progressPercentage = (rocketPositions[playerIndex] / stepsToWin) * 85;
+            const rocket = document.getElementById(`rocket-${playerIndex}`);
+            rocket.style.bottom = `calc(130px + ${progressPercentage}%)`;
+            
+            rocket.classList.add('moving');
+            
+            setTimeout(() => {
+                if (!isRaceOver) rocket.classList.remove('moving');
+            }, 500);
+
+            if (rocketPositions[playerIndex] >= stepsToWin) {
+                declareWinners();
+            }
+        }
+
+        function declareWinners() {
+            isRaceOver = true;
+            winSound.play().catch(e => {});
+            
+            let raceResults = top3.map((player, index) => {
+                return { 
+                    name: player.name, 
+                    steps: rocketPositions[index], 
+                    originalScore: player.score,
+                    originalIndex: index
+                };
+            });
+
+            raceResults.sort((a, b) => {
+                if (b.steps !== a.steps) return b.steps - a.steps;
+                return b.originalScore - a.originalScore;
+            });
+
+            const overlay = document.getElementById('fireworks-overlay');
+            overlay.style.display = 'flex';
+            
+            document.getElementById('final-1st').innerText = raceResults[0].name;
+            document.getElementById('final-2nd').innerText = raceResults[1].name;
+            document.getElementById('final-3rd').innerText = raceResults[2].name;
+            
+            document.getElementById('btn-0').disabled = true;
+            document.getElementById('btn-1').disabled = true;
+            document.getElementById('btn-2').disabled = true;
+            
+            document.getElementById(`rocket-${raceResults[0].originalIndex}`).classList.add('moving');
+
+            // تشغيل تأثير القصاصات الورقية (Confetti)
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#fde047', '#4ade80', '#60a5fa', '#f87171', '#c084fc'];
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.top = '-10px';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.animationDelay = (Math.random() * 2) + 's';
+                document.getElementById('fireworks-overlay').appendChild(confetti);
+            }
+        }
+
+        window.onload = setupRaceArena;
+    </script>
+</body>
+</html>

@@ -272,7 +272,7 @@
         const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
         launchSound.volume = 0.6; winSound.volume = 0.9;
 
-        const allStudents = ["يوسف سداد", "زينب طاهر", "ساره ولام", "سارة ابراهيم", "اشرقت قيس", "قاسم", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
+        const allStudents = ["يوسف سداد", "ساره ولام", "سارة ابراهيم", "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
         let allScores = JSON.parse(localStorage.getItem('contestScores')) || new Array(allStudents.length).fill(0);
 
         let combined = allStudents.map((name, index) => {

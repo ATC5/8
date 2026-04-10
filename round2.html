@@ -6,8 +6,58 @@
     <title>المسابقة الكبرى - الجولة الثانية (عشوائي)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
-        body { margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff; background: linear-gradient(-45deg, #0f1016, #1a1b26, #0f172a, #000000); background-size: 400% 400%; animation: gradientBG 15s ease infinite; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; padding: 40px 0; box-sizing: border-box; }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        :root {
+            /* متغيرات المحطة الفضائية */
+            --metal-gradient: linear-gradient(135deg, #e2e8f0 0%, #8c98a9 40%, #2d3748 100%);
+            --neon-blue: #38bdf8;
+        }
+
+        body { 
+            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff; 
+            /* استبدال الخلفية السابقة بخلفية فضاء عميقة */
+            background-color: #000103;
+            background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100vh; overflow-x: hidden; overflow-y: hidden; padding: 40px 0; box-sizing: border-box; 
+        }
+        
+        /* ========================================= */
+        /* --- خلفية الفضاء والمحطة المتحركة --- */
+        /* ========================================= */
+        .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+        .star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.5; will-change: transform; }
+        .star-fast { animation: fall 15s linear infinite; }
+        .star-slow { animation: fall 35s linear infinite; }
+        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
+
+        /* حركة المحطة العائمة في كل الشاشة */
+        .station-layer { 
+            position: fixed; top: 0; left: 0; z-index: -1; 
+            will-change: transform; pointer-events: none; 
+            /* تتحرك عبر الشاشة وترتد بانسيابية */
+            animation: floatAcrossScreen 70s ease-in-out infinite alternate; 
+        }
+        
+        @keyframes floatAcrossScreen { 
+            0%   { transform: translate(-10vw, 10vh) scale(0.6); } 
+            33%  { transform: translate(75vw, 65vh) scale(0.9); }
+            66%  { transform: translate(15vw, 80vh) scale(0.7); }
+            100% { transform: translate(85vw, 15vh) scale(1); }
+        }
+
+        .space-station { transform-style: preserve-3d; animation: slowOrbit 40s infinite linear; }
+        @keyframes slowOrbit { from { transform: rotateX(25deg) rotateY(0deg); } to { transform: rotateX(25deg) rotateY(360deg); } }
+        
+        .station-core { position: absolute; width: 40px; height: 160px; transform-style: preserve-3d; transform: translate(-20px, -80px); }
+        .station-core div { position: absolute; background: var(--metal-gradient); border: 1px solid #1e293b; width: 40px; height: 160px; }
+        .core-front { transform: translateZ(20px); }
+        .core-back  { transform: rotateY(180deg) translateZ(20px); }
+        .solar-truss { position: absolute; width: 400px; height: 10px; background: #334155; transform: translate(-200px, -5px); }
+        .solar-panel { position: absolute; width: 140px; height: 70px; background: #06406e; border: 2px solid #475569; }
+        .panel-left { transform: translate(-180px, -35px) rotateX(30deg); }
+        .panel-right { transform: translate(40px, -35px) rotateX(-30deg); }
+        /* ========================================= */
 
         /* === قائمة التنقل الجانبية === */
         .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
@@ -17,7 +67,9 @@
 
         /* === الشعارات الجانبية === */
         .side-logo { position: absolute; top: 50px; width: 15vw; max-width: 140px; min-width: 90px; height: auto; z-index: 100; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); }
-        .logo-right { right: 180px; } .logo-left { left: 40px; }
+        .logo-right { right: 180px; } 
+        /* تم تكبير الشعار الأيسر ليتساوى مع الشعار الأيمن */
+        .logo-left { left: 70px; width: 18vw; max-width: 180px; }
 
         .main-container { text-align: center; background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(25px); padding: 40px 50px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.15); width: 85%; max-width: 1000px; z-index: 10; margin-right: 120px; }
         h1 { font-size: 3rem; margin-top: 0; color: #d4af37; font-weight: 900; }
@@ -28,10 +80,25 @@
         #display-img { max-width: 95%; max-height: 95%; object-fit: contain; display: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .placeholder-text { font-size: 1.8rem; color: #94a3b8; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
-        /* === قسم السؤال والجواب === */
-        .qa-container { background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); min-height: 80px; display: none; }
-        #question-text { font-size: 1.5rem; color: #f8fafc; font-weight: 700; margin-bottom: 10px; }
-        #answer-text { font-size: 1.4rem; color: #4ade80; font-weight: 900; display: none; }
+        /* === قسم السؤال والجواب والمؤقت === */
+        .qa-container { background: rgba(0,0,0,0.5); border-radius: 15px; padding: 25px 15px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); min-height: 80px; display: none; position: relative; }
+        #question-text { font-size: 1.6rem; color: #f8fafc; font-weight: 700; margin-bottom: 15px; }
+        #answer-text { font-size: 1.5rem; color: #4ade80; font-weight: 900; margin-top: 15px; display: none; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; }
+
+        /* ستايل المؤقت الزمني */
+        .timer-display {
+            font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue);
+            font-family: 'Courier New', Courier, monospace; letter-spacing: 2px;
+            margin-top: 15px; display: none; transition: all 0.3s ease;
+        }
+        .timer-warning {
+            color: #ef4444; text-shadow: 0 0 20px #ef4444;
+            animation: pulseWarning 1s infinite;
+        }
+        @keyframes pulseWarning {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
 
         /* === الأزرار === */
         .controls { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
@@ -55,14 +122,26 @@
 
         .img-anim { animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        @media (max-width: 1200px) { .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 20px; } .main-container { margin-right: 0; } .logo-right { right: 40px; } }
     </style>
 </head>
 <body>
 
+    <div class="stars-container" id="stars-js"></div>
+    <div class="station-layer">
+        <div class="space-station">
+            <div class="station-core"><div class="core-front"></div><div class="core-back"></div></div>
+            <div class="solar-truss"></div>
+            <div class="solar-panel panel-left"></div>
+            <div class="solar-panel panel-right"></div>
+        </div>
+    </div>
     <div class="sidebar">
         <a href="index.html" class="nav-btn">الجولة الأولى (الأسئلة)</a>
         <a href="round2.html" class="nav-btn active">الجولة الثانية (الصور)</a>
         <a href="round3.html" class="nav-btn">الجولة الثالثة (النهائية)</a>
+        <button class="nav-btn" onclick="resetScores()" style="font-size: 0.9rem; color: #ef4444; border-top: 1px solid #444; margin-top: 10px;">تصفير النقاط</button>
     </div>
 
     <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
@@ -79,6 +158,7 @@
 
         <div class="qa-container" id="qa-box">
             <div id="question-text"></div>
+            <div id="timer-display" class="timer-display">01:00</div>
             <div id="answer-text"></div>
         </div>
         
@@ -93,10 +173,24 @@
     </div>
 
     <script>
+        // تشغيل نظام النجوم في الخلفية
+        const container = document.getElementById('stars-js');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            const isFast = i < 20;
+            star.className = `star ${isFast ? 'star-fast' : 'star-slow'}`;
+            star.style.width = (isFast ? 2 : 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = -(Math.random() * 40) + 's';
+            container.appendChild(star);
+        }
+
         const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
         winSound.volume = 0.8;
 
-         const students = ["يوسف سداد", , "ساره ولام", "سارة ابراهيم", "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
+        const students = ["يوسف سداد", "ساره ولام", "سارة ابراهيم", "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
         let scores = JSON.parse(localStorage.getItem('contestScores')) || new Array(students.length).fill(0);
 
         function renderScoreboard() {
@@ -122,11 +216,17 @@
             localStorage.setItem('contestScores', JSON.stringify(scores));
         }
 
+        function resetScores() {
+            if(confirm("هل أنت متأكد من تصفير جميع نقاط الطلاب للبدء من جديد؟")) {
+                scores = new Array(students.length).fill(0);
+                localStorage.setItem('contestScores', JSON.stringify(scores));
+                renderScoreboard();
+            }
+        }
+
         // === نظام الصور والأسئلة المرتبطة بها ===
-      let imagePool = [
-           
+        let imagePool = [
             { src: "IMG/2", q: "شنو الخطأ بالصورة", a: "اتجاه البوصله بالعكس" },
-           
             { src: "IMG/4", q: "ما اسم هذا الجزء باللون البرتقالي وماهي وظيفته", a: "rudder يتحكم  بحركة مقدمة الطائرة يمين ويسار بدون ميلان الاجنحه" },
             { src: "IMG/5", q: "هل هذا الجناح متحرك ام ثابت", a: "متحرك" },
             { src: "IMG/6", q: "ما اسم الجناح باللون الاخضر", a: "Elevator" },
@@ -146,7 +246,6 @@
             { src: "IMG/20", q: "من أين يستمد هذا القمر الصناعي الملاحي طاقته؟", a: "من الشمس (الألواح الشمسية)" }
         ];
 
-        // دالة لخلط المصفوفة العشوائية
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -157,13 +256,56 @@
         shuffleArray(imagePool);
         let currentIndex = 0;
 
-       function showNextRandomImage() {
+        let countdownInterval;
+        let timeLeft = 60;
+
+        function startTimer() {
+            clearInterval(countdownInterval);
+            timeLeft = 60;
+            const timerEl = document.getElementById('timer-display');
+            timerEl.innerText = "01:00";
+            timerEl.classList.remove('timer-warning');
+            timerEl.style.display = 'block'; 
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                
+                m = m < 10 ? "0" + m : m;
+                s = s < 10 ? "0" + s : s;
+                
+                timerEl.innerText = `${m}:${s}`;
+
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    timerEl.classList.add('timer-warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timerEl.innerText = "00:00";
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdownInterval);
+        }
+
+        function showNextRandomImage() {
             if (currentIndex >= imagePool.length) {
                 document.getElementById('draw-btn').innerText = "اكتملت جميع الصور! 🎓";
                 document.getElementById('draw-btn').disabled = true;
                 document.getElementById('ans-btn').style.display = 'none';
+                stopTimer();
+                document.getElementById('timer-display').style.display = 'none';
                 return;
             }
+
+            // إخفاء العداد أثناء تبديل الصورة
+            stopTimer();
+            document.getElementById('timer-display').style.display = 'none';
 
             const currentData = imagePool[currentIndex];
             const imgElement = document.getElementById('display-img');
@@ -175,46 +317,38 @@
 
             placeholder.style.display = 'none';
             qaBox.style.display = 'block';
-            
-            // نخفي الصورة مؤقتاً لحد ما نلكى الامتداد الصحيح
             imgElement.style.display = 'none'; 
 
-            // --- الطريقة الاحترافية والمضمونة للبحث عن الصورة ---
             const extensions = ['.jpg', '.png', '.jpeg', '.webp', '.gif', '.JPG', '.PNG'];
             let extIndex = 0;
-            
-            // هذا السطر يمسح أي امتداد مكتوب بالغلط بالمصفوفة (حتى لو نسيت تمسح .PNG من الصورة الأولى راح يعالجه)
             let cleanSrc = currentData.src.replace(/\.[a-zA-Z0-9]+$/, ''); 
 
-            // دالة للبحث بالذاكرة
             function tryLoadImage() {
                 if (extIndex < extensions.length) {
-                    let testImg = new Image(); // إنشاء صورة وهمية للفحص
+                    let testImg = new Image(); 
                     testImg.onload = function() {
-                        // ممتاز! لقينا الامتداد الصحيح، هسه نعرضها بالشاشة
                         imgElement.src = testImg.src;
-                        
-                        // تفعيل الأنيميشن
                         imgElement.classList.remove('img-anim');
                         void imgElement.offsetWidth; 
                         imgElement.classList.add('img-anim');
                         imgElement.style.display = 'block';
+                        
+                        // بدء المؤقت بعد تحميل الصورة بنجاح
+                        startTimer();
                     };
                     testImg.onerror = function() {
-                        // إذا فشل هذا الامتداد، جرب اللي بعده فوراً
                         extIndex++;
                         tryLoadImage();
                     };
-                    // جرب الامتداد الحالي
                     testImg.src = cleanSrc + extensions[extIndex];
                 } else {
                     console.error("الصورة غير موجودة بجميع الامتدادات: " + cleanSrc);
+                    // حتى لو لم تظهر الصورة، نبدأ المؤقت
+                    startTimer();
                 }
             }
             
-            // شغل عملية البحث
             tryLoadImage(); 
-            // -------------------------------------------------------------
 
             qText.innerText = `❓ ${currentData.q}`;
             aText.innerText = `✅ الجواب: ${currentData.a}`;
@@ -225,16 +359,15 @@
             winSound.play().catch(e=>{});
 
             currentIndex++;
-            btn.innerText = `الصورة التالية (${currentIndex}/20)`;
+            btn.innerText = `الصورة التالية (${currentIndex}/18)`;
             
-            if(currentIndex === 20) {
+            if(currentIndex === 18) {
                 btn.style.background = "linear-gradient(135deg, #4ade80, #22c55e)";
             }
         }
         
-
-        // دالة إظهار الجواب
         function showAnswer() {
+            stopTimer(); // إيقاف العداد عند إظهار الجواب
             document.getElementById('answer-text').style.display = 'block';
         }
 

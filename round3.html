@@ -5,379 +5,527 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المسابقة الكبرى - سباق التوجيه الحاسم</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         
+        :root {
+            --gold: #fbbf24; --gold-glow: rgba(251, 191, 36, 0.6);
+            --silver: #cbd5e1; --silver-glow: rgba(203, 213, 225, 0.6);
+            --bronze: #f97316; --bronze-glow: rgba(249, 115, 22, 0.6);
+            --bg-dark: #010409; 
+            --glass-border: rgba(56, 189, 248, 0.3);
+            --neon-blue: #38bdf8;
+            /* ألوان معدنية واقعية للمحطة */
+            --metal-base: #9ca3af;
+            --metal-dark: #374151;
+            --metal-light: #f3f4f6;
+            --metal-gradient: linear-gradient(135deg, var(--metal-light) 0%, var(--metal-base) 40%, var(--metal-dark) 100%);
+        }
+
         body {
             margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
-            background: radial-gradient(circle at top, #1e1b4b 0%, #020617 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            min-height: 100vh; overflow: hidden; padding: 20px 0; box-sizing: border-box;
-            transition: transform 0.1s;
-        }
-
-        /* تأثير النجوم المتحركة بالخلفية */
-        .stars { 
-            position: absolute; top: -100%; left: 0; width: 100%; height: 200%; pointer-events: none; z-index: 0; 
+            background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), 
-                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), 
-                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), 
-                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)); 
-            background-repeat: repeat; background-size: 200px 200px; opacity: 0.6; 
-            animation: moveStars 15s linear infinite;
-        }
-        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(50%); } }
-
-        /* اهتزاز الشاشة عند الانطلاق */
-        .shake { animation: screenShake 0.3s ease-in-out; }
-        @keyframes screenShake { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(2px, -2px); } 50% { transform: translate(-2px, 2px); } 75% { transform: translate(2px, 2px); } }
-
-        /* القائمة الجانبية */
-        .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .nav-btn { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; border: 1px solid transparent; padding: 15px 20px; font-family: 'Tajawal', sans-serif; font-size: 1.1rem; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
-        .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
-        .nav-btn.active { background: linear-gradient(135deg, #f59e0b, #b45309); color: #000; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.5); transform: scale(1.05); }
-
-        .side-logo { position: absolute; top: 30px; width: 12vw; max-width: 120px; z-index: 100; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
-        .logo-right { right: 150px; } .logo-left { left: 40px; }
-
-        /* العنوان الرئيسي */
-        .header-container { text-align: center; z-index: 10; margin-right: 120px; margin-bottom: 20px; }
-        h1 { font-size: 2.8rem; margin: 0; color: #fbd786; font-weight: 900; text-shadow: 0 0 30px rgba(245, 158, 11, 0.6); letter-spacing: 1px; }
-        .subtitle { font-size: 1.2rem; color: #94a3b8; margin-top: 5px; font-weight: 700; }
-
-        /* منطقة السباق */
-        .race-arena {
-            width: 85%; max-width: 1100px; height: 65vh; margin-right: 120px;
-            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px;
-            position: relative; display: flex; justify-content: space-evenly;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.6);
-            z-index: 5; overflow: hidden; backdrop-filter: blur(5px);
+                radial-gradient(circle at 20% 30%, rgba(30, 20, 70, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(10, 40, 70, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(15, 15, 25, 1) 0%, var(--bg-dark) 100%);
+            background-size: cover; background-position: center; background-attachment: fixed;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            height: 100vh; overflow: hidden; box-sizing: border-box;
+            perspective: 1200px;
         }
 
-        .finish-line {
-            position: absolute; top: 50px; left: 0; width: 100%; height: 8px;
-            background: repeating-linear-gradient(90deg, #4ade80, #4ade80 20px, transparent 20px, transparent 40px);
-            box-shadow: 0 0 25px rgba(74, 222, 128, 0.9); z-index: 1; opacity: 0.9;
+        /* --- إطار قمرة القيادة --- */
+        .cockpit-window {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 99;
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 0 0 150px rgba(15, 23, 42, 0.8);
+            border: 15px solid #060b14; border-radius: 40px; box-sizing: border-box;
         }
-        .finish-text { position: absolute; top: 15px; width: 100%; text-align: center; color: #4ade80; font-weight: 900; font-size: 1.4rem; letter-spacing: 3px; text-shadow: 0 0 15px rgba(74, 222, 128, 0.8); z-index: 2;}
-
-        .lane {
-            position: relative; width: 28%; height: 100%;
-            border-left: 2px dashed rgba(255, 255, 255, 0.08); border-right: 2px dashed rgba(255, 255, 255, 0.08);
-            display: flex; flex-direction: column; align-items: center;
-            background: linear-gradient(0deg, rgba(255,255,255,0.02), transparent);
-        }
-
-        .rocket-wrapper {
-            position: absolute; bottom: 130px;
-            transition: bottom 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 10; display: flex; flex-direction: column; align-items: center;
-        }
-
-        .rocket-body {
-            width: 55px; height: 100px; background: #e2e8f0;
-            border-radius: 50% 50% 15% 15%; position: relative;
-            box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.1);
-        }
-        .rocket-body::before { content: ''; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); width: 18px; height: 18px; background: #020617; border: 4px solid #cbd5e1; border-radius: 50%; box-shadow: inset 0 0 5px rgba(255,255,255,0.5); }
+        .cockpit-window::before, .cockpit-window::after { content: ""; position: absolute; left: 15%; width: 70%; height: 40px; }
+        .cockpit-window::before { top: -15px; background: linear-gradient(to bottom, #1e293b, #060b14); border-bottom-left-radius: 50%; border-bottom-right-radius: 50%; border-bottom: 2px solid var(--neon-blue); box-shadow: 0 5px 25px rgba(56, 189, 248, 0.4); }
+        .cockpit-window::after { bottom: -15px; background: linear-gradient(to top, #1e293b, #060b14); border-top-left-radius: 50%; border-top-right-radius: 50%; border-top: 2px solid var(--neon-blue); box-shadow: 0 -5px 25px rgba(56, 189, 248, 0.4); }
         
-        .rank-1 .rocket-body { background: linear-gradient(135deg, #fef08a, #ca8a04); box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 25px rgba(253, 224, 71, 0.4); }
-        .rank-1 .rocket-body::before { border-color: #fef08a; }
-        .rank-2 .rocket-body { background: linear-gradient(135deg, #f1f5f9, #94a3b8); box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 25px rgba(226, 232, 240, 0.4); }
-        .rank-2 .rocket-body::before { border-color: #f1f5f9; }
-        .rank-3 .rocket-body { background: linear-gradient(135deg, #fed7aa, #c2410c); box-shadow: inset -8px 0 15px rgba(0,0,0,0.3), 0 0 25px rgba(253, 186, 116, 0.4); }
-        .rank-3 .rocket-body::before { border-color: #fed7aa; }
+        .hud-corner { position: fixed; width: 50px; height: 50px; border: 3px solid transparent; z-index: 98; pointer-events: none; }
+        .hud-tl { top: 30px; left: 30px; border-top-color: var(--neon-blue); border-left-color: var(--neon-blue); }
+        .hud-tr { top: 30px; right: 30px; border-top-color: var(--neon-blue); border-right-color: var(--neon-blue); }
+        .hud-bl { bottom: 30px; left: 30px; border-bottom-color: var(--neon-blue); border-left-color: var(--neon-blue); }
+        .hud-br { bottom: 30px; right: 30px; border-bottom-color: var(--neon-blue); border-right-color: var(--neon-blue); }
 
-        .engine-flame {
-            width: 35px; height: 60px; background: linear-gradient(180deg, #fbd786, #ef4444, transparent);
-            border-radius: 50%; margin-top: -8px; display: none; box-shadow: 0 0 30px rgba(239, 68, 68, 1);
-        }
-        .moving .engine-flame { display: block; animation: flamePulse 0.1s infinite alternate; }
-        .moving .rocket-body { animation: shakeRocket 0.1s infinite; }
+        .stars-container { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; box-shadow: inset 0 0 100px rgba(56, 189, 248, 0.1); }
+        .star { position: absolute; background: #fff; border-radius: 50%; top: -10vh; }
+        @keyframes moveDownStars { 0% { transform: translateY(0vh); } 100% { transform: translateY(110vh); } }
 
-        @keyframes flamePulse { 0% { transform: scaleY(1) scaleX(0.9); opacity: 0.8; } 100% { transform: scaleY(1.4) scaleX(1.1); opacity: 1; } }
-        @keyframes shakeRocket { 0% { transform: translateX(1.5px); } 50% { transform: translateX(-1.5px); } 100% { transform: translateX(1.5px); } }
-
-        .launchpad {
-            position: absolute; bottom: 0; width: 100%; height: 110px;
-            background: linear-gradient(0deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.4), transparent);
-            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-            border-top: 2px solid rgba(255,255,255,0.15); z-index: 5; padding-bottom: 15px;
-        }
-        .player-name { font-size: 1.5rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 5px; }
-        .player-rank { font-size: 1rem; font-weight: 700; padding: 4px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
-        .badge-1 { background: rgba(202, 138, 4, 0.25); color: #fde047; border: 1px solid #ca8a04; }
-        .badge-2 { background: rgba(148, 163, 184, 0.25); color: #e2e8f0; border: 1px solid #94a3b8; }
-        .badge-3 { background: rgba(194, 65, 12, 0.25); color: #fdba74; border: 1px solid #c2410c; }
-
-        /* لوحة تحكم المقدم */
-        .admin-controls {
-            width: 85%; max-width: 1100px; margin-right: 120px; margin-top: 20px;
-            background: rgba(15, 23, 42, 0.85); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px; display: flex; justify-content: center; gap: 25px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+        /* ========================================= */
+        /* --- محطة الفضاء الواقعية والاحترافية 3D --- */
+        /* ========================================= */
+        .station-container {
+            position: absolute; top: 30vh; left: 15vw; 
+            width: 0; height: 0; z-index: 1; pointer-events: none;
+            transform: scale(0.9);
         }
 
-        .btn-launch {
-            background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #334155; color: #fff;
-            padding: 12px 30px; font-size: 1.1rem; font-family: 'Tajawal', sans-serif; font-weight: 700;
-            border-radius: 15px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; overflow: hidden;
-        }
-        .btn-launch::after { content: 'Key ' attr(data-key); position: absolute; top: -10px; right: -10px; background: rgba(255,255,255,0.2); font-size: 0.7rem; padding: 15px 10px 5px 15px; border-radius: 50%; transform: rotate(45deg); font-weight: 900; }
-        .btn-launch:hover { background: #334155; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-        .btn-launch:active { transform: translateY(1px); }
-        .btn-launch:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(1); }
-        
-        .btn-launch.btn-gold { border-color: rgba(202, 138, 4, 0.5); }
-        .btn-launch.btn-gold:hover { background: rgba(202, 138, 4, 0.2); border-color: #fde047; box-shadow: 0 10px 25px rgba(202, 138, 4, 0.3); }
-        
-        .btn-launch.btn-silver { border-color: rgba(148, 163, 184, 0.5); }
-        .btn-launch.btn-silver:hover { background: rgba(148, 163, 184, 0.2); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(148, 163, 184, 0.3); }
-        
-        .btn-launch.btn-bronze { border-color: rgba(194, 65, 12, 0.5); }
-        .btn-launch.btn-bronze:hover { background: rgba(194, 65, 12, 0.2); border-color: #fdba74; box-shadow: 0 10px 25px rgba(194, 65, 12, 0.3); }
-
-        /* ================= شاشة التتويج النهائية ================= */
-        #fireworks-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 2000; animation: fadeInOverlay 1s; backdrop-filter: blur(10px);
-        }
-        @keyframes fadeInOverlay { from { opacity: 0; backdrop-filter: blur(0); } to { opacity: 1; backdrop-filter: blur(10px); } }
-
-        .championship-title { font-size: 4rem; color: #fff; font-weight: 900; margin-bottom: 60px; text-shadow: 0 0 30px rgba(255,255,255,0.6); animation: scaleTitle 1.5s ease-out; }
-        @keyframes scaleTitle { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-        .final-podium { display: flex; justify-content: center; align-items: flex-end; gap: 25px; height: 350px; position: relative; z-index: 10; }
-
-        .podium-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            padding: 25px 20px; border-radius: 25px 25px 0 0; width: 240px;
-            animation: slideUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(150px);
-            position: relative; box-shadow: inset 0 10px 30px rgba(255,255,255,0.2);
+        .space-station {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: floatAndRotate 40s infinite linear; 
         }
 
-        .gold-podium { background: linear-gradient(to top, rgba(202, 138, 4, 0.9), rgba(253, 224, 71, 0.3)); border: 4px solid #fde047; border-bottom: none; height: 340px; animation-delay: 1.5s; box-shadow: 0 0 60px rgba(202, 138, 4, 0.8); z-index: 3;}
-        .silver-podium { background: linear-gradient(to top, rgba(148, 163, 184, 0.9), rgba(226, 232, 240, 0.3)); border: 4px solid #e2e8f0; border-bottom: none; height: 260px; animation-delay: 1s; z-index: 2;}
-        .bronze-podium { background: linear-gradient(to top, rgba(194, 65, 12, 0.9), rgba(253, 186, 116, 0.3)); border: 4px solid #fdba74; border-bottom: none; height: 190px; animation-delay: 0.5s; z-index: 1;}
-        
-        .medal-icon { font-size: 4.5rem; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); margin-bottom: 15px; line-height: 1; }
-        .podium-name { font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.8); text-align: center; }
-        .podium-title { font-size: 1.3rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-top: 8px; letter-spacing: 1px;}
-        
-        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes floatAndRotate {
+            0% { transform: rotateX(15deg) rotateY(0deg) rotateZ(5deg) translateY(0px); }
+            50% { transform: rotateX(25deg) rotateY(180deg) rotateZ(-5deg) translateY(-20px); }
+            100% { transform: rotateX(15deg) rotateY(360deg) rotateZ(5deg) translateY(0px); }
+        }
 
-        /* قصاصات الورق (Confetti) */
-        .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; z-index: 5; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+        /* الوحدة المركزية المليئة بالتفاصيل (Texture lines) */
+        .station-core {
+            position: absolute; width: 44px; height: 180px;
+            transform-style: preserve-3d; transform: translate(-22px, -90px);
+        }
+        .station-core div {
+            position: absolute; background: var(--metal-gradient);
+            border: 1px solid #111827; 
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,0,0,0.3) 15px, rgba(0,0,0,0.3) 18px);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+        }
+        .core-front  { width: 44px; height: 180px; transform: translateZ(22px); }
+        .core-back   { width: 44px; height: 180px; transform: rotateY(180deg) translateZ(22px); }
+        .core-left   { width: 44px; height: 180px; transform: rotateY(-90deg) translateZ(22px); }
+        .core-right  { width: 44px; height: 180px; transform: rotateY(90deg) translateZ(22px); }
+        .core-top    { width: 44px; height: 44px; transform: rotateX(90deg) translateZ(22px); background: #030712; border: 3px solid #38bdf8; box-shadow: 0 0 15px #38bdf8; border-radius: 50%; background-image: none; }
+        
+        /* محرك الدفع البلازمي السفلي */
+        .core-bottom { 
+            width: 44px; height: 44px; transform: rotateX(-90deg) translateZ(158px); 
+            background: radial-gradient(circle, #ffffff 10%, #38bdf8 40%, #0369a1 80%); 
+            box-shadow: 0 0 30px #0284c7, 0 0 60px #38bdf8; border-radius: 50%; background-image: none;
+            animation: enginePulse 1.5s infinite alternate;
+        }
+        @keyframes enginePulse { 0% { box-shadow: 0 0 20px #0284c7, 0 0 40px #38bdf8; transform: rotateX(-90deg) translateZ(158px) scale(0.95); } 100% { box-shadow: 0 0 40px #0284c7, 0 0 80px #38bdf8; transform: rotateX(-90deg) translateZ(158px) scale(1.05); } }
 
+        /* وحدة اتصال ثانوية */
+        .sub-module {
+            position: absolute; width: 24px; height: 60px;
+            transform-style: preserve-3d; transform: translate(11px, 20px) translateZ(30px) rotateX(90deg);
+        }
+        .sub-module div { position: absolute; background: var(--metal-gradient); border: 1px solid #111827; }
+        .sub-front { width: 24px; height: 60px; transform: translateZ(12px); }
+        .sub-back { width: 24px; height: 60px; transform: rotateY(180deg) translateZ(12px); }
+        .sub-left { width: 24px; height: 60px; transform: rotateY(-90deg) translateZ(12px); }
+        .sub-right { width: 24px; height: 60px; transform: rotateY(90deg) translateZ(12px); }
+
+        /* حلقة الجاذبية المعززة */
+        .gravity-ring {
+            position: absolute; width: 170px; height: 170px;
+            border: 8px solid rgba(55, 65, 81, 0.9);
+            border-top: 8px solid rgba(56, 189, 248, 0.9);
+            border-bottom: 8px solid rgba(56, 189, 248, 0.9);
+            border-radius: 50%;
+            transform-style: preserve-3d;
+            transform: translate(-85px, -10px) rotateX(75deg);
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.4), inset 0 0 20px rgba(56, 189, 248, 0.3);
+            animation: spinRing 12s infinite linear;
+        }
+        @keyframes spinRing { 100% { transform: translate(-85px, -10px) rotateX(75deg) rotateZ(360deg); } }
+
+        /* الهيكل الحامل للألواح الشمسية */
+        .solar-truss {
+            position: absolute; width: 400px; height: 12px; 
+            background: repeating-linear-gradient(45deg, #1f2937, #1f2937 5px, #374151 5px, #374151 10px);
+            transform: translate(-200px, 0) translateZ(0); transform-style: preserve-3d;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.9); border-top: 2px solid #9ca3af; border-bottom: 2px solid #111827; border-radius: 4px;
+        }
+
+        /* الألواح الشمسية */
+        .solar-panel {
+            position: absolute; width: 160px; height: 80px;
+            background-color: #082f49;
+            background-image: 
+                linear-gradient(to right, rgba(125, 211, 252, 0.3) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(125, 211, 252, 0.3) 1px, transparent 1px),
+                linear-gradient(135deg, #082f49 0%, #0284c7 50%, #082f49 100%);
+            background-size: 10px 10px, 10px 10px, 100% 100%;
+            border: 3px solid #94a3b8; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 0 20px rgba(2, 132, 199, 0.8);
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+        .solar-panel::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.4) 50%, transparent 55%);
+            transform: rotate(30deg); animation: panelShine 6s infinite linear;
+        }
+        @keyframes panelShine { 0% { left: -100%; } 100% { left: 100%; } }
+        .panel-left { transform: translate(-190px, -34px) rotateX(20deg); }
+        .panel-right { transform: translate(30px, -34px) rotateX(-20deg); }
+
+        /* رادار اتصالات دقيق */
+        .radar-dish {
+            position: absolute; width: 55px; height: 55px;
+            background: radial-gradient(circle at 40% 40%, #e5e7eb 0%, #9ca3af 50%, #374151 100%);
+            border-radius: 50%; border: 2px solid #f3f4f6;
+            transform-style: preserve-3d;
+            transform: translate(-27px, -110px) translateZ(40px) rotateX(55deg);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 15px 25px rgba(0,0,0,0.6);
+            animation: sweepRadar 8s infinite alternate ease-in-out;
+        }
+        .radar-dish::before {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 4px; height: 30px;
+            background: #10b981; transform: translate(-50%, -100%) rotateX(-50deg);
+            border-radius: 2px; box-shadow: 0 0 12px #10b981;
+        }
+        @keyframes sweepRadar { 
+            0% { transform: translate(-27px, -110px) translateZ(40px) rotateX(40deg) rotateY(-45deg); } 
+            100% { transform: translate(-27px, -110px) translateZ(40px) rotateX(70deg) rotateY(45deg); } 
+        }
+
+        /* أضواء الملاحة */
+        .nav-light { position: absolute; width: 8px; height: 8px; border-radius: 50%; animation: blinkLight 1s infinite; z-index: 10; }
+        .light-red { background: #ef4444; box-shadow: 0 0 20px #ef4444; transform: translate(-195px, -4px) translateZ(10px); }
+        .light-green { background: #10b981; box-shadow: 0 0 20px #10b981; transform: translate(187px, -4px) translateZ(10px); }
+        .light-strobe { background: #ffffff; box-shadow: 0 0 25px #ffffff; transform: translate(0px, -90px) translateZ(35px); animation: strobeLight 2s infinite; }
+        @keyframes blinkLight { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.1; } }
+        @keyframes strobeLight { 0%, 5%, 10% { opacity: 1; } 6%, 11%, 100% { opacity: 0; } }
+
+        .shake { animation: screenShake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+        @keyframes screenShake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+
+        /* الهيدر والقائمة */
+        .top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 25px 50px 10px; z-index: 10; box-sizing: border-box; }
+        .logos { display: flex; align-items: center; justify-content: flex-start; }
+        .logos img { height: 65px; filter: drop-shadow(0 0 15px rgba(56,189,248,0.4)); }
+        
+        .header-titles { 
+            text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(2, 6, 23, 0.75); backdrop-filter: blur(15px); padding: 15px 40px; border-radius: 25px;
+            border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(56, 189, 248, 0.1); max-width: 600px; margin: 0 auto;
+        }
+        .header-titles h1 { font-size: 3.5rem; margin: 0; font-weight: 900; letter-spacing: 2px; line-height: 1; color: #ffffff; text-shadow: 0 0 15px rgba(56, 189, 248, 0.9), 0 5px 5px rgba(0,0,0,0.8); }
+        .header-titles p { font-size: 1.1rem; color: #cbd5e1; margin: 0; font-weight: 700; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+        .sidebar { display: flex; gap: 10px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); padding: 8px; border-radius: 16px; border: 1px solid var(--glass-border); }
+        .nav-btn { color: #94a3b8; padding: 10px 20px; text-decoration: none; font-weight: 700; border-radius: 10px; transition: 0.3s; font-size: 0.9rem; }
+        .nav-btn.active { background: var(--neon-blue); color: #020617; box-shadow: 0 0 15px rgba(56, 189, 248, 0.6); }
+
+        /* مؤقت السؤال */
+        .moderator-panel { z-index: 10; display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; background: rgba(15, 23, 42, 0.9); padding: 10px 30px; border-radius: 50px; border: 1px solid var(--neon-blue); box-shadow: 0 0 25px rgba(56, 189, 248, 0.3); backdrop-filter: blur(10px); }
+        .timer-label { font-size: 1rem; color: var(--neon-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .timer-display { font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--neon-blue); font-variant-numeric: tabular-nums; min-width: 60px; text-align: center; line-height: 1; }
+        .timer-display.warning { color: #ef4444; text-shadow: 0 0 10px #ef4444; animation: blink 1s infinite; }
+        .start-timer-btn { background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue); padding: 8px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: 'Tajawal', sans-serif; }
+        .start-timer-btn:hover { background: var(--neon-blue); color: #020617; }
+
+        /* حلبة السباق */
+        .race-arena { width: 85%; max-width: 1100px; flex-grow: 1; margin: 15px 0 20px 0; background: rgba(2, 6, 23, 0.4); border: 2px solid var(--glass-border); border-radius: 24px; position: relative; display: flex; justify-content: space-evenly; backdrop-filter: blur(8px); box-shadow: inset 0 0 80px rgba(56,189,248,0.1), 0 20px 50px rgba(0,0,0,0.8); padding-bottom: 120px; overflow: hidden; }
+        .finish-line-container { position: absolute; top: 30px; left: 0; width: 100%; height: 40px; z-index: 2; display: flex; justify-content: center; align-items: center; background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.3), transparent); border-bottom: 3px dashed #4ade80; box-shadow: 0 10px 20px rgba(74, 222, 128, 0.2); }
+        .finish-text { color: #4ade80; font-weight: 900; font-size: 1.5rem; letter-spacing: 5px; text-shadow: 0 0 15px #4ade80; }
+        .lane { position: relative; width: 25%; height: 100%; display: flex; justify-content: center; background: linear-gradient(180deg, rgba(56,189,248,0.01) 0%, rgba(56,189,248,0.08) 100%); border-left: 1px solid rgba(56,189,248,0.1); border-right: 1px solid rgba(56,189,248,0.1); }
+        .rocket-wrapper { position: absolute; bottom: 0; width: 90px; height: 140px; display: flex; flex-direction: column; align-items: center; transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; will-change: transform; }
+        .rocket-svg { width: 100%; height: 100%; filter: drop-shadow(0 15px 15px rgba(0,0,0,0.9)); transition: 0.1s; }
+        .launchpad { position: absolute; bottom: 0; width: 100%; padding: 15px 0; background: rgba(15,23,42,0.95); border-top: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 30; }
+        .player-name { font-size: 1.3rem; font-weight: 900; color: #fff; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .player-rank { font-size: 0.85rem; font-weight: 700; padding: 5px 15px; border-radius: 20px; text-transform: uppercase; }
+        
+        .rank-gold .player-rank { background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid var(--gold); box-shadow: 0 0 15px var(--gold-glow); }
+        .rank-silver .player-rank { background: rgba(203, 213, 225, 0.15); color: var(--silver); border: 1px solid var(--silver); box-shadow: 0 0 15px var(--silver-glow); }
+        .rank-bronze .player-rank { background: rgba(249, 115, 22, 0.15); color: var(--bronze); border: 1px solid var(--bronze); box-shadow: 0 0 15px var(--bronze-glow); }
+
+        .rank-gold .rocket-svg path.body { fill: url(#gold-grad); } .rank-gold .rocket-svg path.fin { fill: #b45309; }
+        .rank-silver .rocket-svg path.body { fill: url(#silver-grad); } .rank-silver .rocket-svg path.fin { fill: #475569; }
+        .rank-bronze .rocket-svg path.body { fill: url(#bronze-grad); } .rank-bronze .rocket-svg path.fin { fill: #7c2d12; }
+
+        .engine-fire { opacity: 0; transition: 0.15s; transform-origin: top center; }
+        .rocket-wrapper.moving .engine-fire { opacity: 1; animation: fireFlicker 0.1s infinite alternate; }
+        @keyframes fireFlicker { 0% { transform: scale(0.9) translateY(0); opacity: 0.8; } 100% { transform: scale(1.2) translateY(5px); opacity: 1; } }
+
+        /* لوحة التحكم السفلية */
+        .controls-panel { width: 100%; padding: 20px 40px; background: #020617; z-index: 100; border-top: 2px solid var(--glass-border); display: flex; justify-content: center; gap: 30px; box-sizing: border-box; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); position: relative; }
+        .btn-launch { flex: 1; max-width: 300px; padding: 15px 20px; border-radius: 16px; border: none; background: rgba(15, 23, 42, 0.9); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); outline: none; transition: 0.2s;}
+        .btn-launch:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+        .btn-launch .btn-key { background: rgba(56,189,248,0.2); padding: 5px 12px; border-radius: 8px; font-weight: 900; color: var(--neon-blue);}
+        .btn-launch .btn-name { font-size: 1.3rem; font-weight: 900; }
+        .btn-gold { border: 1px solid rgba(251, 191, 36, 0.5); color: var(--gold); }
+        .btn-silver { border: 1px solid rgba(203, 213, 225, 0.5); color: var(--silver); }
+        .btn-bronze { border: 1px solid rgba(249, 115, 22, 0.5); color: var(--bronze); }
+
+        /* شاشة التتويج */
+        #victory-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; opacity: 0; transition: opacity 1s; perspective: 1000px; }
+        
+        /* القسم الجديد للشعارات داخل شاشة الفوز */
+        .victory-logos { display: flex; gap: 40px; margin-bottom: 20px; align-items: center; animation: logoFade 1.5s ease-out; }
+        .victory-logos img { height: 110px; filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)); }
+        @keyframes logoFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .victory-title { font-size: 3.2rem; font-weight: 900; background: linear-gradient(to right, #fbbf24, #fff, #fbbf24); -webkit-background-clip: text; color: transparent; margin-bottom: 30px; text-shadow: 0 0 40px rgba(251, 191, 36, 0.6); text-align: center; }
+        .podium-container { display: flex; align-items: flex-end; gap: 30px; height: 400px; }
+        .podium-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 1)); border: 2px solid transparent; border-radius: 24px; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; width: 220px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9); transform: translateY(100px) rotateX(20deg); opacity: 0; position: relative; }
+        .podium-card.animate { animation: popUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popUp { to { transform: translateY(0) rotateX(0); opacity: 1; } }
+        .podium-gold { height: 350px; z-index: 3; animation-delay: 1.5s; box-shadow: 0 0 60px var(--gold-glow); border-color: var(--gold); }
+        .podium-silver { height: 280px; z-index: 2; animation-delay: 1s; border-color: var(--silver); box-shadow: 0 0 30px var(--silver-glow);}
+        .podium-bronze { height: 220px; z-index: 1; animation-delay: 0.5s; border-color: var(--bronze); box-shadow: 0 0 30px var(--bronze-glow);}
+        .medal-img { font-size: 5rem; margin-bottom: 15px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.6)); }
+        .winner-name { font-size: 1.8rem; font-weight: 900; color: #fff; text-align: center; }
+        .winner-rank { font-size: 1.1rem; color: #94a3b8; font-weight: 700; margin-top: 5px; }
+        #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+
+        @media (max-width: 1024px) {
+            .cockpit-window { border-width: 8px; border-radius: 20px; }
+            .top-bar { flex-direction: column; gap: 10px; padding: 25px 15px 10px; }
+            .logos { display: none; }
+            .header-titles { padding: 10px 20px; }
+            .header-titles h1 { font-size: 2.2rem; }
+            .moderator-panel { scale: 0.8; }
+            .race-arena { width: 95%; height: 50vh; padding-bottom: 100px; }
+            .podium-container { scale: 0.7; transform-origin: bottom; }
+            .station-container { left: 5vw; transform: scale(0.6); } 
+            .victory-logos img { height: 80px; }
+            .victory-title { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="stars"></div>
 
-    <div class="sidebar">
-        <a href="index.html" class="nav-btn">الجولة الأولى (الأسئلة)</a>
-        <a href="round2.html" class="nav-btn">الجولة الثانية (الصور)</a>
-        <a href="#" class="nav-btn active">🚀 سباق التوجيه الحاسم</a>
+    <div class="cockpit-window"></div>
+    <div class="hud-corner hud-tl"></div><div class="hud-corner hud-tr"></div>
+    <div class="hud-corner hud-bl"></div><div class="hud-corner hud-br"></div>
+
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true">
+      <defs>
+        <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fef08a" /><stop offset="100%" stop-color="#b45309" /></linearGradient>
+        <linearGradient id="silver-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f1f5f9" /><stop offset="100%" stop-color="#475569" /></linearGradient>
+        <linearGradient id="bronze-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fdba74" /><stop offset="100%" stop-color="#9a3412" /></linearGradient>
+      </defs>
+    </svg>
+
+    <div class="stars-container" id="stars-bg"></div>
+    
+    <div class="station-container">
+        <div class="space-station">
+            <div class="gravity-ring"></div>
+            <div class="station-core">
+                <div class="core-front"></div><div class="core-back"></div><div class="core-left"></div><div class="core-right"></div><div class="core-top"></div><div class="core-bottom"></div>
+            </div>
+            <div class="sub-module">
+                <div class="sub-front"></div><div class="sub-back"></div><div class="sub-left"></div><div class="sub-right"></div>
+            </div>
+            <div class="solar-truss"></div>
+            <div class="solar-panel panel-left"></div>
+            <div class="solar-panel panel-right"></div>
+            <div class="radar-dish"></div>
+            <div class="nav-light light-red"></div><div class="nav-light light-green"></div><div class="nav-light light-strobe"></div>
+        </div>
     </div>
 
-    <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
-    <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
+    <div class="top-bar">
+        <div class="logos">
+            <img src="IMG/UOT2.PNG" alt="شعار القسم" onerror="this.style.display='none'">
+        </div>
+        <div class="header-titles">
+            <h1>السباق الحاسم</h1>
+            <p>الجولة النهائية لأبطال قسم هندسة الملاحة والتوجيه 2026</p>
+        </div>
+        <div class="sidebar">
+            <a href="index.html" class="nav-btn">الأسئلة</a>
+            <a href="round2.html" class="nav-btn">الصور</a>
+            <a href="#" class="nav-btn active">السباق</a>
+        </div>
+    </div>
 
-    <div class="header-container">
-        <h1>🚀 سباق الصواريخ الحاسم 🚀</h1>
-        <div class="subtitle">المتأهلون الثلاثة للنهائي.. من سيصل إلى الهدف أولاً؟ (استخدم الأرقام 1, 2, 3 للإطلاق)</div>
+    <div class="moderator-panel">
+        <span class="timer-label">المؤقت:</span>
+        <div id="q-timer" class="timer-display">--</div>
+        <button class="start-timer-btn" onclick="startQuestionTimer()">ابدأ</button>
     </div>
 
     <div class="race-arena">
-        <div class="finish-text">🏁 خط النهاية (الهدف) 🏁</div>
-        <div class="finish-line"></div>
+        <div class="finish-line-container"><div class="finish-text">الهدف 🎯</div></div>
         
-        <div class="lane" id="lane-0">
-            <div class="rocket-wrapper rank-1" id="rocket-0">
-                <div class="rocket-body"></div>
-                <div class="engine-flame"></div>
+        <div class="lane">
+            <div class="rocket-wrapper rank-gold" id="rocket-0">
+                <svg class="rocket-svg" viewBox="0 0 80 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="engine-fire" d="M30 115C30 115 40 150 40 150C40 150 50 115 50 115L30 115Z" fill="#ef4444"/>
+                    <path class="engine-fire" d="M34 115C34 115 40 135 40 135C40 135 46 115 46 115L34 115Z" fill="#fbbf24"/>
+                    <path class="fin" d="M20 80L0 120H24V80H20Z"/><path class="fin" d="M60 80L80 120H56V80H60Z"/>
+                    <path d="M32 110H48V120H32V110Z" fill="#334155"/>
+                    <path class="body" d="M40 0C40 0 16 35 20 80V110H60V80C64 35 40 0 40 0Z"/>
+                    <circle cx="40" cy="50" r="10" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+                </svg>
             </div>
-            <div class="launchpad">
-                <div class="player-name" id="name-0">---</div>
-                <div class="player-rank badge-1">المركز الأول (مبدئياً)</div>
-            </div>
+            <div class="launchpad rank-gold"><div class="player-name" id="name-0">---</div><div class="player-rank">المركز الأول</div></div>
         </div>
 
-        <div class="lane" id="lane-1">
-            <div class="rocket-wrapper rank-2" id="rocket-1">
-                <div class="rocket-body"></div>
-                <div class="engine-flame"></div>
+        <div class="lane">
+            <div class="rocket-wrapper rank-silver" id="rocket-1">
+                <svg class="rocket-svg" viewBox="0 0 80 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="engine-fire" d="M30 115C30 115 40 150 40 150C40 150 50 115 50 115L30 115Z" fill="#ef4444"/>
+                    <path class="engine-fire" d="M34 115C34 115 40 135 40 135C40 135 46 115 46 115L34 115Z" fill="#fbbf24"/>
+                    <path class="fin" d="M20 80L0 120H24V80H20Z"/><path class="fin" d="M60 80L80 120H56V80H60Z"/>
+                    <path d="M32 110H48V120H32V110Z" fill="#334155"/>
+                    <path class="body" d="M40 0C40 0 16 35 20 80V110H60V80C64 35 40 0 40 0Z"/>
+                    <circle cx="40" cy="50" r="10" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+                </svg>
             </div>
-            <div class="launchpad">
-                <div class="player-name" id="name-1">---</div>
-                <div class="player-rank badge-2">المركز الثاني (مبدئياً)</div>
-            </div>
+            <div class="launchpad rank-silver"><div class="player-name" id="name-1">---</div><div class="player-rank">المركز الثاني</div></div>
         </div>
 
-        <div class="lane" id="lane-2">
-            <div class="rocket-wrapper rank-3" id="rocket-2">
-                <div class="rocket-body"></div>
-                <div class="engine-flame"></div>
+        <div class="lane">
+            <div class="rocket-wrapper rank-bronze" id="rocket-2">
+                <svg class="rocket-svg" viewBox="0 0 80 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="engine-fire" d="M30 115C30 115 40 150 40 150C40 150 50 115 50 115L30 115Z" fill="#ef4444"/>
+                    <path class="engine-fire" d="M34 115C34 115 40 135 40 135C40 135 46 115 46 115L34 115Z" fill="#fbbf24"/>
+                    <path class="fin" d="M20 80L0 120H24V80H20Z"/><path class="fin" d="M60 80L80 120H56V80H60Z"/>
+                    <path d="M32 110H48V120H32V110Z" fill="#334155"/>
+                    <path class="body" d="M40 0C40 0 16 35 20 80V110H60V80C64 35 40 0 40 0Z"/>
+                    <circle cx="40" cy="50" r="10" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+                </svg>
             </div>
-            <div class="launchpad">
-                <div class="player-name" id="name-2">---</div>
-                <div class="player-rank badge-3">المركز الثالث (مبدئياً)</div>
-            </div>
+            <div class="launchpad rank-bronze"><div class="player-name" id="name-2">---</div><div class="player-rank">المركز الثالث</div></div>
         </div>
     </div>
 
-    <div class="admin-controls">
-        <button class="btn-launch btn-gold" onclick="launchRocket(0)" id="btn-0" data-key="1">
-            <span>🚀 انطلاق</span><span id="btn-name-0" style="color:#fde047; font-size: 1.2rem;">الطالب 1</span>
-        </button>
-        <button class="btn-launch btn-silver" onclick="launchRocket(1)" id="btn-1" data-key="2">
-            <span>🚀 انطلاق</span><span id="btn-name-1" style="color:#e2e8f0; font-size: 1.2rem;">الطالب 2</span>
-        </button>
-        <button class="btn-launch btn-bronze" onclick="launchRocket(2)" id="btn-2" data-key="3">
-            <span>🚀 انطلاق</span><span id="btn-name-2" style="color:#fdba74; font-size: 1.2rem;">الطالب 3</span>
-        </button>
+    <div class="controls-panel">
+        <button class="btn-launch btn-gold" onclick="launchRocket(0)" id="btn-0"><div class="btn-info"><span class="btn-name" id="btn-name-0">---</span></div><span class="btn-key">1</span></button>
+        <button class="btn-launch btn-silver" onclick="launchRocket(1)" id="btn-1"><div class="btn-info"><span class="btn-name" id="btn-name-1">---</span></div><span class="btn-key">2</span></button>
+        <button class="btn-launch btn-bronze" onclick="launchRocket(2)" id="btn-2"><div class="btn-info"><span class="btn-name" id="btn-name-2">---</span></div><span class="btn-key">3</span></button>
     </div>
 
-    <div id="fireworks-overlay">
-        <div class="championship-title">🏆 أبطال هندسة الملاحة والتوجيه 2026 🏆</div>
+    <div id="victory-overlay">
+        <canvas id="confetti-canvas"></canvas>
         
-        <div class="final-podium">
-            <div class="podium-item silver-podium">
-                <div class="medal-icon">🥈</div>
-                <div class="podium-name" id="final-2nd">---</div>
-                <div class="podium-title">المركز الثاني</div>
-            </div>
-            
-            <div class="podium-item gold-podium">
-                <div class="medal-icon">🥇</div>
-                <div class="podium-name" id="final-1st" style="font-size: 2.5rem; color: #fde047;">---</div>
-                <div class="podium-title" style="color:#fde047; font-size: 1.5rem;">البطل الأول</div>
+        <div class="victory-logos">
+            <img src="IMG/UOT2.PNG" alt="الجامعة التكنولوجية">
             </div>
 
-            <div class="podium-item bronze-podium">
-                <div class="medal-icon">🥉</div>
-                <div class="podium-name" id="final-3rd">---</div>
-                <div class="podium-title">المركز الثالث</div>
+        <div class="victory-title">أبطال قسم هندسة الملاحة والتوجيه 2026</div>
+        
+        <div class="podium-container">
+            <div class="podium-card podium-silver" id="card-2">
+                <div class="medal-img">🥈</div>
+                <div class="winner-name" id="final-2nd">---</div>
+                <div class="winner-rank">المركز الثاني</div>
+            </div>
+            <div class="podium-card podium-gold" id="card-1">
+                <div class="medal-img">🥇</div>
+                <div class="winner-name" id="final-1st">---</div>
+                <div class="winner-rank" style="color:var(--gold);"> المركز الأول</div>
+            </div>
+            <div class="podium-card podium-bronze" id="card-3">
+                <div class="medal-img">🥉</div>
+                <div class="winner-name" id="final-3rd">---</div>
+                <div class="winner-rank"> المركز الثالث</div>
             </div>
         </div>
+        
+        <button onclick="location.reload()" style="margin-top:40px; padding:15px 40px; border-radius:15px; background:var(--neon-blue); color:#000; border:none; font-weight:bold; cursor:pointer;">إغلاق السباق</button>
     </div>
 
     <script>
+        let audioCtx;
+        function playTickSound() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        const starsBg = document.getElementById('stars-bg');
+        for(let i=0; i < 300; i++) {
+            let star = document.createElement('div'); star.className = 'star';
+            let layer = Math.random(); let size, duration, opacity;
+            if (layer < 0.6) { size = Math.random() * 1.5 + 0.5; duration = Math.random() * 15 + 15; opacity = Math.random() * 0.4 + 0.1; }
+            else if (layer < 0.9) { size = Math.random() * 2 + 1; duration = Math.random() * 8 + 7; opacity = Math.random() * 0.7 + 0.4; }
+            else { size = Math.random() * 3 + 1.5; duration = Math.random() * 3 + 2; opacity = Math.random() * 0.9 + 0.7; }
+            star.style.width = size + 'px'; star.style.height = size + 'px'; star.style.left = Math.random() * 100 + 'vw';
+            star.style.animation = `moveDownStars ${duration}s linear ${Math.random() * -20}s infinite`;
+            star.style.opacity = opacity; starsBg.appendChild(star);
+        }
+
         const launchSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'); 
         const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
-        launchSound.volume = 0.6; winSound.volume = 0.9;
+        const timeUpSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
 
         const allStudents = ["يوسف سداد", "ساره ولام", "سارة ابراهيم", "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
         let allScores = JSON.parse(localStorage.getItem('contestScores')) || new Array(allStudents.length).fill(0);
-
-        let combined = allStudents.map((name, index) => {
-            return { name: name, score: allScores[index] };
-        });
-
+        let combined = allStudents.map((name, index) => ({ name, score: allScores[index] }));
         combined.sort((a, b) => b.score - a.score);
         let top3 = combined.slice(0, 3);
 
-        function setupRaceArena() {
-            top3.forEach((player, index) => {
-                document.getElementById(`name-${index}`).innerText = player.name;
-                document.getElementById(`btn-name-${index}`).innerText = player.name;
-            });
-        }
-
-        let rocketPositions = [0, 0, 0];
-        const stepsToWin = 8; 
-        let isRaceOver = false;
-
-        // دعم اختصارات الكيبورد (1, 2, 3)
-        document.addEventListener('keydown', (e) => {
-            if (isRaceOver) return;
-            if (e.key === '1') launchRocket(0);
-            if (e.key === '2') launchRocket(1);
-            if (e.key === '3') launchRocket(2);
+        top3.forEach((player, index) => {
+            document.getElementById(`name-${index}`).innerText = player.name;
+            document.getElementById(`btn-name-${index}`).innerText = player.name;
         });
 
+        let rocketPositions = [0, 0, 0];
+        let isRaceOver = false;
+        let questionTimer = null;
+
+        function startQuestionTimer() {
+            if(isRaceOver) return;
+            clearInterval(questionTimer);
+            let timeLeft = 5;
+            const display = document.getElementById('q-timer');
+            display.innerText = `0${timeLeft}`;
+            display.className = 'timer-display active';
+            playTickSound();
+            questionTimer = setInterval(() => {
+                timeLeft--;
+                if(timeLeft > 0) { display.innerText = `0${timeLeft}`; playTickSound(); if(timeLeft <= 2) display.className = 'timer-display warning'; }
+                else { clearInterval(questionTimer); display.innerText = "00"; display.className = 'timer-display warning'; timeUpSound.play(); }
+            }, 1000);
+        }
+
         function launchRocket(playerIndex) {
-            if (isRaceOver) return;
-
+            if(isRaceOver) return;
             rocketPositions[playerIndex]++;
-            launchSound.currentTime = 0; 
-            launchSound.play().catch(e => {});
-
-            // اهتزاز الشاشة
-            document.body.classList.remove('shake');
-            void document.body.offsetWidth; // Trigger reflow
-            document.body.classList.add('shake');
-
-            let progressPercentage = (rocketPositions[playerIndex] / stepsToWin) * 85;
+            launchSound.cloneNode().play();
+            document.body.classList.remove('shake'); void document.body.offsetWidth; document.body.classList.add('shake');
+            const maxTravel = document.querySelector('.lane').clientHeight - 170; 
+            const y = (rocketPositions[playerIndex] / 10) * maxTravel;
             const rocket = document.getElementById(`rocket-${playerIndex}`);
-            rocket.style.bottom = `calc(130px + ${progressPercentage}%)`;
-            
-            rocket.classList.add('moving');
-            
-            setTimeout(() => {
-                if (!isRaceOver) rocket.classList.remove('moving');
-            }, 500);
-
-            if (rocketPositions[playerIndex] >= stepsToWin) {
-                declareWinners();
-            }
+            rocket.style.transform = `translate3d(0, -${y}px, 0)`;
+            rocket.classList.add('moving'); setTimeout(() => rocket.classList.remove('moving'), 200);
+            if (rocketPositions[playerIndex] >= 10) declareWinners();
         }
 
         function declareWinners() {
-            isRaceOver = true;
-            winSound.play().catch(e => {});
-            
-            let raceResults = top3.map((player, index) => {
-                return { 
-                    name: player.name, 
-                    steps: rocketPositions[index], 
-                    originalScore: player.score,
-                    originalIndex: index
-                };
-            });
-
-            raceResults.sort((a, b) => {
-                if (b.steps !== a.steps) return b.steps - a.steps;
-                return b.originalScore - a.originalScore;
-            });
-
-            const overlay = document.getElementById('fireworks-overlay');
-            overlay.style.display = 'flex';
-            
-            document.getElementById('final-1st').innerText = raceResults[0].name;
-            document.getElementById('final-2nd').innerText = raceResults[1].name;
-            document.getElementById('final-3rd').innerText = raceResults[2].name;
-            
-            document.getElementById('btn-0').disabled = true;
-            document.getElementById('btn-1').disabled = true;
-            document.getElementById('btn-2').disabled = true;
-            
-            document.getElementById(`rocket-${raceResults[0].originalIndex}`).classList.add('moving');
-
-            // تشغيل تأثير القصاصات الورقية (Confetti)
-            createConfetti();
+            isRaceOver = true; clearInterval(questionTimer);
+            winSound.play();
+            const overlay = document.getElementById('victory-overlay');
+            overlay.style.display = 'flex'; setTimeout(() => overlay.style.opacity = '1', 100);
+            document.getElementById('final-1st').innerText = top3[0].name;
+            document.getElementById('final-2nd').innerText = top3[1].name;
+            document.getElementById('final-3rd').innerText = top3[2].name;
+            setTimeout(() => document.getElementById('card-2').classList.add('animate'), 500);
+            setTimeout(() => document.getElementById('card-1').classList.add('animate'), 1000);
+            setTimeout(() => document.getElementById('card-3').classList.add('animate'), 1500);
+            startConfetti();
         }
 
-        function createConfetti() {
-            const colors = ['#fde047', '#4ade80', '#60a5fa', '#f87171', '#c084fc'];
-            for (let i = 0; i < 150; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.top = '-10px';
-                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                confetti.style.animationDelay = (Math.random() * 2) + 's';
-                document.getElementById('fireworks-overlay').appendChild(confetti);
+        function startConfetti() {
+            const canvas = document.getElementById('confetti-canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const particles = []; const colors = ['#38bdf8', '#4ade80', '#fbbf24', '#f1f5f9'];
+            for (let i = 0; i < 150; i++) particles.push({ x: Math.random() * canvas.width, y: -10, r: Math.random() * 6 + 2, dx: Math.random() * 4 - 2, dy: Math.random() * 5 + 2, color: colors[Math.floor(Math.random() * colors.length)] });
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill();
+                    p.x += p.dx; p.y += p.dy; if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+                });
+                requestAnimationFrame(draw);
             }
+            draw();
         }
 
-        window.onload = setupRaceArena;
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !isRaceOver) { e.preventDefault(); startQuestionTimer(); }
+            if (isRaceOver) return;
+            if (e.key === '1') launchRocket(0); if (e.key === '2') launchRocket(1); if (e.key === '3') launchRocket(2);
+        });
     </script>
 </body>
 </html>

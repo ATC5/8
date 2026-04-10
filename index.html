@@ -104,7 +104,7 @@
 
     <div class="main-container">
         <h1>مسابقة هندسة الملاحة والتوجيه</h1>
-        <div class="subtitle">الكلية الكهروميكانيكية</div>
+        <div class="subtitle">الجامعة التكنولوجية - الكلية الكهروميكانيكية</div>
         
         <div class="q-container" id="q-container">
             <div id="question-number"></div>
@@ -127,7 +127,7 @@
         const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
         tickSound.volume = 0.5; winSound.volume = 0.8;
 
-        const students = ["يوسف سداد", "زينب طاهر", "ساره ولام", "سارة ابراهيم", "اشرقت قيس", "قاسم", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
+     const students = ["يوسف سداد", , "ساره ولام", "سارة ابراهيم", "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
         let scores = JSON.parse(localStorage.getItem('contestScores')) || new Array(students.length).fill(0);
 
         function renderScoreboard() {

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المسابقة الكبرى - الجولة الأولى</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
+
+        :root { --metal-gradient: linear-gradient(135deg, #e2e8f0 0%, #8c98a9 40%, #2d3748 100%); --neon-blue: #38bdf8; }
+
+        body {
+            margin: 0; padding: 50px 20px; font-family: 'Tajawal', sans-serif; color: #ffffff;
+            background-color: #000103; background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            min-height: 100vh; overflow-x: hidden; box-sizing: border-box;
+        }
+
+        .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+        .star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.5; will-change: transform; }
+        .star-fast { animation: fall 15s linear infinite; }
+        .star-slow { animation: fall 35s linear infinite; }
+        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
+
+        .station-layer { position: fixed; top: 0; left: 0; z-index: -1; will-change: transform; pointer-events: none; animation: floatAcrossScreen 70s ease-in-out infinite alternate; }
+        @keyframes floatAcrossScreen { 0% { transform: translate(-10vw, 10vh) scale(0.6); } 33% { transform: translate(75vw, 65vh) scale(0.9); } 66% { transform: translate(15vw, 80vh) scale(0.7); } 100% { transform: translate(85vw, 15vh) scale(1); } }
+        
+        .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 15px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
+        .nav-btn { background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent; padding: 12px 15px; font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
+        .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
+        .nav-btn.active { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
+        .btn-danger { color: #ef4444; border-top: 1px solid #444; font-size: 0.9rem; }
+        .btn-warning { color: #f97316; border-top: 1px solid #444; font-size: 0.9rem; }
+        .btn-tie { background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff !important; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); }
+
+        .side-logo { position: absolute; top: 30px; width: 10vw; max-width: 100px; min-width: 70px; height: auto; z-index: 100; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+        .logo-right { right: 180px; } .logo-left { left: 40px; width: 12vw; max-width: 120px; }
+
+        .main-container { text-align: center; background: rgba(20, 20, 25, 0.5); backdrop-filter: blur(25px); padding: 30px 40px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2); width: 95%; max-width: 1200px; z-index: 10; margin-right: 140px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        h1 { font-size: 2.5rem; margin-top: 0; color: #d4af37; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .subtitle { font-size: 1.2rem; color: #94a3b8; margin-bottom: 20px; }
+
+        .q-container { background: rgba(0, 0, 0, 0.7); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; margin: 15px 0; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s; position: relative;}
+        .glowing { background: rgba(212, 175, 55, 0.1) !important; border: 2px solid #d4af37 !important; transform: scale(1.02); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
+        
+        #question-number { font-size: 1.1rem; color: #d4af37; font-weight: 900; margin-bottom: 10px; display: none; background: rgba(212, 175, 55, 0.1); padding: 5px 20px; border-radius: 50px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        #question-box { font-size: 1.8rem; font-weight: 700; color: #f8fafc; transition: all 0.3s; line-height: 1.4; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+        #answer-text { font-size: 1.6rem; color: #4ade80; font-weight: 900; margin-top: 20px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.3); display: none; width: 90%; }
+
+        .timer-display { font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; margin-top: 15px; display: none; }
+        .timer-warning { color: #ef4444; text-shadow: 0 0 20px #ef4444; animation: pulseWarning 1s infinite; }
+        @keyframes pulseWarning { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        .controls { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+        .action-btn { border: none; padding: 12px 35px; font-size: 1.3rem; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.4);}
+        #draw-btn { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
+        #draw-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);}
+        #ans-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; }
+
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 30px 0 25px 0; }
+        .scoreboard-title { font-size: 1.6rem; color: #d4af37; margin-bottom: 20px; font-weight: 900; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+
+        #scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .team-card { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 15px; transition: 0.3s; box-shadow: 0 5px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;}
+        .team-card:hover:not(.eliminated) { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(212,175,55,0.3); }
+        .team-members { margin-bottom: 15px; min-height: 70px; display:flex; flex-direction:column; gap:5px;}
+        .member-name { font-size: 0.95rem; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 5px; }
+        
+        .eliminated { opacity: 0.5; filter: grayscale(1); border-color: #ef4444 !important; }
+        .eliminated-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: rgba(239, 68, 68, 0.9); color: white; padding: 5px 15px; font-size: 1.5rem; font-weight: 900; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 0 20px rgba(239,68,68,0.8); z-index: 10; pointer-events: none; white-space: nowrap;}
+        
+        .audience-btn {
+            background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4);
+            color: var(--neon-blue); padding: 8px; border-radius: 8px; cursor: pointer;
+            font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: 900; transition: 0.3s;
+            margin-bottom: 15px; width: 100%; box-sizing: border-box;
+        }
+        .audience-btn:hover:not(:disabled) { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+        .audience-btn:disabled { background: rgba(255,255,255,0.05); color: #64748b; border-color: rgba(255,255,255,0.1); cursor: not-allowed; }
+
+        .score-controls { display: flex; justify-content: space-around; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 10px; }
+        .score-btn { width: 35px; height: 35px; border-radius: 50%; border: none; font-size: 1.4rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
+        .score-btn:active:not(:disabled) { transform: scale(0.8); }
+        .btn-plus { background: #d4af37; color: #000; }
+        .btn-minus { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .score-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .score-value { font-size: 1.6rem; font-weight: 900; color: #fbd786; }
+        
+        .slide-up { animation: slideUp 0.5s ease forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1000px) { #scoreboard { grid-template-columns: repeat(2, 1fr); } .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; width: 100%;} .main-container { margin-right: 0; width: 100%; padding: 20px; } .logo-right, .logo-left { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="stars-container" id="stars-js"></div>
+
+    <!-- شاشة كسر التعادل (Overlay) -->
+    <div id="tiebreaker-overlay" style="display:none; position:fixed; inset:0; background:rgba(2,6,23,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(15px);">
+        <h1 style="color:#d4af37; font-size:3rem; margin-bottom:10px; text-shadow:0 0 20px rgba(212,175,55,0.5);">⚔️ جولة كسر التعادل ⚔️</h1>
+        
+        <!-- الخطوة 1: اختيار الفرق المتعادلة -->
+        <div id="tie-step-1" style="display:flex; flex-direction:column; align-items:center; width: 100%;">
+            <p style="font-size:1.5rem; color:#cbd5e1; margin-bottom: 20px;">اختر الفرق المتعادلة للمنافسة:</p>
+            <div id="tie-teams-list" style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center; margin-bottom:30px;"></div>
+            <button onclick="startTieBreaker()" style="padding:15px 40px; font-size:1.3rem; background:linear-gradient(135deg, #38bdf8, #2563eb); color:#fff; font-family:'Tajawal'; font-weight:900; border:none; border-radius:12px; cursor:pointer; box-shadow:0 10px 20px rgba(56,189,248,0.4); transition:0.3s;">بدء التحدي الفاصل 🔥</button>
+            <button onclick="closeTieBreaker()" style="margin-top:20px; background:transparent; color:#ef4444; font-family:'Tajawal'; font-weight:bold; font-size:1.1rem; border:none; cursor:pointer;">إلغاء وإغلاق</button>
+        </div>
+
+        <!-- الخطوة 2: المنافسة والمعادلة -->
+        <div id="tie-step-2" style="display:none; flex-direction:column; align-items:center; width:95%; max-width:900px;">
+            <div style="background:rgba(0,0,0,0.6); border:2px solid #38bdf8; padding:30px; border-radius:20px; width:100%; text-align:center; margin-bottom:30px; box-shadow:inset 0 0 30px rgba(56,189,248,0.2);">
+                <p style="color:#94a3b8; font-size:1.2rem; margin-top:0;">أول فريق يعطي الناتج الصحيح يربح الجولة!</p>
+                <!-- مكان للصورة (إذا رفعت صورة للمعادلة في فولدر IMG باسم math1.jpg) -->
+                <img id="math-img" src="" alt="معادلة رياضية" style="max-width:100%; max-height:250px; display:none; border-radius:10px; margin:15px auto;">
+                <!-- نص بديل في حال عدم وجود صورة -->
+                <div id="math-text" style="font-size:3.5rem; color:#f8fafc; font-weight:900; letter-spacing:5px; margin:20px 0; font-family:'Courier New', Courier, monospace; text-shadow:0 5px 15px rgba(0,0,0,0.8);"></div>
+                
+                <button onclick="showMathAnswer()" style="padding:10px 25px; background:rgba(74, 222, 128, 0.2); border:1px solid #4ade80; color:#4ade80; font-family:'Tajawal'; font-weight:bold; font-size:1.1rem; border-radius:8px; cursor:pointer;">إظهار الحل</button>
+                <div id="math-ans" style="display:none; font-size:2.5rem; color:#4ade80; margin-top:15px; font-weight:900;"></div>
+            </div>
+
+            <div id="tie-competing-teams" style="display:flex; justify-content:space-around; flex-wrap:wrap; width:100%; gap:20px;"></div>
+            <button onclick="closeTieBreaker()" style="margin-top:40px; padding:12px 30px; font-size:1.2rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:#fff; font-family:'Tajawal'; font-weight:bold; border-radius:10px; cursor:pointer;">إنهاء وإغلاق</button>
+        </div>
+    </div>
+    <!-- نهاية شاشة التعادل -->
+
+    <div class="sidebar">
+        <a href="index.html" class="nav-btn" style="background: rgba(255,255,255,0.1); border: 1px solid #fff;">العودة للقرعة 🎲</a>
+        <a href="round1.html" class="nav-btn active">الجولة الأولى (الأسئلة)</a>
+        <a href="round2.html" class="nav-btn">الجولة الثانية (الصور)</a>
+        <a href="round3.html" class="nav-btn">الجولة الثالثة (النهائي)</a>
+        <button class="nav-btn btn-tie" onclick="openTieBreaker()">كسر التعادل ⚔️</button>
+        <button class="nav-btn btn-warning" onclick="eliminateLowestScoreTeam()">استبعاد الفريق الخاسر 🏁</button>
+        <button class="nav-btn btn-danger" onclick="resetScores()">تصفير النقاط والمساعدات</button>
+    </div>
+
+    <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
+    <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
+
+    <div class="main-container">
+        <h1>مسابقة هندسة الملاحة والتوجيه</h1>
+        <div class="subtitle">الجامعة التكنولوجية - الكلية الكهروميكانيكية</div>
+        
+        <div class="q-container" id="q-container">
+            <div id="question-number"></div>
+            <div id="question-box">اضغط لبدء الجولة...</div>
+            <div id="timer-display" class="timer-display">00:45</div>
+            <div id="answer-text"></div>
+        </div>
+
+        <div class="controls">
+            <button id="draw-btn" class="action-btn" onclick="drawQuestion()">اسحب سؤالاً</button>
+            <button id="ans-btn" class="action-btn" onclick="showAnswer()">إظهار الجواب</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="scoreboard-title">📊 نقاط الفرق والتحالفات</div>
+        <div id="scoreboard"></div>
+    </div>
+
+    <script>
+        const container = document.getElementById('stars-js');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            const isFast = i < 20;
+            star.className = `star ${isFast ? 'star-fast' : 'star-slow'}`;
+            star.style.width = (isFast ? 2 : 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = -(Math.random() * 40) + 's';
+            container.appendChild(star);
+        }
+
+        const tickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+        const endSound = new Audio('https://assets.mixkit.co/active_storage/sfx/3159/3159-preview.mp3'); // صوت قصير واحترافي لانتهاء الوقت
+        tickSound.volume = 0.5; winSound.volume = 0.8;
+
+        const teamNames = ["أبولو", "فوياجر", "أرتيميس", "أوريون"];
+        const teamData = {
+            "أبولو": { icon: "🚀", color: "#fbbf24", members: [] },
+            "فوياجر": { icon: "🛰️", color: "#38bdf8", members: [] },
+            "أرتيميس": { icon: "🌙", color: "#4ade80", members: [] },
+            "أوريون": { icon: "☄️", color: "#f43f5e", members: [] }
+        };
+
+        let teamScores = JSON.parse(localStorage.getItem('teamScores')) || { "أبولو": 0, "فوياجر": 0, "أرتيميس": 0, "أوريون": 0 };
+        let teamLifelines = JSON.parse(localStorage.getItem('teamLifelines')) || { "أبولو": true, "فوياجر": true, "أرتيميس": true, "أوريون": true };
+        let eliminatedTeams = JSON.parse(localStorage.getItem('eliminatedTeams')) || []; 
+
+        function renderScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = ''; 
+            
+            for(let t in teamData) teamData[t].members = [];
+
+            const teamAssignments = JSON.parse(localStorage.getItem('teamAssignments')) || {};
+            for (let student in teamAssignments) {
+                let tName = teamAssignments[student].name;
+                if(teamData[tName]) teamData[tName].members.push(student);
+            }
+
+            teamNames.forEach(tName => {
+                const tInfo = teamData[tName];
+                const score = teamScores[tName];
+                const hasLifeline = teamLifelines[tName];
+                const isEliminated = eliminatedTeams.includes(tName);
+                
+                let membersHtml = tInfo.members.map(m => `<div class="member-name">${m}</div>`).join('');
+                if(!membersHtml) membersHtml = '<div style="color:#64748b; font-size:0.9rem;">الرجاء إجراء القرعة أولاً</div>';
+
+                let lifelineBtnHtml = hasLifeline && !isEliminated ? 
+                    `<button class="audience-btn" onclick="askAudience('${tName}')">استعانة بالجمهور 👥</button>` : 
+                    `<button class="audience-btn" disabled>استنفذت المساعدة ❌</button>`;
+
+                let badgeHtml = isEliminated ? `<div class="eliminated-badge">❌ تم الاستبعاد</div>` : '';
+                let cardClass = isEliminated ? 'team-card eliminated' : 'team-card';
+                let btnDisable = isEliminated ? 'disabled' : '';
+
+                board.innerHTML += `
+                    <div class="${cardClass}" style="border-top: 4px solid ${tInfo.color};">
+                        ${badgeHtml}
+                        <div style="font-size: 1.4rem; color: ${tInfo.color}; margin-bottom: 10px; font-weight:900;">
+                            ${tInfo.icon} فريق ${tName}
+                        </div>
+                        <div class="team-members">
+                            ${membersHtml}
+                        </div>
+                        ${lifelineBtnHtml}
+                        <div class="score-controls">
+                            <button class="score-btn btn-minus" onclick="changeTeamScore('${tName}', -1)" ${btnDisable}>-</button>
+                            <span class="score-value" id="score-${tName}">${score}</span>
+                            <button class="score-btn btn-plus" onclick="changeTeamScore('${tName}', 1)" ${btnDisable}>+</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function changeTeamScore(teamName, delta) {
+            if(eliminatedTeams.includes(teamName)) return; 
+            teamScores[teamName] += delta; 
+            if(teamScores[teamName] < 0) teamScores[teamName] = 0; 
+            document.getElementById(`score-${teamName}`).innerText = teamScores[teamName];
+            localStorage.setItem('teamScores', JSON.stringify(teamScores));
+        }
+
+        function eliminateLowestScoreTeam() {
+            let activeTeams = teamNames.filter(t => !eliminatedTeams.includes(t));
+            if(activeTeams.length <= 1) { alert("لم يتبق سوى فريق واحد أو أقل!"); return; }
+
+            let lowestScore = Math.min(...activeTeams.map(t => teamScores[t]));
+            let lowestTeams = activeTeams.filter(t => teamScores[t] === lowestScore);
+
+            let confirmMsg = `هل أنت متأكد من استبعاد الفريق صاحب أقل النقاط (${lowestScore})؟\n\nالفرق: ` + lowestTeams.join(" و ");
+            if(confirm(confirmMsg)) {
+                lowestTeams.forEach(t => eliminatedTeams.push(t));
+                localStorage.setItem('eliminatedTeams', JSON.stringify(eliminatedTeams));
+                renderScoreboard();
+                winSound.currentTime = 0; winSound.play().catch(e=>{});
+            }
+        }
+
+        function askAudience(teamName) {
+            if(eliminatedTeams.includes(teamName)) return;
+            if(confirm(`تفعيل الاستعانة بالجمهور لفريق ${teamName}؟ (المدة 45 ثانية)`)) {
+                teamLifelines[teamName] = false;
+                localStorage.setItem('teamLifelines', JSON.stringify(teamLifelines));
+                renderScoreboard(); 
+                startTimer();
+
+                const qBox = document.getElementById('question-box');
+                const oldAlert = document.getElementById('aud-alert');
+                if(oldAlert) oldAlert.remove();
+                qBox.innerHTML += `<div id="aud-alert" style="color: #f43f5e; font-size: 1.5rem; font-weight: 900; margin-top: 15px; animation: pulseWarning 1s infinite;">🚨 فريق ${teamName} يستعين بالجمهور! 🚨</div>`;
+                winSound.currentTime = 0; winSound.play().catch(e=>{});
+            }
+        }
+
+        function resetScores() {
+            if(confirm("هل أنت متأكد من تصفير نقاط جميع الفرق والمساعدات وإلغاء الاستبعادات للبدء من جديد؟")) {
+                teamScores = { "أبولو": 0, "فوياجر": 0, "أرتيميس": 0, "أوريون": 0 };
+                teamLifelines = { "أبولو": true, "فوياجر": true, "أرتيميس": true, "أوريون": true };
+                eliminatedTeams = [];
+                localStorage.setItem('teamScores', JSON.stringify(teamScores));
+                localStorage.setItem('teamLifelines', JSON.stringify(teamLifelines));
+                localStorage.setItem('eliminatedTeams', JSON.stringify(eliminatedTeams));
+                renderScoreboard();
+            }
+        }
+
+        // ====== أكواد كسر التعادل ======
+        const tieMathQuestions = [
+            { q: "25 × 4 + 15 = ?", a: "115" },
+            { q: "144 ÷ 12 + 8 = ?", a: "20" },
+            { q: "7 × 8 - 16 = ?", a: "40" },
+            { q: "100 - (5 × 12) = ?", a: "40" },
+            { q: "3³ + 15 = ?", a: "42" },
+            { q: "50 ÷ 2 × 3 = ?", a: "75" }
+        ];
+
+        function openTieBreaker() {
+            document.getElementById('tiebreaker-overlay').style.display = 'flex';
+            document.getElementById('tie-step-1').style.display = 'flex';
+            document.getElementById('tie-step-2').style.display = 'none';
+            
+            const list = document.getElementById('tie-teams-list');
+            list.innerHTML = '';
+            
+            teamNames.forEach(t => {
+                if(!eliminatedTeams.includes(t)) {
+                    let color = teamData[t].color;
+                    list.innerHTML += `<label style="background:rgba(0,0,0,0.5); border:1px solid ${color}; padding:15px 25px; border-radius:12px; cursor:pointer; font-size:1.3rem; display:flex; align-items:center; gap:15px; color:#fff; font-family:'Tajawal'; font-weight:bold; transition:0.2s;">
+                        <input type="checkbox" value="${t}" class="tie-team-cb" style="width:22px; height:22px; accent-color:${color};"> 
+                        ${teamData[t].icon} فريق ${t} (${teamScores[t]} نقطة)
+                    </label>`;
+                }
+            });
+        }
+
+        function closeTieBreaker() {
+            document.getElementById('tiebreaker-overlay').style.display = 'none';
+            renderScoreboard();
+        }
+
+        function startTieBreaker() {
+            const checkboxes = document.querySelectorAll('.tie-team-cb:checked');
+            if(checkboxes.length < 2) { alert("الرجاء اختيار فريقين على الأقل لكسر التعادل!"); return; }
+
+            document.getElementById('tie-step-1').style.display = 'none';
+            document.getElementById('tie-step-2').style.display = 'flex';
+
+            const randomMath = tieMathQuestions[Math.floor(Math.random() * tieMathQuestions.length)];
+            document.getElementById('math-text').innerText = randomMath.q;
+            document.getElementById('math-ans').innerText = `الجواب: ${randomMath.a}`;
+            document.getElementById('math-ans').style.display = 'none';
+            
+            const mathImg = document.getElementById('math-img');
+            const randomImgNum = Math.floor(Math.random() * 3) + 1; // يختار math1.jpg أو math2...
+            mathImg.src = `IMG/math${randomImgNum}.jpg`; 
+            mathImg.onload = () => { mathImg.style.display = 'block'; document.getElementById('math-text').style.display = 'none'; }
+            mathImg.onerror = () => { mathImg.style.display = 'none'; document.getElementById('math-text').style.display = 'block'; }
+
+            const arena = document.getElementById('tie-competing-teams');
+            arena.innerHTML = '';
+            
+            checkboxes.forEach(cb => {
+                const tName = cb.value;
+                const tInfo = teamData[tName];
+                arena.innerHTML += `
+                    <div style="background:rgba(15,23,42,0.9); border:2px solid ${tInfo.color}; padding:20px; border-radius:15px; text-align:center; flex:1; min-width:200px;">
+                        <div style="font-size:1.6rem; color:${tInfo.color}; font-weight:900; margin-bottom:20px;">${tInfo.icon} ${tName}</div>
+                        <button onclick="winTie('${tName}')" style="background:#4ade80; color:#000; border:none; padding:12px; border-radius:10px; width:100%; font-family:'Tajawal'; font-weight:900; cursor:pointer; margin-bottom:12px; font-size:1.2rem; box-shadow:0 5px 15px rgba(74,222,128,0.3);">أجاب صحيحاً (+1) 🏆</button>
+                        <button onclick="eliminateTie('${tName}')" style="background:transparent; border:1px solid #ef4444; color:#ef4444; padding:10px; border-radius:10px; width:100%; font-family:'Tajawal'; font-weight:bold; cursor:pointer; font-size:1.1rem; transition:0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">استبعاد الفريق ❌</button>
+                    </div>
+                `;
+            });
+        }
+
+        function showMathAnswer() { document.getElementById('math-ans').style.display = 'block'; }
+
+        function winTie(teamName) {
+            if(confirm(`هل أنت متأكد أن فريق ${teamName} فاز بكسر التعادل؟ سيحصل على نقطة. (لن يتم استبعاد البقية تلقائياً)`)) {
+                teamScores[teamName] += 1;
+                localStorage.setItem('teamScores', JSON.stringify(teamScores));
+                alert(`مبروك لفريق ${teamName}! تمت إضافة نقطة.`);
+                closeTieBreaker();
+            }
+        }
+
+        function eliminateTie(teamName) {
+            if(confirm(`هل أنت متأكد من استبعاد فريق ${teamName} بشكل نهائي؟`)) {
+                eliminatedTeams.push(teamName);
+                localStorage.setItem('eliminatedTeams', JSON.stringify(eliminatedTeams));
+                alert(`تم استبعاد فريق ${teamName}.`);
+                closeTieBreaker();
+            }
+        }
+        // ==============================
+
+        window.onload = renderScoreboard;
+
+        let questions = [
+            { id: 1, q: "هل كل الطائرات تحتاج إلى مدرج حتى تقلع؟", a: "لا، المروحيات والطائرات العمودية (VTOL) لا تحتاج." },
+            { id: 2, q: "هل يعتمد الطيار على بصره فقط أثناء الطيران؟", a: "لا، يعتمد بشكل أساسي على أجهزة الملاحة والطيران الآلي." },
+            { id: 3, q: "هل جميع الطائرات تحلق على نفس الارتفاع؟", a: "لا، يعتمد على نوع الطائرة والضغط الجوي والمسار المخصص." },
+            { id: 4, q: "إذا كان الجو صافياً، هل الطيران دائمًا آمن 100%؟", a: "لا، قد تواجه الطائرة مطبات هوائية صافية (CAT)." },
+            { id: 5, q: "هل تصبح الطائرة أبطأ إذا ارتفعت أكثر في الغلاف الجوي؟", a: "بالعكس، الهواء الخفيف يقلل الاحتكاك فتطير أسرع." },
+            { id: 6, q: "إذا انطفأ محرك واحد، هل تسقط الطائرة فورًا؟", a: "لا، الطائرات التجارية مصممة للطيران بأمان بمحرك واحد." },
+            { id: 7, q: "هل تستهلك الطائرة وقوداً أكثر وقت الإقلاع أم أثناء التحليق؟", a: "وقت الإقلاع يستهلك أقصى طاقة ووقود." },
+            { id: 8, q: "هل جميع الطائرات تطير بنفس السرعة؟", a: "لا، السرعات تختلف حسب التصميم (تجارية، حربية، خفيفة)." },
+            { id: 9, q: "هل يمكن للطائرة أن تطير بدون استخدام الرادار؟", a: "نعم، باستخدام أنظمة بديلة مثل GPS والملاحة بالقصور الذاتي." },
+            { id: 10, q: "ما هو الفرق بين الملاحة (Navigation) والتوجيه (Guidance)؟", a: "الملاحة: معرفة أين أنت. التوجيه: معرفة كيف تصل للهدف." }
+        ];
+
+        let isSpinning = false;
+        let countdownInterval; 
+        let timeLeft = 45; // تم التعديل إلى 45 ثانية
+
+        function startTimer() {
+            clearInterval(countdownInterval);
+            timeLeft = 45; 
+            const timerEl = document.getElementById('timer-display');
+            timerEl.innerText = "00:45";
+            timerEl.classList.remove('timer-warning');
+            timerEl.style.display = 'block'; 
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                m = m < 10 ? "0" + m : m;
+                s = s < 10 ? "0" + s : s;
+                timerEl.innerText = `${m}:${s}`;
+                
+                if (timeLeft <= 5 && timeLeft > 0) {
+                    timerEl.classList.add('timer-warning');
+                    tickSound.currentTime = 0;
+                    tickSound.play().catch(e=>{});
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timerEl.innerText = "00:00";
+                    endSound.currentTime = 0;
+                    endSound.play().catch(e=>{});
+                }
+            }, 1000);
+        }
+
+        function stopTimer() { clearInterval(countdownInterval); }
+
+        function drawQuestion() {
+            if (isSpinning || questions.length === 0) return;
+            isSpinning = true;
+            stopTimer();
+            document.getElementById('timer-display').style.display = 'none';
+            
+            const btn = document.getElementById('draw-btn');
+            const qContainer = document.getElementById('q-container');
+            const box = document.getElementById('question-box');
+            const qNumber = document.getElementById('question-number');
+            const aText = document.getElementById('answer-text');
+            const ansBtn = document.getElementById('ans-btn');
+
+            btn.disabled = true; 
+            qContainer.classList.remove('glowing'); 
+            box.style.color = "#94a3b8"; 
+            qNumber.style.display = 'none';
+            aText.style.display = 'none';
+            ansBtn.style.display = 'none';
+            aText.classList.remove('slide-up');
+
+            let counter = 0;
+            const shuffleInterval = setInterval(() => {
+                box.innerText = questions[Math.floor(Math.random() * questions.length)].q;
+                counter++; 
+                tickSound.currentTime = 0; 
+                tickSound.play().catch(e=>{});
+
+                if (counter > 40) {
+                    clearInterval(shuffleInterval);
+                    const finalIndex = Math.floor(Math.random() * questions.length);
+                    const finalData = questions[finalIndex];
+                    
+                    qNumber.innerText = `السؤال رقم (${finalData.id})`;
+                    qNumber.style.display = 'inline-block';
+                    
+                    box.innerText = `❓ ${finalData.q}`; 
+                    box.style.color = "#f8fafc";
+                    qContainer.classList.add('glowing'); 
+                    
+                    aText.innerText = `✅ الجواب: ${finalData.a}`;
+                    ansBtn.style.display = 'inline-block';
+                    
+                    winSound.currentTime = 0; 
+                    winSound.play().catch(e=>{});
+                    
+                    startTimer();
+                    questions.splice(finalIndex, 1);
+                    
+                    if(questions.length === 0) btn.innerText = "انتهت جميع الأسئلة!"; 
+                    else { btn.disabled = false; btn.innerText = `اسحب سؤالاً آخر (${questions.length} متبقي)`; }
+                    isSpinning = false;
+                }
+            }, 60);
+        }
+
+        function showAnswer() {
+            stopTimer();
+            const aText = document.getElementById('answer-text');
+            aText.classList.add('slide-up');
+            aText.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

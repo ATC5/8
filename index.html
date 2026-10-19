@@ -3,328 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المسابقة الكبرى - الجولة الأولى</title>
+    <title>القرعة العشوائية - تشكيل التحالفات</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
-
-        :root {
-            --metal-gradient: linear-gradient(135deg, #e2e8f0 0%, #8c98a9 40%, #2d3748 100%);
-            --gold: #fbbf24;
-            --silver: #cbd5e1;
-            --neon-blue: #38bdf8;
-            --bronze: #f97316;
-        }
-
-        body {
-            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
-            background-color: #000103;
-            background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100vh; overflow-x: hidden; overflow-y: hidden; padding: 40px 0; box-sizing: border-box;
-        }
-
-        /* ========================================= */
-        /* --- خلفية الفضاء والمحطة المتحركة --- */
-        /* ========================================= */
+        body { margin: 0; padding: 20px; font-family: 'Tajawal', sans-serif; color: #ffffff; background-color: #000103; background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; }
         .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
-        .star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.5; will-change: transform; }
-        .star-fast { animation: fall 15s linear infinite; }
-        .star-slow { animation: fall 35s linear infinite; }
+        .star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.5; }
+        .star-fast { animation: fall 15s linear infinite; } .star-slow { animation: fall 35s linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
-
-        .station-layer { 
-            position: fixed; top: 0; left: 0; z-index: -1; 
-            will-change: transform; pointer-events: none; 
-            animation: floatAcrossScreen 70s ease-in-out infinite alternate; 
-        }
-        @keyframes floatAcrossScreen { 
-            0%   { transform: translate(-10vw, 10vh) scale(0.6); } 
-            33%  { transform: translate(75vw, 65vh) scale(0.9); }
-            66%  { transform: translate(15vw, 80vh) scale(0.7); }
-            100% { transform: translate(85vw, 15vh) scale(1); }
-        }
-
-        .space-station { transform-style: preserve-3d; animation: slowOrbit 40s infinite linear; }
-        @keyframes slowOrbit { from { transform: rotateX(25deg) rotateY(0deg); } to { transform: rotateX(25deg) rotateY(360deg); } }
-        
-        .station-core { position: absolute; width: 40px; height: 160px; transform-style: preserve-3d; transform: translate(-20px, -80px); }
-        .station-core div { position: absolute; background: var(--metal-gradient); border: 1px solid #1e293b; width: 40px; height: 160px; }
-        .core-front { transform: translateZ(20px); }
-        .core-back  { transform: rotateY(180deg) translateZ(20px); }
-        .solar-truss { position: absolute; width: 400px; height: 10px; background: #334155; transform: translate(-200px, -5px); }
-        .solar-panel { position: absolute; width: 140px; height: 70px; background: #06406e; border: 2px solid #475569; }
-        .panel-left { transform: translate(-180px, -35px) rotateX(30deg); }
-        .panel-right { transform: translate(40px, -35px) rotateX(-30deg); }
-        /* ========================================= */
-
-        /* === قائمة التنقل الجانبية === */
-        .sidebar {
-            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
-            background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px);
-            border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px;
-            padding: 20px 15px; display: flex; flex-direction: column; gap: 15px;
-            z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent;
-            padding: 15px 20px; font-family: 'Tajawal', sans-serif; font-size: 1.2rem;
-            font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none;
-        }
-        .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
-        .nav-btn.active { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
-
-        .info-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border: 1px solid var(--neon-blue); margin-bottom: 10px; position: relative; overflow: hidden;}
-        .info-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.5s; transform: skewX(-20deg); }
-        .info-btn:hover::after { left: 150%; }
-        .info-btn:hover { box-shadow: 0 0 20px var(--neon-blue); transform: scale(1.05); }
-
-        .side-logo { position: absolute; top: 50px; width: 15vw; max-width: 140px; min-width: 90px; height: auto; z-index: 100; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); }
-        .logo-right { right: 180px; } 
-        .logo-left { left: 70px; width: 18vw; max-width: 180px; }
-
-        .main-container {
-            text-align: center; background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(25px);
-            padding: 40px 50px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.15);
-            width: 85%; max-width: 1000px; z-index: 10; margin-right: 120px; 
-        }
-
-        h1 { font-size: 3rem; margin-top: 0; color: #d4af37; font-weight: 900; }
-        .subtitle { font-size: 1.3rem; color: #94a3b8; margin-bottom: 20px; }
-
-        /* === منطقة السؤال والجواب والمؤقت === */
-        .q-container { background: rgba(0, 0, 0, 0.6); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px; margin: 15px 0; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s; position: relative;}
-        .glowing { background: rgba(212, 175, 55, 0.08) !important; border: 2px solid #d4af37 !important; transform: scale(1.02); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-        
-        #question-number { font-size: 1.3rem; color: #d4af37; font-weight: 900; margin-bottom: 15px; display: none; background: rgba(212, 175, 55, 0.1); padding: 5px 20px; border-radius: 50px; border: 1px solid rgba(212, 175, 55, 0.3); }
-        #question-box { font-size: 2.1rem; font-weight: 700; color: #f8fafc; transition: all 0.3s; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        #answer-text { font-size: 1.6rem; color: #4ade80; font-weight: 900; margin-top: 20px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.2); display: none; width: 90%; }
-
-        /* ستايل المؤقت الزمني */
-        .timer-display {
-            font-size: 3rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue);
-            font-family: 'Courier New', Courier, monospace; letter-spacing: 2px;
-            margin-top: 20px; display: none; transition: all 0.3s ease;
-        }
-        .timer-warning {
-            color: #ef4444; text-shadow: 0 0 20px #ef4444;
-            animation: pulseWarning 1s infinite;
-        }
-        @keyframes pulseWarning {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        /* === الأزرار === */
-        .controls { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
-        .action-btn { border: none; padding: 15px 40px; font-size: 1.5rem; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-family: 'Tajawal', sans-serif;}
-        #draw-btn { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
-        #draw-btn:hover { transform: translateY(-5px); background: linear-gradient(135deg, #f5d76e, #d4af37); }
-        #draw-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        #ans-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; }
-        #ans-btn:hover { transform: translateY(-5px); background: linear-gradient(135deg, #60a5fa, #3b82f6); }
-
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 40px 0 30px 0; }
-        .scoreboard-title { font-size: 1.8rem; color: #d4af37; margin-bottom: 25px; font-weight: 700; }
-
-        #scoreboard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
-        .student-card { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; padding: 15px; transition: 0.3s;}
-        .student-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(212,175,55,0.2); }
-        .student-name { font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px; }
-        .score-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 5px; border-radius: 10px; }
-        .score-btn { width: 35px; height: 35px; border-radius: 50%; border: none; font-size: 1.5rem; font-weight: bold; cursor: pointer; transition: 0.2s;}
-        .score-btn:active { transform: scale(0.8); }
-        .btn-plus { background: #d4af37; color: #000; }
-        .btn-minus { background: rgba(255, 255, 255, 0.1); color: #fff; }
-        .score-value { font-size: 1.6rem; font-weight: 900; color: #fbd786; }
-        
-        .slide-up { animation: slideUp 0.5s ease forwards; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ========================================= */
-        /* === نافذة محاور المسابقة (3D Interactive Hologram) === */
-        /* ========================================= */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
-            display: none; justify-content: center; align-items: center; z-index: 9999;
-            opacity: 0; transition: opacity 0.4s ease; perspective: 1200px;
-        }
-        
-        .modal-content {
-            background: rgba(10, 15, 30, 0.85); border: 2px solid var(--neon-blue);
-            border-radius: 30px; padding: 40px; width: 90%; max-width: 900px;
-            position: relative; transform: scale(0.8) translateY(100px) rotateX(20deg); 
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 50px rgba(56, 189, 248, 0.2);
-            text-align: right; overflow: hidden; transform-style: preserve-3d;
-        }
-        
-        .modal-content::after {
-            content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 30%;
-            background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.3), transparent);
-            animation: scanline 4s linear infinite; pointer-events: none; z-index: 0;
-        }
-        @keyframes scanline { 0% { top: -30%; } 100% { top: 110%; } }
-
-        .modal-overlay.show { opacity: 1; }
-        .modal-overlay.show .modal-content { transform: scale(1) translateY(0) rotateX(0deg); }
-
-        .close-modal {
-            position: absolute; top: 20px; left: 20px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444;
-            color: #ef4444; width: 45px; height: 45px; border-radius: 50%; font-size: 2rem; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; transition: 0.3s; z-index: 10;
-        }
-        .close-modal:hover { background: #ef4444; color: #fff; transform: rotate(90deg) scale(1.1); box-shadow: 0 0 20px #ef4444; }
-
-        .modal-title-wrapper { text-align: center; margin-bottom: 40px; position: relative; z-index: 2;}
-        .modal-title { 
-            color: #fff; font-size: 2.8rem; margin: 0; display: inline-block;
-            text-shadow: 0 0 15px var(--neon-blue); border-right: 3px solid var(--neon-blue);
-            padding-right: 10px; white-space: nowrap; overflow: hidden;
-        }
-        .typing-effect { animation: typing 2s steps(20, end), blinkCursor 0.7s step-end infinite; }
-        @keyframes typing { from { width: 0; } to { width: 100%; } }
-        @keyframes blinkCursor { 50% { border-color: transparent; } }
-
-        .axis-container { display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; perspective: 1000px;}
-
-        .axis-wrapper { perspective: 1000px; opacity: 0; transform: translateY(30px); transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .modal-overlay.show .axis-wrapper { opacity: 1; transform: translateY(0); }
-        .modal-overlay.show .axis-wrapper:nth-child(1) { transition-delay: 0.2s; }
-        .modal-overlay.show .axis-wrapper:nth-child(2) { transition-delay: 0.4s; }
-        .modal-overlay.show .axis-wrapper:nth-child(3) { transition-delay: 0.6s; }
-
-        .axis-card { background: rgba(2, 6, 23, 0.6); border-radius: 20px; padding: 25px 30px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; display: flex; align-items: center; gap: 25px; transition: transform 0.1s ease, box-shadow 0.3s ease; transform-style: preserve-3d; }
-        .axis-wrapper:nth-child(1) .axis-card { border-right: 5px solid var(--gold); }
-        .axis-wrapper:nth-child(2) .axis-card { border-right: 5px solid var(--silver); }
-        .axis-wrapper:nth-child(3) .axis-card { border-right: 5px solid var(--neon-blue); }
-
-        .axis-icon { font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); animation: floatIcon 3s ease-in-out infinite; transform: translateZ(40px); }
-        @keyframes floatIcon { 0%, 100% { transform: translateY(0) translateZ(40px); } 50% { transform: translateY(-10px) translateZ(40px); } }
-
-        .axis-content { transform: translateZ(20px); } 
-        .axis-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);}
-        .axis-desc { font-size: 1.2rem; color: #94a3b8; line-height: 1.6; margin: 0; }
-
-        @media (max-width: 1200px) { .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; } .main-container { margin-right: 0; } .logo-right { right: 40px; } }
+        .header { text-align: center; margin-bottom: 20px; z-index: 10; }
+        .header h1 { font-size: 2.5rem; color: #38bdf8; margin: 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); font-weight: 900; }
+        .header p { font-size: 1.1rem; color: #94a3b8; margin-top: 5px; }
+        .teams-container { display: flex; gap: 15px; justify-content: center; width: 100%; max-width: 1200px; z-index: 10; flex-wrap: wrap; }
+        .team-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 15px; flex: 1; min-width: 220px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .team-card.revealed { opacity: 1; transform: translateY(0); }
+        .team-icon { font-size: 2.5rem; margin-bottom: 5px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
+        .team-name { font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; border-bottom: 2px dashed rgba(255,255,255,0.2); padding-bottom: 10px;}
+        .team-apollo { color: #fbbf24; box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.3);}
+        .team-voyager { color: #38bdf8; box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3);}
+        .team-artemis { color: #4ade80; box-shadow: inset 0 0 20px rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.3);}
+        .team-orion { color: #f43f5e; box-shadow: inset 0 0 20px rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3);}
+        .student-slot { background: rgba(0,0,0,0.5); margin: 8px 0; padding: 10px; border-radius: 10px; font-size: 1.1rem; font-weight: 700; color: #f8fafc; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; min-height: 20px; transition: 0.3s; }
+        .controls { margin-top: 30px; z-index: 10; display: flex; gap: 15px; }
+        .btn { padding: 12px 30px; font-size: 1.2rem; font-weight: 900; border-radius: 50px; cursor: pointer; font-family: 'Tajawal', sans-serif; border: none; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        #start-draw { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
+        #start-draw:hover { transform: translateY(-5px); background: linear-gradient(135deg, #f5d76e, #d4af37); }
+        #start-draw:disabled { background: #334155; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
+        #next-round { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; text-decoration: none;}
+        #next-round:hover { transform: translateY(-5px); background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+        .spinner { animation: spinColor 0.1s infinite alternate; }
+        @keyframes spinColor { 0% { color: #94a3b8; } 100% { color: #fff; } }
     </style>
 </head>
 <body>
-
     <div class="stars-container" id="stars-js"></div>
-    <div class="station-layer">
-        <div class="space-station">
-            <div class="station-core"><div class="core-front"></div><div class="core-back"></div></div>
-            <div class="solar-truss"></div>
-            <div class="solar-panel panel-left"></div>
-            <div class="solar-panel panel-right"></div>
+    <div class="header">
+        <h1>توزيع التحالفات الفضائية</h1>
+        <p>جاري تحديد مسارات رواد الفضاء...</p>
+    </div>
+    <div class="teams-container">
+        <div class="team-card team-apollo" id="team-1">
+            <div class="team-icon">🚀</div>
+            <div class="team-name">فريق أبولو</div>
+            <div class="student-slot" id="t1-s1">?</div>
+            <div class="student-slot" id="t1-s2">?</div>
+            <div class="student-slot" id="t1-s3">?</div>
+        </div>
+        <div class="team-card team-voyager" id="team-2">
+            <div class="team-icon">🛰️</div>
+            <div class="team-name">فريق فوياجر</div>
+            <div class="student-slot" id="t2-s1">?</div>
+            <div class="student-slot" id="t2-s2">?</div>
+            <div class="student-slot" id="t2-s3">?</div>
+        </div>
+        <div class="team-card team-artemis" id="team-3">
+            <div class="team-icon">🌙</div>
+            <div class="team-name">فريق أرتيميس</div>
+            <div class="student-slot" id="t3-s1">?</div>
+            <div class="student-slot" id="t3-s2">?</div>
+            <div class="student-slot" id="t3-s3">?</div>
+        </div>
+        <div class="team-card team-orion" id="team-4">
+            <div class="team-icon">☄️</div>
+            <div class="team-name">فريق أوريون</div>
+            <div class="student-slot" id="t4-s1">?</div>
+            <div class="student-slot" id="t4-s2">?</div>
+            <div class="student-slot" id="t4-s3">?</div>
         </div>
     </div>
-
-    <div class="modal-overlay" id="info-modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">×</button>
-            <div class="modal-title-wrapper">
-                <h2 class="modal-title" id="typewriter-title">دليل محاور المسابقة الرئيسية</h2>
-            </div>
-            <div class="axis-container">
-                <div class="axis-wrapper">
-                    <div class="axis-card">
-                        <div class="axis-icon">🎯</div>
-                        <div class="axis-content">
-                            <div class="axis-title" style="color: var(--gold);">الجولة الأولى: بنك الأسئلة</div>
-                            <p class="axis-desc">يتم سحب أسئلة علمية وعامة بشكل عشوائي بطريقة "الروليت". تعتمد الجولة على سرعة البديهة والذاكرة العلمية للمتسابقين في مجال الطيران والملاحة.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="axis-wrapper">
-                    <div class="axis-card">
-                        <div class="axis-icon">🖼️</div>
-                        <div class="axis-content">
-                            <div class="axis-title" style="color: var(--silver);">الجولة الثانية: التحدي البصري</div>
-                            <p class="axis-desc">اختبار للذاكرة البصرية! عرض صور دقيقة لأجزاء الطائرات والمطارات والأنظمة الملاحية. يجب التعرف على الصورة وتحديد الغرض منها بدقة عالية.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="axis-wrapper">
-                    <div class="axis-card">
-                        <div class="axis-icon">🚀</div>
-                        <div class="axis-content">
-                            <div class="axis-title" style="color: var(--neon-blue);">الجولة الثالثة: السباق الحاسم</div>
-                            <p class="axis-desc">النهائي الحماسي للطلبة الأوائل. سباق صواريخ تفاعلي مباشر، يتقدم فيه المتسابق مع كل إجابة صحيحة نحو خط النهاية لحسم اللقب والبطولة.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="sidebar">
-        <button class="nav-btn info-btn" onclick="openModal()">📋 محاور المسابقة</button>
-        <a href="index.html" class="nav-btn active">الجولة الأولى (الأسئلة)</a>
-        <a href="round2.html" class="nav-btn">الجولة الثانية (الصور)</a>
-        <a href="round3.html" class="nav-btn">الجولة الثالثة (النهائي)</a>
-        <button class="nav-btn" onclick="resetScores()" style="font-size: 0.9rem; color: #ef4444; border-top: 1px solid #444;">تصفير النقاط</button>
-    </div>
-
-    <img class="side-logo logo-right" src="IMG/UOT.png" alt="شعار الجامعة">
-    <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
-
-    <div class="main-container">
-        <h1>مسابقة هندسة الملاحة والتوجيه</h1>
-        <div class="subtitle">الجامعة التكنولوجية - الكلية الكهروميكانيكية</div>
-        
-        <div class="q-container" id="q-container">
-            <div id="question-number"></div>
-            <div id="question-box">اضغط لبدء الجولة...</div>
-            <div id="timer-display" class="timer-display">01:00</div>
-            <div id="answer-text"></div>
-        </div>
-
-        <div class="controls">
-            <button id="draw-btn" class="action-btn" onclick="drawQuestion()">اسحب سؤالاً</button>
-            <button id="ans-btn" class="action-btn" onclick="showAnswer()">إظهار الجواب</button>
-        </div>
-
-        <div class="divider"></div>
-        <div class="scoreboard-title">📊 نقاط المتسابقين</div>
-        <div id="scoreboard"></div>
+    <div class="controls">
+        <button id="start-draw" class="btn" onclick="startDraw()">إجراء القرعة 🎲</button>
+        <a id="next-round" href="round1.html" class="btn">الانتقال إلى الجولة الأولى ➔</a>
     </div>
 
     <script>
-        // --- 3D Parallax Tilt ---
-        const cards = document.querySelectorAll('.axis-card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                const centerX = rect.width / 2; const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -10; const rotateY = ((x - centerX) / centerX) * 10;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                card.style.boxShadow = `${-rotateY}px ${rotateX}px 20px rgba(56, 189, 248, 0.2)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                card.style.boxShadow = `none`;
-            });
-        });
-
-        function openModal() {
-            const modal = document.getElementById('info-modal');
-            const title = document.getElementById('typewriter-title');
-            modal.style.display = 'flex';
-            title.classList.remove('typing-effect');
-            void title.offsetWidth; 
-            title.classList.add('typing-effect');
-            setTimeout(() => { modal.classList.add('show'); }, 10);
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('info-modal');
-            modal.classList.remove('show');
-            setTimeout(() => { modal.style.display = 'none'; }, 400);
-        }
-
         const container = document.getElementById('stars-js');
         for (let i = 0; i < 60; i++) {
             const star = document.createElement('div');
@@ -338,209 +90,78 @@
             container.appendChild(star);
         }
 
+        setTimeout(() => document.getElementById('team-1').classList.add('revealed'), 100);
+        setTimeout(() => document.getElementById('team-2').classList.add('revealed'), 300);
+        setTimeout(() => document.getElementById('team-3').classList.add('revealed'), 500);
+        setTimeout(() => document.getElementById('team-4').classList.add('revealed'), 700);
+
+        const students = [
+            "يوسف سداد", "ساره ولام", "سارة ابراهيم", 
+            "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", 
+            "ساره اياد", "حسين عباس", "ياسر مؤيد", 
+            "طالب 10", "طالب 11", "طالب 12"
+        ];
+        
         const tickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
         const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
-        tickSound.volume = 0.5; winSound.volume = 0.8;
 
-        const students = ["يوسف سداد", "ساره ولام", "سارة ابراهيم", "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", "ساره اياد", "حسين عباس", "ياسر مؤيد"];
-        let scores = JSON.parse(localStorage.getItem('contestScores')) || new Array(students.length).fill(0);
+        function startDraw() {
+            const btn = document.getElementById('start-draw');
+            btn.disabled = true;
+            btn.innerText = "جاري اختيار الفرق...";
 
-        function renderScoreboard() {
-            const board = document.getElementById('scoreboard');
-            board.innerHTML = ''; 
-            students.forEach((name, index) => {
-                board.innerHTML += `
-                    <div class="student-card">
-                        <div class="student-name">${name}</div>
-                        <div class="score-controls">
-                            <button class="score-btn btn-minus" onclick="changeScore(${index}, -1)">-</button>
-                            <span class="score-value" id="score-${index}">${scores[index]}</span>
-                            <button class="score-btn btn-plus" onclick="changeScore(${index}, 1)">+</button>
-                        </div>
-                    </div>`;
-            });
-        }
+            let shuffled = [...students].sort(() => Math.random() - 0.5);
+            
+            const slots = [
+                document.getElementById('t1-s1'), document.getElementById('t1-s2'), document.getElementById('t1-s3'),
+                document.getElementById('t2-s1'), document.getElementById('t2-s2'), document.getElementById('t2-s3'),
+                document.getElementById('t3-s1'), document.getElementById('t3-s2'), document.getElementById('t3-s3'),
+                document.getElementById('t4-s1'), document.getElementById('t4-s2'), document.getElementById('t4-s3')
+            ];
 
-        function changeScore(index, delta) {
-            scores[index] += delta; 
-            if(scores[index] < 0) scores[index] = 0; 
-            document.getElementById(`score-${index}`).innerText = scores[index];
-            localStorage.setItem('contestScores', JSON.stringify(scores));
-        }
+            let currentSlotIndex = 0;
 
-        function resetScores() {
-            if(confirm("هل أنت متأكد من تصفير جميع نقاط الطلاب للبدء من جديد؟")) {
-                scores = new Array(students.length).fill(0);
-                localStorage.setItem('contestScores', JSON.stringify(scores));
-                renderScoreboard();
-            }
-        }
-
-        window.onload = renderScoreboard;
-
-        let questions = [
-            { id: 1, q: "هل كل الطائرات تحتاج إلى مدرج حتى تقلع؟", a: "لا، المروحيات والطائرات العمودية (VTOL) لا تحتاج." },
-            { id: 2, q: "هل يعتمد الطيار على بصره فقط أثناء الطيران؟", a: "لا، يعتمد بشكل أساسي على أجهزة الملاحة والطيران الآلي." },
-            { id: 3, q: "هل جميع الطائرات تحلق على نفس الارتفاع؟", a: "لا، يعتمد على نوع الطائرة والضغط الجوي والمسار المخصص." },
-            { id: 4, q: "إذا كان الجو صافياً، هل الطيران دائمًا آمن 100%؟", a: "لا، قد تواجه الطائرة مطبات هوائية صافية (CAT)." },
-            { id: 5, q: "هل تصبح الطائرة أبطأ إذا ارتفعت أكثر في الغلاف الجوي؟", a: "بالعكس، الهواء الخفيف يقلل الاحتكاك فتطير أسرع." },
-            { id: 6, q: "إذا انطفأ محرك واحد، هل تسقط الطائرة فورًا؟", a: "لا، الطائرات التجارية مصممة للطيران بأمان بمحرك واحد." },
-            { id: 7, q: "هل تستهلك الطائرة وقوداً أكثر وقت الإقلاع أم أثناء التحليق؟", a: "وقت الإقلاع يستهلك أقصى طاقة ووقود." },
-            { id: 8, q: "هل جميع الطائرات تطير بنفس السرعة؟", a: "لا، السرعات تختلف حسب التصميم (تجارية، حربية، خفيفة)." },
-            { id: 9, q: "هل يمكن للطائرة أن تطير بدون استخدام الرادار؟", a: "نعم، باستخدام أنظمة بديلة مثل GPS والملاحة بالقصور الذاتي." },
-            { id: 10, q: "ما هو الفرق بين الملاحة (Navigation) والتوجيه (Guidance)؟", a: "الملاحة: معرفة أين أنت. التوجيه: معرفة كيف تصل للهدف." },
-            { id: 11, q: "هل تحتاج الطائرة إلى الهواء (الغلاف الجوي) حتى تتمكن من الطيران؟", a: "نعم، لتوليد قوة الرفع (Lift) عبر الأجنحة." },
-            { id: 12, q: "هل يمكن للطائرة أن تطير بدون أجنحة؟", a: "لا، الأجنحة أساسية لتوليد قوة الرفع." },
-            { id: 13, q: "أيهما أثقل: طائرة فارغة أم طائرة مليئة بالركاب؟", a: "بالتأكيد المليئة بالركاب والوقود والبضائع." },
-            { id: 14, q: "هل تطير الطائرة أسرع في حالة الصعود أم في حالة الهبوط؟", a: "في حالة الهبوط (بسبب تأثير الجاذبية)." },
-            { id: 15, q: "إذا تم تكبير حجم الأجنحة، هل تصبح الطائرة دائمًا أفضل؟", a: "لا، الحجم الكبير يزيد من الوزن وقوة السحب (Drag)." },
-            { id: 16, q: "إذا فقدت الطائرة الاتصال اللاسلكي، هل تسقط مباشرة؟", a: "لا، الطيار الآلي والأنظمة الملاحية تبقيها محلقة." },
-            { id: 17, q: "ما هي القوى التي تساعد الطائرة على البقاء ثابتة في الجو؟", a: "قوة الرفع (Lift) والدفع (Thrust) تعاكس الوزن والسحب." },
-            { id: 18, q: "لماذا تحلق الطائرات التجارية على ارتفاعات عالية جداً؟", a: "لتجنب الطقس السيء وتقليل مقاومة الهواء وتوفير الوقود." },
-            { id: 19, q: "إذا كانت الطائرة على ارتفاع عالٍ، هل يمكننا فتح الأبواب؟", a: "لا، بسبب فرق الضغط الهائل بين الداخل والخارج." },
-            { id: 20, q: "ما اسم الجزء في الطائرة الذي يساعدها على الارتفاع؟", a: "الروافع (Elevators) الموجودة في الذيل." },
-            { id: 21, q: "ما اسم الشخص الذي يراقب حركة الطائرات من الأرض؟", a: "المراقب الجوي (Air Traffic Controller)." },
-            { id: 22, q: "اشرح باختصار: كيف تطير الطائرة؟", a: "المحرك يدفعها للأمام، والهواء يمر فوق الجناح ليولد قوة الرفع." },
-            { id: 23, q: "ما اسم المكان المخصص الذي تقلع منه الطائرة؟", a: "المدرج (Runway)." },
-            { id: 24, q: "ما اسم الجهاز الأساسي الذي يحدد اتجاه الطائرة؟", a: "البوصلة (Compass) أو نظام الجيروسكوب." },
-            { id: 25, q: "ما هو المصطلح الإنجليزي لجناح الطائرة؟", a: "Wing." },
-            { id: 26, q: "بشكل عام، أيهما أسرع: الطائرة أم السيارة؟", a: "الطائرة أسرع بكثير." },
-            { id: 27, q: "ماذا يحدث إذا نفد الوقود؟ هل تسقط الطائرة مباشرة؟", a: "لا، تنزلق تدريجياً (Gliding) حتى تجد مكاناً للهبوط." },
-            { id: 28, q: "ما الذي يساعد الطائرة على البقاء متزنة أفقياً في الجو؟", a: "الجنيحات (Ailerons) والموازنات في الذيل." },
-            { id: 29, q: "هل تستطيع الطائرة التجارية التوقف في الجو مثل المروحية؟", a: "لا، يجب أن تستمر بالحركة لتوليد قوة الرفع." },
-            { id: 30, q: "لماذا تمتلك الطائرة جناحين وليس جناحاً واحداً فقط؟", a: "للحفاظ على توازن الطائرة أفقياً على جانبي مركز الثقل." },
-            { id: 31, q: "إذا كانت سرعة الرياح صفراً، هل يتطابق الاتجاه مع المسار؟", a: "نعم، يتطابق الـ Heading مع الـ Track لعدم وجود انحراف." },
-            { id: 32, q: "هل أقصر طريق بين نقطتين على الأرض دائمًا خط مستقيم؟", a: "لا، هو المسار الدائري العظيم (Great Circle) بسبب كروية الأرض." },
-            { id: 33, q: "هل الخرائط الجوية التي يستخدمها الطيار مطابقة لخرائط Google؟", a: "لا، الخرائط الجوية مخصصة وتحتوي على مسارات ومحطات ملاحية." },
-            { id: 34, q: "هل يمكن أن تضيع الطائرة إذا تعطل نظام VOR الملاحي؟", a: "لا، هناك أنظمة بديلة تعوضه مثل الـ GPS." },
-            { id: 35, q: "هل أنظمة الرادار موجودة داخل الطائرة أم على الأرض فقط؟", a: "في كلاهما (رادار للطقس بالطائرة، ورادار مراقبة بالأرض)." },
-            { id: 36, q: "في الطيران الحديث، هل تعتمد الملاحة أكثر على النظر أم الأجهزة؟", a: "تعتمد بشكل كبير جداً على الأجهزة (IFR)." },
-            { id: 37, q: "هل يستطيع الطيار معرفة موقعه الدقيق بدون أي جهاز ملاحي؟", a: "صعب جداً، إلا بتمييز التضاريس والمعالم البصرية نهاراً." },
-            { id: 38, q: "هل تعتمد الملاحة الجوية على معالم الأرض أم على الأقمار؟", a: "في وقتنا الحالي، الاعتماد الأكبر على الأقمار الصناعية (GPS)." },
-            { id: 39, q: "هل يتغير الاتجاه (Heading) الخاص بالطائرة أثناء الرحلة؟", a: "نعم، يتغير لمواجهة تأثير الرياح وتصحيح مسارها." },
-            { id: 40, q: "هل تقاس سرعة الطائرة بالنسبة للهواء أم بالنسبة للأرض؟", a: "تقاس بالاثنين: السرعة الجوية (Airspeed) والأرضية (Groundspeed)." },
-            { id: 41, q: "أيهما الأهم: معرفة الموقع الحالي أم معرفة الاتجاه؟", a: "كلاهما مكمل للآخر للملاحة الصحيحة." },
-            { id: 42, q: "إذا عرفت موقعك الحالي، هل يمكنك الوصول للهدف بدون توجيه؟", a: "لا، التوجيه هو من يعطيك الزاوية والمسار الصحيح للوصول." },
-            { id: 43, q: "ما هو الطيار الآلي (Autopilot) وما وظيفته؟", a: "نظام كمبيوتر يحافظ على مسار وارتفاع وسرعة الطائرة آلياً." },
-            { id: 44, q: "هل يعمل الطيار الآلي بدون أي تدخل أو مراقبة بشرية؟", a: "لا، الطيار البشري يبرمجه ويراقبه ويتدخل في حالات الطوارئ." },
-            { id: 45, q: "هل تحتاج الطائرة إلى التوازن الجوي أكثر أم إلى السرعة؟", a: "إلى السرعة، لأن السرعة هي التي تولد قوة الرفع والتوازن." },
-            { id: 46, q: "هل يعتمد نظام التوجيه (Guidance) على الماضي أم الحاضر؟", a: "يعتمد على الحاضر (الموقع) للوصول إلى المستقبل (الهدف)." },
-            { id: 47, q: "ما هو الفرق الدقيق بين التحكم (Control) والتوجيه (Guidance)؟", a: "التوجيه يخبرك (أين تذهب)، والتحكم هو تطبيق القوة للذهاب هناك." }
-        ];
-
-        let isSpinning = false;
-        let countdownInterval; // متغير المؤقت
-        let timeLeft = 60; // 60 ثانية
-
-        // دالة تشغيل المؤقت
-        function startTimer() {
-            clearInterval(countdownInterval);
-            timeLeft = 60;
-            const timerEl = document.getElementById('timer-display');
-            timerEl.innerText = "01:00";
-            timerEl.classList.remove('timer-warning');
-            timerEl.style.display = 'block'; // إظهار المؤقت
-
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
-                
-                // تنسيق الأرقام لتكون دائماً بصيغة 00:00
-                m = m < 10 ? "0" + m : m;
-                s = s < 10 ? "0" + s : s;
-                
-                timerEl.innerText = `${m}:${s}`;
-
-                // تفعيل وضع الخطر في آخر 10 ثواني
-                if (timeLeft <= 10 && timeLeft > 0) {
-                    timerEl.classList.add('timer-warning');
+            function rollName() {
+                if (currentSlotIndex >= slots.length) {
+                    winSound.play();
+                    btn.style.display = 'none';
+                    document.getElementById('next-round').style.display = 'inline-block';
+                    
+                    // حفظ الفرق في الذاكرة حتى تقرأها الجولات الباقية
+                    const teamAssignments = {};
+                    shuffled.forEach((student, index) => {
+                        if(index < 3) teamAssignments[student] = { name: "أبولو", icon: "🚀", color: "#fbbf24" };
+                        else if(index < 6) teamAssignments[student] = { name: "فوياجر", icon: "🛰️", color: "#38bdf8" };
+                        else if(index < 9) teamAssignments[student] = { name: "أرتيميس", icon: "🌙", color: "#4ade80" };
+                        else teamAssignments[student] = { name: "أوريون", icon: "☄️", color: "#f43f5e" };
+                    });
+                    localStorage.setItem('teamAssignments', JSON.stringify(teamAssignments));
+                    
+                    return;
                 }
 
-                // إيقاف العداد عند الصفر
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    timerEl.innerText = "00:00";
-                }
-            }, 1000);
-        }
+                const slot = slots[currentSlotIndex];
+                slot.classList.add('spinner');
+                let spinCount = 0;
 
-        // إيقاف المؤقت
-        function stopTimer() {
-            clearInterval(countdownInterval);
-        }
+                const spinInterval = setInterval(() => {
+                    slot.innerText = students[Math.floor(Math.random() * students.length)];
+                    tickSound.currentTime = 0;
+                    tickSound.play().catch(e=>{});
+                    spinCount++;
 
-        function drawQuestion() {
-            if (isSpinning || questions.length === 0) return;
-            isSpinning = true;
-            
-            // إخفاء العداد وإيقافه أثناء السحب
-            stopTimer();
-            document.getElementById('timer-display').style.display = 'none';
-            
-            const btn = document.getElementById('draw-btn');
-            const qContainer = document.getElementById('q-container');
-            const box = document.getElementById('question-box');
-            const qNumber = document.getElementById('question-number');
-            const aText = document.getElementById('answer-text');
-            const ansBtn = document.getElementById('ans-btn');
-
-            btn.disabled = true; 
-            qContainer.classList.remove('glowing'); 
-            box.style.color = "#94a3b8"; 
-            qNumber.style.display = 'none';
-            aText.style.display = 'none';
-            ansBtn.style.display = 'none';
-            aText.classList.remove('slide-up');
-
-            let counter = 0;
-            const shuffleInterval = setInterval(() => {
-                box.innerText = questions[Math.floor(Math.random() * questions.length)].q;
-                counter++; 
-                tickSound.currentTime = 0; 
-                tickSound.play().catch(e=>{});
-
-                if (counter > 40) {
-                    clearInterval(shuffleInterval);
-                    const finalIndex = Math.floor(Math.random() * questions.length);
-                    const finalData = questions[finalIndex];
-                    
-                    qNumber.innerText = `السؤال رقم (${finalData.id})`;
-                    qNumber.style.display = 'inline-block';
-                    
-                    box.innerText = `❓ ${finalData.q}`; 
-                    box.style.color = "#f8fafc";
-                    qContainer.classList.add('glowing'); 
-                    
-                    aText.innerText = `✅ الجواب: ${finalData.a}`;
-                    ansBtn.style.display = 'inline-block';
-                    
-                    winSound.currentTime = 0; 
-                    winSound.play().catch(e=>{});
-                    
-                    // تشغيل المؤقت الزمني فور استقرار السؤال
-                    startTimer();
-                    
-                    questions.splice(finalIndex, 1);
-                    
-                    if(questions.length === 0) { 
-                        btn.innerText = "انتهت جميع الأسئلة!"; 
-                    } else { 
-                        btn.disabled = false; 
-                        btn.innerText = `اسحب سؤالاً آخر (${questions.length} متبقي)`; 
+                    if (spinCount > 15) { 
+                        clearInterval(spinInterval);
+                        slot.classList.remove('spinner');
+                        slot.innerText = shuffled[currentSlotIndex]; 
+                        slot.style.borderColor = "rgba(255,255,255,0.5)";
+                        slot.style.boxShadow = "0 0 15px rgba(255,255,255,0.2)";
+                        currentSlotIndex++;
+                        setTimeout(rollName, 400); 
                     }
-                    isSpinning = false;
-                }
-            }, 60);
-        }
-
-        function showAnswer() {
-            // إيقاف العداد عند إظهار الجواب
-            stopTimer();
-            const aText = document.getElementById('answer-text');
-            aText.classList.add('slide-up');
-            aText.style.display = 'block';
+                }, 50);
+            }
+            rollName();
         }
     </script>
 </body>

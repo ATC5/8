@@ -14,7 +14,7 @@
         .header { text-align: center; margin-bottom: 20px; z-index: 10; }
         .header h1 { font-size: 2.5rem; color: #38bdf8; margin: 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); font-weight: 900; }
         .header p { font-size: 1.1rem; color: #94a3b8; margin-top: 5px; }
-        .teams-container { display: flex; gap: 15px; justify-content: center; width: 100%; max-width: 1200px; z-index: 10; flex-wrap: wrap; }
+        .teams-container { display: flex; gap: 20px; justify-content: center; width: 100%; max-width: 1200px; z-index: 10; flex-wrap: wrap; }
         .team-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 15px; flex: 1; min-width: 220px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .team-card.revealed { opacity: 1; transform: translateY(0); }
         .team-icon { font-size: 2.5rem; margin-bottom: 5px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
@@ -22,7 +22,7 @@
         .team-apollo { color: #fbbf24; box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.3);}
         .team-voyager { color: #38bdf8; box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3);}
         .team-artemis { color: #4ade80; box-shadow: inset 0 0 20px rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.3);}
-        .team-orion { color: #f43f5e; box-shadow: inset 0 0 20px rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3);}
+        .team-red { color: #f87171; box-shadow: inset 0 0 20px rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3);}
         .student-slot { background: rgba(0,0,0,0.5); margin: 8px 0; padding: 10px; border-radius: 10px; font-size: 1.1rem; font-weight: 700; color: #f8fafc; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; min-height: 20px; transition: 0.3s; }
         .controls { margin-top: 30px; z-index: 10; display: flex; gap: 15px; }
         .btn { padding: 12px 30px; font-size: 1.2rem; font-weight: 900; border-radius: 50px; cursor: pointer; font-family: 'Tajawal', sans-serif; border: none; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
@@ -38,34 +38,34 @@
 <body>
     <div class="stars-container" id="stars-js"></div>
     <div class="header">
-        <h1>توزيع التحالفات الفضائية</h1>
-        <p>جاري تحديد مسارات رواد الفضاء...</p>
+        <h1>توزيع  تلقائي للمتسابقين</h1>
+        <p>جاري تحديد المسارات  ...</p>
     </div>
     <div class="teams-container">
         <div class="team-card team-apollo" id="team-1">
             <div class="team-icon">🚀</div>
-            <div class="team-name">فريق أبولو</div>
+            <div class="team-name">فريق الأصفر</div>
             <div class="student-slot" id="t1-s1">?</div>
             <div class="student-slot" id="t1-s2">?</div>
             <div class="student-slot" id="t1-s3">?</div>
         </div>
         <div class="team-card team-voyager" id="team-2">
             <div class="team-icon">🛰️</div>
-            <div class="team-name">فريق فوياجر</div>
+            <div class="team-name">فريق الأزرق</div>
             <div class="student-slot" id="t2-s1">?</div>
             <div class="student-slot" id="t2-s2">?</div>
             <div class="student-slot" id="t2-s3">?</div>
         </div>
         <div class="team-card team-artemis" id="team-3">
             <div class="team-icon">🌙</div>
-            <div class="team-name">فريق أرتيميس</div>
+            <div class="team-name">فريق الأخضر</div>
             <div class="student-slot" id="t3-s1">?</div>
             <div class="student-slot" id="t3-s2">?</div>
             <div class="student-slot" id="t3-s3">?</div>
         </div>
-        <div class="team-card team-orion" id="team-4">
-            <div class="team-icon">☄️</div>
-            <div class="team-name">فريق أوريون</div>
+        <div class="team-card team-red" id="team-4">
+            <div class="team-icon">🪐</div>
+            <div class="team-name">فريق الأحمر</div>
             <div class="student-slot" id="t4-s1">?</div>
             <div class="student-slot" id="t4-s2">?</div>
             <div class="student-slot" id="t4-s3">?</div>
@@ -96,10 +96,10 @@
         setTimeout(() => document.getElementById('team-4').classList.add('revealed'), 700);
 
         const students = [
-            "يوسف سداد", "ساره ولام", "سارة ابراهيم", 
-            "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", 
-            "ساره اياد", "حسين عباس", "ياسر مؤيد", 
-            "طالب 10", "طالب 11", "طالب 12"
+            "يوسف سداد", "ساره ولام", "مأثر عدنان", 
+            "زهراء خالد", "قاسم محمد", "زينب احمد", 
+            "حسين عباس", "ياسر مؤيد", "مرتضى امجد",
+            "سارة غزوان كاسب", "فاطمة حسين مظهر", "يونس محمد ابراهيم"
         ];
         
         const tickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
@@ -127,13 +127,12 @@
                     btn.style.display = 'none';
                     document.getElementById('next-round').style.display = 'inline-block';
                     
-                    // حفظ الفرق في الذاكرة حتى تقرأها الجولات الباقية
                     const teamAssignments = {};
                     shuffled.forEach((student, index) => {
-                        if(index < 3) teamAssignments[student] = { name: "أبولو", icon: "🚀", color: "#fbbf24" };
-                        else if(index < 6) teamAssignments[student] = { name: "فوياجر", icon: "🛰️", color: "#38bdf8" };
-                        else if(index < 9) teamAssignments[student] = { name: "أرتيميس", icon: "🌙", color: "#4ade80" };
-                        else teamAssignments[student] = { name: "أوريون", icon: "☄️", color: "#f43f5e" };
+                        if(index < 3) teamAssignments[student] = { name: "الأصفر", icon: "🚀", color: "#fbbf24" };
+                        else if(index < 6) teamAssignments[student] = { name: "الأزرق", icon: "🛰️", color: "#38bdf8" };
+                        else if(index < 9) teamAssignments[student] = { name: "الأخضر", icon: "🌙", color: "#4ade80" };
+                        else teamAssignments[student] = { name: "الأحمر", icon: "🪐", color: "#f87171" };
                     });
                     localStorage.setItem('teamAssignments', JSON.stringify(teamAssignments));
                     

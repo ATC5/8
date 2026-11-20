@@ -24,6 +24,14 @@
 
         .station-layer { position: fixed; top: 0; left: 0; z-index: -1; will-change: transform; pointer-events: none; animation: floatAcrossScreen 70s ease-in-out infinite alternate; }
         @keyframes floatAcrossScreen { 0% { transform: translate(-10vw, 10vh) scale(0.6); } 33% { transform: translate(75vw, 65vh) scale(0.9); } 66% { transform: translate(15vw, 80vh) scale(0.7); } 100% { transform: translate(85vw, 15vh) scale(1); } }
+        .space-station { transform-style: preserve-3d; animation: slowOrbit 40s infinite linear; }
+        @keyframes slowOrbit { from { transform: rotateX(25deg) rotateY(0deg); } to { transform: rotateX(25deg) rotateY(360deg); } }
+        .station-core { position: absolute; width: 40px; height: 160px; transform-style: preserve-3d; transform: translate(-20px, -80px); }
+        .station-core div { position: absolute; background: var(--metal-gradient); border: 1px solid #1e293b; width: 40px; height: 160px; }
+        .core-front { transform: translateZ(20px); } .core-back { transform: rotateY(180deg) translateZ(20px); }
+        .solar-truss { position: absolute; width: 400px; height: 10px; background: #334155; transform: translate(-200px, -5px); }
+        .solar-panel { position: absolute; width: 140px; height: 70px; background: #06406e; border: 2px solid #475569; }
+        .panel-left { transform: translate(-180px, -35px) rotateX(30deg); } .panel-right { transform: translate(40px, -35px) rotateX(-30deg); }
         
         .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 15px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
         .nav-btn { background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent; padding: 12px 15px; font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
@@ -36,7 +44,7 @@
         .side-logo { position: absolute; top: 30px; width: 10vw; max-width: 100px; min-width: 70px; height: auto; z-index: 100; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
         .logo-right { right: 180px; } .logo-left { left: 40px; width: 12vw; max-width: 120px; }
 
-        .main-container { text-align: center; background: rgba(20, 20, 25, 0.5); backdrop-filter: blur(25px); padding: 30px 40px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2); width: 95%; max-width: 1200px; z-index: 10; margin-right: 140px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .main-container { text-align: center; background: rgba(20, 20, 25, 0.5); backdrop-filter: blur(25px); padding: 30px 40px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2); width: 95%; max-width: 1250px; z-index: 10; margin-right: 140px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         h1 { font-size: 2.5rem; margin-top: 0; color: #d4af37; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .subtitle { font-size: 1.2rem; color: #94a3b8; margin-bottom: 20px; }
 
@@ -60,19 +68,19 @@
         .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 30px 0 25px 0; }
         .scoreboard-title { font-size: 1.6rem; color: #d4af37; margin-bottom: 20px; font-weight: 900; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
 
-        #scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        #scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
         .team-card { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 15px; transition: 0.3s; box-shadow: 0 5px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;}
         .team-card:hover:not(.eliminated) { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(212,175,55,0.3); }
         .team-members { margin-bottom: 15px; min-height: 70px; display:flex; flex-direction:column; gap:5px;}
         .member-name { font-size: 0.95rem; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 5px; }
         
         .eliminated { opacity: 0.5; filter: grayscale(1); border-color: #ef4444 !important; }
-        .eliminated-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: rgba(239, 68, 68, 0.9); color: white; padding: 5px 15px; font-size: 1.5rem; font-weight: 900; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 0 20px rgba(239,68,68,0.8); z-index: 10; pointer-events: none; white-space: nowrap;}
+        .eliminated-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: rgba(239, 68, 68, 0.9); color: white; padding: 5px 15px; font-size: 1.3rem; font-weight: 900; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 0 20px rgba(239,68,68,0.8); z-index: 10; pointer-events: none; white-space: nowrap;}
         
         .audience-btn {
             background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4);
             color: var(--neon-blue); padding: 8px; border-radius: 8px; cursor: pointer;
-            font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: 900; transition: 0.3s;
+            font-family: 'Tajawal', sans-serif; font-size: 0.9rem; font-weight: 900; transition: 0.3s;
             margin-bottom: 15px; width: 100%; box-sizing: border-box;
         }
         .audience-btn:hover:not(:disabled) { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
@@ -89,17 +97,24 @@
         .slide-up { animation: slideUp 0.5s ease forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (max-width: 1000px) { #scoreboard { grid-template-columns: repeat(2, 1fr); } .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; width: 100%;} .main-container { margin-right: 0; width: 100%; padding: 20px; } .logo-right, .logo-left { display: none; } }
+        @media (max-width: 1100px) { #scoreboard { grid-template-columns: repeat(2, 1fr); } .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; width: 100%;} .main-container { margin-right: 0; width: 100%; padding: 20px; } .logo-right, .logo-left { display: none; } }
+        @media (max-width: 600px) { #scoreboard { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
     </style>
 </head>
 <body>
     <div class="stars-container" id="stars-js"></div>
+    <div class="station-layer">
+        <div class="space-station">
+            <div class="station-core"><div class="core-front"></div><div class="core-back"></div></div>
+            <div class="solar-truss"></div>
+            <div class="solar-panel panel-left"></div>
+            <div class="solar-panel panel-right"></div>
+        </div>
+    </div>
 
-    <!-- شاشة كسر التعادل (Overlay) -->
     <div id="tiebreaker-overlay" style="display:none; position:fixed; inset:0; background:rgba(2,6,23,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(15px);">
         <h1 style="color:#d4af37; font-size:3rem; margin-bottom:10px; text-shadow:0 0 20px rgba(212,175,55,0.5);">⚔️ جولة كسر التعادل ⚔️</h1>
         
-        <!-- الخطوة 1: اختيار الفرق المتعادلة -->
         <div id="tie-step-1" style="display:flex; flex-direction:column; align-items:center; width: 100%;">
             <p style="font-size:1.5rem; color:#cbd5e1; margin-bottom: 20px;">اختر الفرق المتعادلة للمنافسة:</p>
             <div id="tie-teams-list" style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center; margin-bottom:30px;"></div>
@@ -107,13 +122,10 @@
             <button onclick="closeTieBreaker()" style="margin-top:20px; background:transparent; color:#ef4444; font-family:'Tajawal'; font-weight:bold; font-size:1.1rem; border:none; cursor:pointer;">إلغاء وإغلاق</button>
         </div>
 
-        <!-- الخطوة 2: المنافسة والمعادلة -->
         <div id="tie-step-2" style="display:none; flex-direction:column; align-items:center; width:95%; max-width:900px;">
             <div style="background:rgba(0,0,0,0.6); border:2px solid #38bdf8; padding:30px; border-radius:20px; width:100%; text-align:center; margin-bottom:30px; box-shadow:inset 0 0 30px rgba(56,189,248,0.2);">
                 <p style="color:#94a3b8; font-size:1.2rem; margin-top:0;">أول فريق يعطي الناتج الصحيح يربح الجولة!</p>
-                <!-- مكان للصورة (إذا رفعت صورة للمعادلة في فولدر IMG باسم math1.jpg) -->
                 <img id="math-img" src="" alt="معادلة رياضية" style="max-width:100%; max-height:250px; display:none; border-radius:10px; margin:15px auto;">
-                <!-- نص بديل في حال عدم وجود صورة -->
                 <div id="math-text" style="font-size:3.5rem; color:#f8fafc; font-weight:900; letter-spacing:5px; margin:20px 0; font-family:'Courier New', Courier, monospace; text-shadow:0 5px 15px rgba(0,0,0,0.8);"></div>
                 
                 <button onclick="showMathAnswer()" style="padding:10px 25px; background:rgba(74, 222, 128, 0.2); border:1px solid #4ade80; color:#4ade80; font-family:'Tajawal'; font-weight:bold; font-size:1.1rem; border-radius:8px; cursor:pointer;">إظهار الحل</button>
@@ -124,13 +136,13 @@
             <button onclick="closeTieBreaker()" style="margin-top:40px; padding:12px 30px; font-size:1.2rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:#fff; font-family:'Tajawal'; font-weight:bold; border-radius:10px; cursor:pointer;">إنهاء وإغلاق</button>
         </div>
     </div>
-    <!-- نهاية شاشة التعادل -->
 
     <div class="sidebar">
         <a href="index.html" class="nav-btn" style="background: rgba(255,255,255,0.1); border: 1px solid #fff;">العودة للقرعة 🎲</a>
         <a href="round1.html" class="nav-btn active">الجولة الأولى (الأسئلة)</a>
         <a href="round2.html" class="nav-btn">الجولة الثانية (الصور)</a>
-        <a href="round3.html" class="nav-btn">الجولة الثالثة (النهائي)</a>
+        <a href="round_bet.html" class="nav-btn">الجولة الثالثة (الرهان)</a>
+        <a href="round3.html" class="nav-btn">الجولة  (النهائي)</a>
         <button class="nav-btn btn-tie" onclick="openTieBreaker()">كسر التعادل ⚔️</button>
         <button class="nav-btn btn-warning" onclick="eliminateLowestScoreTeam()">استبعاد الفريق الخاسر 🏁</button>
         <button class="nav-btn btn-danger" onclick="resetScores()">تصفير النقاط والمساعدات</button>
@@ -176,19 +188,35 @@
 
         const tickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
         const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
-        const endSound = new Audio('https://assets.mixkit.co/active_storage/sfx/3159/3159-preview.mp3'); // صوت قصير واحترافي لانتهاء الوقت
+        const endSound = new Audio('https://assets.mixkit.co/active_storage/sfx/3159/3159-preview.mp3');
         tickSound.volume = 0.5; winSound.volume = 0.8;
 
-        const teamNames = ["أبولو", "فوياجر", "أرتيميس", "أوريون"];
+        function playBeep(freq, duration) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        const teamNames = ["الأصفر", "الأزرق", "الأخضر", "الأحمر"];
         const teamData = {
-            "أبولو": { icon: "🚀", color: "#fbbf24", members: [] },
-            "فوياجر": { icon: "🛰️", color: "#38bdf8", members: [] },
-            "أرتيميس": { icon: "🌙", color: "#4ade80", members: [] },
-            "أوريون": { icon: "☄️", color: "#f43f5e", members: [] }
+            "الأصفر": { icon: "🚀", color: "#fbbf24", members: [] },
+            "الأزرق": { icon: "🛰️", color: "#38bdf8", members: [] },
+            "الأخضر": { icon: "🌙", color: "#4ade80", members: [] },
+            "الأحمر": { icon: "🪐", color: "#f87171", members: [] }
         };
 
-        let teamScores = JSON.parse(localStorage.getItem('teamScores')) || { "أبولو": 0, "فوياجر": 0, "أرتيميس": 0, "أوريون": 0 };
-        let teamLifelines = JSON.parse(localStorage.getItem('teamLifelines')) || { "أبولو": true, "فوياجر": true, "أرتيميس": true, "أوريون": true };
+        let teamScores = JSON.parse(localStorage.getItem('teamScores')) || { "الأصفر": 0, "الأزرق": 0, "الأخضر": 0, "الأحمر": 0 };
+        let teamLifelines = JSON.parse(localStorage.getItem('teamLifelines')) || { "الأصفر": true, "الأزرق": true, "الأخضر": true, "الأحمر": true };
         let eliminatedTeams = JSON.parse(localStorage.getItem('eliminatedTeams')) || []; 
 
         function renderScoreboard() {
@@ -205,8 +233,8 @@
 
             teamNames.forEach(tName => {
                 const tInfo = teamData[tName];
-                const score = teamScores[tName];
-                const hasLifeline = teamLifelines[tName];
+                const score = teamScores[tName] || 0;
+                const hasLifeline = teamLifelines[tName] !== false;
                 const isEliminated = eliminatedTeams.includes(tName);
                 
                 let membersHtml = tInfo.members.map(m => `<div class="member-name">${m}</div>`).join('');
@@ -223,7 +251,7 @@
                 board.innerHTML += `
                     <div class="${cardClass}" style="border-top: 4px solid ${tInfo.color};">
                         ${badgeHtml}
-                        <div style="font-size: 1.4rem; color: ${tInfo.color}; margin-bottom: 10px; font-weight:900;">
+                        <div style="font-size: 1.3rem; color: ${tInfo.color}; margin-bottom: 10px; font-weight:900;">
                             ${tInfo.icon} فريق ${tName}
                         </div>
                         <div class="team-members">
@@ -241,7 +269,7 @@
 
         function changeTeamScore(teamName, delta) {
             if(eliminatedTeams.includes(teamName)) return; 
-            teamScores[teamName] += delta; 
+            teamScores[teamName] = (teamScores[teamName] || 0) + delta; 
             if(teamScores[teamName] < 0) teamScores[teamName] = 0; 
             document.getElementById(`score-${teamName}`).innerText = teamScores[teamName];
             localStorage.setItem('teamScores', JSON.stringify(teamScores));
@@ -251,8 +279,8 @@
             let activeTeams = teamNames.filter(t => !eliminatedTeams.includes(t));
             if(activeTeams.length <= 1) { alert("لم يتبق سوى فريق واحد أو أقل!"); return; }
 
-            let lowestScore = Math.min(...activeTeams.map(t => teamScores[t]));
-            let lowestTeams = activeTeams.filter(t => teamScores[t] === lowestScore);
+            let lowestScore = Math.min(...activeTeams.map(t => teamScores[t] || 0));
+            let lowestTeams = activeTeams.filter(t => (teamScores[t] || 0) === lowestScore);
 
             let confirmMsg = `هل أنت متأكد من استبعاد الفريق صاحب أقل النقاط (${lowestScore})؟\n\nالفرق: ` + lowestTeams.join(" و ");
             if(confirm(confirmMsg)) {
@@ -281,8 +309,8 @@
 
         function resetScores() {
             if(confirm("هل أنت متأكد من تصفير نقاط جميع الفرق والمساعدات وإلغاء الاستبعادات للبدء من جديد؟")) {
-                teamScores = { "أبولو": 0, "فوياجر": 0, "أرتيميس": 0, "أوريون": 0 };
-                teamLifelines = { "أبولو": true, "فوياجر": true, "أرتيميس": true, "أوريون": true };
+                teamScores = { "الأصفر": 0, "الأزرق": 0, "الأخضر": 0, "الأحمر": 0 };
+                teamLifelines = { "الأصفر": true, "الأزرق": true, "الأخضر": true, "الأحمر": true };
                 eliminatedTeams = [];
                 localStorage.setItem('teamScores', JSON.stringify(teamScores));
                 localStorage.setItem('teamLifelines', JSON.stringify(teamLifelines));
@@ -291,7 +319,6 @@
             }
         }
 
-        // ====== أكواد كسر التعادل ======
         const tieMathQuestions = [
             { q: "25 × 4 + 15 = ?", a: "115" },
             { q: "144 ÷ 12 + 8 = ?", a: "20" },
@@ -314,7 +341,7 @@
                     let color = teamData[t].color;
                     list.innerHTML += `<label style="background:rgba(0,0,0,0.5); border:1px solid ${color}; padding:15px 25px; border-radius:12px; cursor:pointer; font-size:1.3rem; display:flex; align-items:center; gap:15px; color:#fff; font-family:'Tajawal'; font-weight:bold; transition:0.2s;">
                         <input type="checkbox" value="${t}" class="tie-team-cb" style="width:22px; height:22px; accent-color:${color};"> 
-                        ${teamData[t].icon} فريق ${t} (${teamScores[t]} نقطة)
+                        ${teamData[t].icon} فريق ${t} (${teamScores[t] || 0} نقطة)
                     </label>`;
                 }
             });
@@ -338,7 +365,7 @@
             document.getElementById('math-ans').style.display = 'none';
             
             const mathImg = document.getElementById('math-img');
-            const randomImgNum = Math.floor(Math.random() * 3) + 1; // يختار math1.jpg أو math2...
+            const randomImgNum = Math.floor(Math.random() * 3) + 1;
             mathImg.src = `IMG/math${randomImgNum}.jpg`; 
             mathImg.onload = () => { mathImg.style.display = 'block'; document.getElementById('math-text').style.display = 'none'; }
             mathImg.onerror = () => { mathImg.style.display = 'none'; document.getElementById('math-text').style.display = 'block'; }
@@ -363,7 +390,7 @@
 
         function winTie(teamName) {
             if(confirm(`هل أنت متأكد أن فريق ${teamName} فاز بكسر التعادل؟ سيحصل على نقطة. (لن يتم استبعاد البقية تلقائياً)`)) {
-                teamScores[teamName] += 1;
+                teamScores[teamName] = (teamScores[teamName] || 0) + 1;
                 localStorage.setItem('teamScores', JSON.stringify(teamScores));
                 alert(`مبروك لفريق ${teamName}! تمت إضافة نقطة.`);
                 closeTieBreaker();
@@ -378,7 +405,6 @@
                 closeTieBreaker();
             }
         }
-        // ==============================
 
         window.onload = renderScoreboard;
 
@@ -397,7 +423,7 @@
 
         let isSpinning = false;
         let countdownInterval; 
-        let timeLeft = 45; // تم التعديل إلى 45 ثانية
+        let timeLeft = 45;
 
         function startTimer() {
             clearInterval(countdownInterval);
@@ -417,6 +443,7 @@
                 
                 if (timeLeft <= 5 && timeLeft > 0) {
                     timerEl.classList.add('timer-warning');
+                    playBeep(880, 0.12);
                     tickSound.currentTime = 0;
                     tickSound.play().catch(e=>{});
                 }
@@ -424,6 +451,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(countdownInterval);
                     timerEl.innerText = "00:00";
+                    playBeep(440, 0.6);
                     endSound.currentTime = 0;
                     endSound.play().catch(e=>{});
                 }

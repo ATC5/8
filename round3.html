@@ -9,84 +9,208 @@
         
         :root {
             --gold: #fbbf24; --silver: #cbd5e1; --bronze: #f97316;
-            --bg-dark: #010409; --neon-blue: #38bdf8;
+            --bg-dark: #010409; --neon-blue: #38bdf8; --danger: #ef4444; --success: #4ade80;
         }
 
         body {
-            margin: 0; padding: 20px 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
+            margin: 0; padding: 15px 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
             background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 30%, #071530 0%, #010409 88%);
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            min-height: 100vh; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; gap: 15px;
+            min-height: 100vh; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; gap: 12px;
         }
 
-        .stars-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+        .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; }
         .star { position: absolute; background: #fff; border-radius: 50%; top: -10vh; }
         @keyframes moveDownStars { 0% { transform: translateY(0vh); } 100% { transform: translateY(110vh); } }
+
+        /* طبقة المركبة الفضائية الاحترافية (محصورة بالكامل داخل الشاشة) */
+        .spacecraft-bg-layer {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .orbiting-spacecraft {
+            position: absolute;
+            width: 390px; height: 240px;
+            left: 25%; top: 30%;
+            transform: translate(-50%, -50%);
+            opacity: 0.62;
+            filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.45));
+            animation: safeScreenOrbit 38s ease-in-out infinite alternate;
+        }
+        /* مسار دائري/بيضاوي آمن يضمن بقاء المركبة بالكامل داخل الشاشة */
+        @keyframes safeScreenOrbit {
+            0%   { left: 22%; top: 28%; transform: translate(-50%, -50%) rotate(-10deg) scale(0.92); }
+            25%  { left: 52%; top: 22%; transform: translate(-50%, -50%) rotate(4deg) scale(1.0); }
+            50%  { left: 78%; top: 42%; transform: translate(-50%, -50%) rotate(14deg) scale(0.95); }
+            75%  { left: 55%; top: 68%; transform: translate(-50%, -50%) rotate(-5deg) scale(1.02); }
+            100% { left: 24%; top: 60%; transform: translate(-50%, -50%) rotate(-14deg) scale(0.94); }
+        }
+        .ion-glow { animation: ionPulse 0.15s infinite alternate; }
+        @keyframes ionPulse { from { opacity: 0.7; transform: scaleX(0.95); } to { opacity: 1; transform: scaleX(1.12); } }
+        .nav-beacon { animation: beaconBlink 1.2s infinite alternate; }
+        @keyframes beaconBlink { from { opacity: 0.25; } to { opacity: 1; } }
 
         .cockpit-window {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none; z-index: 99;
             box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 0 0 150px rgba(15, 23, 42, 0.8);
-            border: 15px solid #060b14; border-radius: 40px; box-sizing: border-box;
+            border: 12px solid #060b14; border-radius: 35px; box-sizing: border-box;
         }
 
-        .top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; z-index: 10; box-sizing: border-box; }
-        .logos img { height: 55px; filter: drop-shadow(0 0 15px rgba(56,189,248,0.4)); }
+        /* الشريط العلوي مع إبراز الشعارين */
+        .top-bar { width: 95%; max-width: 1400px; display: flex; justify-content: space-between; align-items: center; padding: 5px 15px; z-index: 10; box-sizing: border-box; gap: 15px; }
         
-        .header-titles { text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: rgba(2, 6, 23, 0.8); padding: 10px 30px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .header-titles h1 { font-size: 2.2rem; margin: 0; font-weight: 900; color: #ffffff; }
-        .header-titles p { font-size: 1rem; color: #cbd5e1; margin: 0; }
+        .logos-group {
+            display: flex; align-items: center; gap: 14px;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 8px 18px; border-radius: 18px;
+            border: 1.5px solid rgba(56, 189, 248, 0.55);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.08);
+        }
+        .logo-badge {
+            height: 68px; width: auto; object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.35)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
+            transition: transform 0.3s;
+        }
+        .logo-badge:hover { transform: scale(1.06); }
+        .logo-divider { width: 1.5px; height: 48px; background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.6), transparent); }
+        
+        .header-titles { text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: rgba(2, 6, 23, 0.88); padding: 10px 25px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header-titles h1 { font-size: 1.95rem; margin: 0; font-weight: 900; color: #ffffff; }
+        .header-titles p { font-size: 0.95rem; color: #38bdf8; margin: 0; font-weight: 700; }
 
-        .sidebar { display: flex; gap: 10px; background: rgba(15, 23, 42, 0.8); padding: 8px; border-radius: 12px; }
-        .nav-btn { color: #94a3b8; padding: 10px 15px; text-decoration: none; font-weight: 700; border-radius: 8px; font-size: 0.9rem; transition: 0.3s; }
+        .sidebar { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.9); padding: 8px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); }
+        .nav-btn { color: #94a3b8; padding: 8px 12px; text-decoration: none; font-weight: 700; border-radius: 8px; font-size: 0.85rem; transition: 0.3s; }
         .nav-btn.active { background: var(--neon-blue); color: #020617; }
         .nav-btn:hover { background: rgba(56, 189, 248, 0.2); color: #fff; }
 
-        .moderator-panel { z-index: 10; display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(15, 23, 42, 0.9); padding: 10px 30px; border-radius: 50px; border: 1px solid var(--neon-blue); margin-top: 5px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);}
-        .timer-label { font-size: 1rem; color: var(--neon-blue); font-weight: 700; }
-        .timer-display { font-size: 2rem; font-weight: 900; color: #fff; min-width: 60px; text-align: center; line-height: 1; }
-        .start-timer-btn { background: transparent; color: var(--neon-blue); border: 2px solid var(--neon-blue); padding: 8px 20px; border-radius: 20px; font-weight: 900; cursor: pointer; transition: 0.3s;}
+        /* لوحة المؤقت */
+        .moderator-panel { z-index: 10; display: flex; align-items: center; justify-content: center; gap: 15px; background: rgba(15, 23, 42, 0.95); padding: 8px 25px; border-radius: 50px; border: 2px solid var(--neon-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); transition: 0.3s; }
+        .moderator-panel.time-up-box { border-color: var(--danger); box-shadow: 0 0 30px rgba(239, 68, 68, 0.6); }
+        .timer-label { font-size: 1rem; color: #cbd5e1; font-weight: 700; }
+        .timer-display { font-size: 2.2rem; font-weight: 900; color: var(--neon-blue); min-width: 70px; text-align: center; line-height: 1; font-family: 'Courier New', Courier, monospace; transition: 0.3s; }
+        .timer-display.time-up { color: var(--danger) !important; text-shadow: 0 0 20px var(--danger); animation: pulseRed 0.6s infinite alternate; }
+        @keyframes pulseRed { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+        .start-timer-btn { background: transparent; color: var(--neon-blue); border: 2px solid var(--neon-blue); padding: 7px 18px; border-radius: 20px; font-family: 'Tajawal'; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
         .start-timer-btn:hover { background: var(--neon-blue); color: #000; }
+
+        /* تقسيم الشاشة الرئيسية */
+        .main-stage { width: 95%; max-width: 1400px; display: flex; gap: 20px; flex-grow: 1; z-index: 10; align-items: stretch; }
+
+        /* لوحة البيانات الجانبية */
+        .stats-sidebar {
+            width: 320px; background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 20px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+        }
+        .stats-header { text-align: center; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
+        .stats-header h2 { margin: 0; font-size: 1.25rem; color: var(--neon-blue); font-weight: 900; }
+        .total-q-badge { display: inline-block; margin-top: 6px; background: rgba(56, 189, 248, 0.15); color: #fff; padding: 4px 12px; border-radius: 15px; font-size: 0.9rem; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+        .player-stat-card {
+            background: rgba(2, 6, 23, 0.85); border-radius: 14px; padding: 12px; margin-bottom: 12px;
+            border-right: 4px solid var(--neon-blue); display: flex; flex-direction: column; gap: 8px;
+        }
+        .stat-card-top { display: flex; justify-content: space-between; align-items: center; }
+        .stat-player-name { font-size: 1.15rem; font-weight: 900; color: #fff; }
+        .stat-rocket-badge { font-size: 0.85rem; background: rgba(74, 222, 128, 0.15); color: var(--success); padding: 3px 10px; border-radius: 10px; font-weight: 900; border: 1px solid rgba(74, 222, 128, 0.4); }
+
+        .stat-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 6px 10px; border-radius: 8px; font-size: 0.95rem; }
+        .q-counter-controls { display: flex; align-items: center; gap: 8px; }
+        .q-btn { width: 26px; height: 26px; border-radius: 6px; border: none; font-weight: 900; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .q-btn-plus { background: var(--neon-blue); color: #000; }
+        .q-btn-minus { background: rgba(255,255,255,0.15); color: #fff; }
+        .q-btn:active { transform: scale(0.85); }
+
+        .reset-race-btn { width: 100%; padding: 10px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; border-radius: 10px; font-family: 'Tajawal'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .reset-race-btn:hover { background: var(--danger); color: #fff; }
+
+        /* ساحة السباق (شفافة قليلاً لإظهار المركبة الفضائية خلفها) */
+        .race-arena {
+            flex-grow: 1; height: 540px; background: rgba(2, 6, 23, 0.52);
+            border: 2px solid rgba(56, 189, 248, 0.35); border-radius: 20px;
+            position: relative; display: flex; justify-content: space-evenly;
+            overflow: hidden; box-shadow: inset 0 0 50px rgba(56,189,248,0.12);
+            backdrop-filter: blur(2px);
+        }
         
-        .race-arena { width: 90%; max-width: 1200px; min-height: 500px; flex-grow: 1; background: rgba(2, 6, 23, 0.6); border: 2px solid rgba(56, 189, 248, 0.3); border-radius: 20px; position: relative; display: flex; justify-content: space-evenly; padding-bottom: 100px; overflow: hidden; box-shadow: inset 0 0 50px rgba(56,189,248,0.1); }
-        .finish-line-container { position: absolute; top: 30px; left: 0; width: 100%; height: 30px; z-index: 2; display: flex; justify-content: center; align-items: center; border-bottom: 3px dashed #4ade80; background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.1), transparent);}
-        .finish-text { color: #4ade80; font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 10px #4ade80;}
+        .finish-line-container {
+            position: absolute; top: 45px; left: 0; width: 100%; height: 34px; z-index: 5;
+            display: flex; justify-content: center; align-items: center;
+            border-bottom: 3px dashed #4ade80;
+            background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.18), transparent);
+        }
+        .finish-text { color: #4ade80; font-weight: 900; font-size: 1.35rem; text-shadow: 0 0 12px #4ade80; letter-spacing: 1px; }
         
-        .lane { position: relative; width: 25%; height: 100%; display: flex; justify-content: center; border-left: 1px solid rgba(56,189,248,0.1); border-right: 1px solid rgba(56,189,248,0.1); background: linear-gradient(180deg, rgba(56,189,248,0.01), rgba(56,189,248,0.05)); }
-        .rocket-wrapper { position: absolute; bottom: 0; width: 80px; height: 120px; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; }
-        .rocket-svg { width: 100%; height: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.8));}
+        .lane { position: relative; width: 28%; height: 100%; display: flex; justify-content: center; border-left: 1px dashed rgba(56,189,248,0.18); border-right: 1px dashed rgba(56,189,248,0.18); background: linear-gradient(180deg, rgba(56,189,248,0.01), rgba(56,189,248,0.05)); }
         
-        .launchpad { position: absolute; bottom: 0; width: 100%; padding: 15px 0; background: rgba(15,23,42,0.95); border-top: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 30; }
-        .player-name { font-size: 1.2rem; font-weight: 900; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);}
-        .player-rank { font-size: 0.85rem; font-weight: 700; padding: 4px 12px; border-radius: 15px; }
+        /* الصاروخ والانطلاق الديناميكي */
+        .rocket-wrapper {
+            position: absolute; bottom: 92px; width: 90px; height: 145px;
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1); z-index: 15;
+        }
+        .rocket-svg { width: 100%; height: 100%; filter: drop-shadow(0 12px 14px rgba(0,0,0,0.9)); transition: transform 0.2s; }
+        
+        .thruster-flame {
+            width: 28px; height: 52px; margin-top: -10px;
+            background: linear-gradient(to bottom, #ffffff 0%, #38bdf8 35%, #f59e0b 75%, transparent 100%);
+            border-radius: 50% 50% 25% 25%;
+            opacity: 0.35; transform: scaleY(0.45); transform-origin: top;
+            transition: opacity 0.2s, transform 0.2s;
+            filter: blur(1.5px);
+        }
+        .rocket-wrapper.boosting .thruster-flame {
+            opacity: 1; transform: scaleY(1.75);
+            animation: flameFlicker 0.07s infinite alternate;
+        }
+        .rocket-wrapper.boosting .rocket-svg {
+            animation: rocketShake 0.09s infinite;
+        }
+        @keyframes flameFlicker { from { transform: scaleY(1.5) scaleX(0.9); } to { transform: scaleY(1.9) scaleX(1.15); } }
+        @keyframes rocketShake { 0% { transform: translateX(-2px); } 50% { transform: translateX(2px); } 100% { transform: translateX(0); } }
+
+        .step-badge {
+            position: absolute; top: -24px; background: rgba(2, 6, 23, 0.9); color: #fff;
+            border: 1px solid rgba(56, 189, 248, 0.5); padding: 2px 10px; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 900; white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .launchpad { position: absolute; bottom: 0; width: 100%; height: 85px; background: rgba(15,23,42,0.96); border-top: 2px solid rgba(56, 189, 248, 0.35); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 30; }
+        .player-name { font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .player-rank { font-size: 0.8rem; font-weight: 700; padding: 3px 12px; border-radius: 15px; }
 
         .rank-gold .player-rank { background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid var(--gold); }
-        .rank-silver .player-rank { background: rgba(203, 213, 225, 0.15); color: var(--silver); border: 1px solid var(--silver); }
-        .rank-bronze .player-rank { background: rgba(249, 115, 22, 0.15); color: var(--bronze); border: 1px solid var(--bronze); }
-        .rank-gold .rocket-svg path.body { fill: #fef08a; } .rank-gold .rocket-svg path.fin { fill: #b45309; }
-        .rank-silver .rocket-svg path.body { fill: #f1f5f9; } .rank-silver .rocket-svg path.fin { fill: #475569; }
-        .rank-bronze .rocket-svg path.body { fill: #fdba74; } .rank-bronze .rocket-svg path.fin { fill: #9a3412; }
+        .rank-silver .player-rank { background: rgba(56, 189, 248, 0.15); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+        .rank-bronze .player-rank { background: rgba(74, 222, 128, 0.15); color: var(--success); border: 1px solid var(--success); }
 
-        .controls-panel { width: 90%; max-width: 1200px; padding: 20px 30px; background: rgba(2, 6, 23, 0.9); border-radius: 20px; z-index: 100; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; justify-content: center; gap: 30px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
-        .btn-launch { flex: 1; max-width: 300px; padding: 15px 20px; border-radius: 15px; border: 2px solid; background: rgba(15, 23, 42, 0.9); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; box-shadow: inset 0 0 15px rgba(0,0,0,0.5);}
-        .btn-launch:active { transform: translateY(4px); }
-        .btn-launch .btn-key { background: rgba(56,189,248,0.2); padding: 5px 12px; border-radius: 8px; font-weight: 900; color: var(--neon-blue);}
+        /* أزرار الانطلاق السفلية */
+        .controls-panel { width: 95%; max-width: 1400px; padding: 15px 25px; background: rgba(2, 6, 23, 0.92); border-radius: 20px; z-index: 100; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; justify-content: center; gap: 25px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .btn-launch { flex: 1; max-width: 340px; padding: 14px 20px; border-radius: 15px; border: 2px solid; background: rgba(15, 23, 42, 0.95); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; font-family: 'Tajawal'; }
+        .btn-launch:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); }
+        .btn-launch:active { transform: translateY(3px); }
+        .btn-launch .btn-key { background: rgba(56,189,248,0.2); padding: 5px 12px; border-radius: 8px; font-weight: 900; color: var(--neon-blue); font-size: 0.9rem; }
         .btn-launch .btn-name { font-size: 1.2rem; font-weight: 900; }
-        .btn-gold { border-color: rgba(251, 191, 36, 0.5); color: var(--gold); }
-        .btn-silver { border-color: rgba(203, 213, 225, 0.5); color: var(--silver); }
-        .btn-bronze { border-color: rgba(249, 115, 22, 0.5); color: var(--bronze); }
+        .btn-gold { border-color: var(--gold); color: var(--gold); }
+        .btn-silver { border-color: var(--neon-blue); color: var(--neon-blue); }
+        .btn-bronze { border-color: var(--success); color: var(--success); }
 
-        #victory-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(10px);}
-        .victory-title { font-size: 3rem; font-weight: 900; background: linear-gradient(to right, #fbbf24, #fff, #fbbf24); -webkit-background-clip: text; color: transparent; margin-bottom: 40px; text-shadow: 0 0 30px rgba(251, 191, 36, 0.5);}
-        .podium-container { display: flex; align-items: flex-end; gap: 30px; height: 350px; }
-        .podium-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 1)); border: 2px solid transparent; border-radius: 20px; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; width: 200px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);}
-        .podium-gold { height: 300px; border-color: var(--gold); box-shadow: 0 0 50px rgba(251, 191, 36, 0.4);}
-        .podium-silver { height: 240px; border-color: var(--silver); }
+        /* شاشة التتويج */
+        #victory-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.96); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(12px); }
+        .victory-title { font-size: 3rem; font-weight: 900; background: linear-gradient(to right, #fbbf24, #fff, #fbbf24); -webkit-background-clip: text; color: transparent; margin-bottom: 35px; text-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
+        .podium-container { display: flex; align-items: flex-end; gap: 30px; height: 340px; }
+        .podium-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 1)); border: 2px solid transparent; border-radius: 20px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 210px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        .podium-gold { height: 290px; border-color: var(--gold); box-shadow: 0 0 50px rgba(251, 191, 36, 0.4); }
+        .podium-silver { height: 230px; border-color: var(--silver); }
         .podium-bronze { height: 180px; border-color: var(--bronze); }
-        .medal-img { font-size: 4.5rem; margin-bottom: 15px; }
-        .winner-name { font-size: 1.6rem; font-weight: 900; color: #fff; text-align: center;}
+        .medal-img { font-size: 4.5rem; margin-bottom: 10px; }
+        .winner-name { font-size: 1.6rem; font-weight: 900; color: #fff; text-align: center; }
+        .winner-stats { font-size: 0.95rem; color: #94a3b8; margin-top: 8px; }
 
-        @media (max-width: 1024px) { .top-bar { flex-direction: column; gap: 15px; } .logos { display: none; } .controls-panel { flex-direction: column; } .btn-launch { max-width: 100%; } }
+        @media (max-width: 1024px) { .main-stage { flex-direction: column; } .stats-sidebar { width: 100%; box-sizing: border-box; } .top-bar { flex-direction: column; gap: 10px; } .controls-panel { flex-direction: column; } .btn-launch { max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -94,142 +218,501 @@
     <div class="cockpit-window"></div>
     <div class="stars-container" id="stars-bg"></div>
 
+    <!-- المركبة الفضائية الاحترافية عالية التفاصيل (مكوك مداري متكامل داخل الشاشة) -->
+    <div class="spacecraft-bg-layer">
+        <svg class="orbiting-spacecraft" viewBox="0 0 640 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- تدرج هيكل المكوك المعدني -->
+                <linearGradient id="shuttleBody" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="50%" stop-color="#cbd5e1"/>
+                    <stop offset="85%" stop-color="#64748b"/>
+                    <stop offset="100%" stop-color="#1e293b"/>
+                </linearGradient>
+                <!-- درع الحماية الحراري الأسود -->
+                <linearGradient id="heatShield" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#334155"/>
+                    <stop offset="50%" stop-color="#0f172a"/>
+                    <stop offset="100%" stop-color="#020617"/>
+                </linearGradient>
+                <!-- الألواح الشمسية القابلة للطي -->
+                <linearGradient id="wingSolar" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#0284c7"/>
+                    <stop offset="50%" stop-color="#1d4ed8"/>
+                    <stop offset="100%" stop-color="#1e1b4b"/>
+                </linearGradient>
+                <!-- لهب المحركات الأيونية -->
+                <linearGradient id="ionFlame" x1="1" y1="0" x2="0" y2="0">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="30%" stop-color="#38bdf8"/>
+                    <stop offset="70%" stop-color="#6366f1" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                </linearGradient>
+                <pattern id="solarCells" width="14" height="14" patternUnits="userSpaceOnUse">
+                    <path d="M 14 0 L 0 0 0 14" fill="none" stroke="#7dd3fc" stroke-width="0.6" stroke-opacity="0.5"/>
+                </pattern>
+            </defs>
+
+            <!-- الألواح الشمسية الممتدة من وحدة الشحن (أعلى وأسفل) -->
+            <g transform="translate(260, 25)">
+                <rect x="0" y="0" width="95" height="75" rx="3" fill="url(#wingSolar)" stroke="#38bdf8" stroke-width="1.5"/>
+                <rect x="0" y="0" width="95" height="75" rx="3" fill="url(#solarCells)"/>
+                <rect x="44" y="75" width="7" height="25" fill="#94a3b8"/>
+            </g>
+            <g transform="translate(260, 280)">
+                <rect x="0" y="25" width="95" height="75" rx="3" fill="url(#wingSolar)" stroke="#38bdf8" stroke-width="1.5"/>
+                <rect x="0" y="25" width="95" height="75" rx="3" fill="url(#solarCells)"/>
+                <rect x="44" y="0" width="7" height="25" fill="#94a3b8"/>
+            </g>
+
+            <!-- لهب الدفع الأيوني من المحركات الخلفية -->
+            <g class="ion-glow">
+                <ellipse cx="95" cy="172" rx="65" ry="12" fill="url(#ionFlame)"/>
+                <ellipse cx="90" cy="190" rx="75" ry="15" fill="url(#ionFlame)"/>
+                <ellipse cx="95" cy="208" rx="65" ry="12" fill="url(#ionFlame)"/>
+            </g>
+
+            <!-- أجنحة الدلتا الرئيسية (Delta Wings) مع الحواف الحرارية -->
+            <path d="M165 145 L250 75 L385 155 L385 225 L250 305 L165 235 Z" fill="url(#heatShield)" stroke="#475569" stroke-width="2"/>
+            <path d="M180 150 L252 90 L370 160 L370 220 L252 290 L180 230 Z" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+            <!-- خطوط انسيابية على الأجنحة -->
+            <line x1="210" y1="130" x2="340" y2="162" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.4"/>
+            <line x1="210" y1="250" x2="340" y2="218" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.4"/>
+
+            <!-- فوهات المحركات الثلاث الخلفية (RS-25) -->
+            <path d="M165 162 L142 156 L142 184 L165 178 Z" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+            <path d="M165 178 L136 172 L136 208 L165 202 Z" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.5"/>
+            <path d="M165 202 L142 196 L142 224 L165 218 Z" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+
+            <!-- جسم المركبة الأسطواني الرئيسي (Fuselage) -->
+            <path d="M165 150 L430 150 C485 150 535 168 555 190 C535 212 485 230 430 230 L165 230 Z" fill="url(#shuttleBody)" stroke="#94a3b8" stroke-width="2"/>
+
+            <!-- وحدة الشحن المفتوحة في المنتصف (Payload Bay) -->
+            <rect x="235" y="160" width="165" height="60" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
+            <!-- قمر صناعي / حمولة علمية داخل وحدة الشحن -->
+            <rect x="275" y="170" width="85" height="40" rx="5" fill="#d97706" stroke="#fde047" stroke-width="1.2"/>
+            <line x1="255" y1="190" x2="380" y2="190" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 3"/>
+            <!-- الذراع الآلية (Canadarm) -->
+            <polyline points="245,165 265,142 315,148" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="265" cy="142" r="3" fill="#38bdf8"/>
+
+            <!-- قمرة القيادة ونوافذ الطاقم الأمامية -->
+            <path d="M430 154 C465 154 495 168 510 190 C495 212 465 226 430 226 Z" fill="#1e293b"/>
+            <!-- نوافذ قمرة القيادة الزجاجية -->
+            <path d="M462 166 L482 173 L478 183 L458 178 Z" fill="#38bdf8" stroke="#bae6fd" stroke-width="1"/>
+            <path d="M485 176 L496 186 L496 194 L485 204 L481 190 Z" fill="#0284c7" stroke="#bae6fd" stroke-width="1"/>
+            <path d="M462 214 L482 207 L478 197 L458 202 Z" fill="#38bdf8" stroke="#bae6fd" stroke-width="1"/>
+
+            <!-- مقدمة المكوك الحرارية (Nose Cap) -->
+            <path d="M522 169 C540 176 550 183 555 190 C550 197 540 204 522 211 C526 197 526 183 522 169 Z" fill="#090d16" stroke="#475569" stroke-width="1"/>
+
+            <!-- الزعنفة الذيلية الرأسية -->
+            <rect x="160" y="187" width="65" height="6" rx="3" fill="#f8fafc" stroke="#334155" stroke-width="1"/>
+
+            <!-- أضواء ملاحية نابضة -->
+            <circle class="nav-beacon" cx="250" cy="78" r="4" fill="#ef4444"/>
+            <circle class="nav-beacon" cx="250" cy="302" r="4" fill="#4ade80"/>
+            <circle class="nav-beacon" cx="552" cy="190" r="3.5" fill="#38bdf8"/>
+        </svg>
+    </div>
+
     <div class="top-bar">
-        <div class="logos"><img src="IMG/UOT2.PNG" alt="شعار القسم"></div>
-        <div class="header-titles">
-            <h1>السباق الحاسم</h1>
-            <p>الجولة النهائية لأبطال قسم هندسة الملاحة والتوجيه</p>
+        <!-- شعار الجامعة وشعار القسم معاً وبشكل بارز -->
+        <div class="logos-group">
+            <img class="logo-badge" src="IMG/UOT.png" alt="شعار الجامعة التكنولوجية" title="الجامعة التكنولوجية">
+            <div class="logo-divider"></div>
+            <img class="logo-badge" src="IMG/UOT2.PNG" alt="شعار قسم هندسة الملاحة والتوجيه" title="قسم هندسة الملاحة والتوجيه">
         </div>
+
+        <div class="header-titles">
+            <h1>السباق الفضائي الحاسم (5 مراحل)</h1>
+            <p id="finalist-team-subtitle">جاري تحميل أبطال الفريق المتأهل...</p>
+        </div>
+
         <div class="sidebar">
-            <a href="index.html" class="nav-btn" style="background: rgba(255,255,255,0.1); border: 1px solid #fff;">العودة للقرعة 🎲</a>
+            <a href="index.html" class="nav-btn">القرعة 🎲</a>
             <a href="round1.html" class="nav-btn">الأسئلة</a>
             <a href="round2.html" class="nav-btn">الصور</a>
-            <a href="round3.html" class="nav-btn active">السباق</a>
+            <a href="round_bet.html" class="nav-btn">الرهان</a>
+            <a href="round3.html" class="nav-btn active">النهائي</a>
         </div>
     </div>
 
-    <div class="moderator-panel">
-        <span class="timer-label">المؤقت:</span>
-        <div id="q-timer" class="timer-display">--</div>
-        <button class="start-timer-btn" onclick="startQuestionTimer()">ابدأ المؤقت</button>
+    <div class="moderator-panel" id="timer-panel">
+        <span class="timer-label">⏱️ مؤقت الإجابة (5 ثواني):</span>
+        <div id="q-timer" class="timer-display">05</div>
+        <button class="start-timer-btn" onclick="startQuestionTimer()">ابدأ المؤقت (Space)</button>
     </div>
 
-    <div class="race-arena">
-        <div class="finish-line-container"><div class="finish-text">خط النهاية 🎯</div></div>
-        
-        <div class="lane">
-            <div class="rocket-wrapper rank-gold" id="rocket-0">
-                <svg class="rocket-svg" viewBox="0 0 80 140" fill="none">
-                    <path class="fin" d="M20 80L0 120H24V80H20Z"/><path class="fin" d="M60 80L80 120H56V80H60Z"/>
-                    <path class="body" d="M40 0C40 0 16 35 20 80V110H60V80C64 35 40 0 40 0Z"/>
-                </svg>
+    <div class="main-stage">
+        <!-- لوحة الإحصائيات والبيانات الجانبية -->
+        <div class="stats-sidebar">
+            <div>
+                <div class="stats-header">
+                    <h2>📊 سجل المتسابقين المباشر</h2>
+                    <div class="total-q-badge">إجمالي الأسئلة المطروحة: <span id="total-questions-count">0</span></div>
+                </div>
+                <div id="stats-cards-container"></div>
             </div>
-            <div class="launchpad rank-gold"><div class="player-name" id="name-0">---</div><div class="player-rank">المركز الأول</div></div>
+            <button class="reset-race-btn" onclick="resetFinalRace()">🔄 إعادة ضبط السباق والعدادات</button>
         </div>
 
-        <div class="lane">
-            <div class="rocket-wrapper rank-silver" id="rocket-1">
-                <svg class="rocket-svg" viewBox="0 0 80 140" fill="none">
-                    <path class="fin" d="M20 80L0 120H24V80H20Z"/><path class="fin" d="M60 80L80 120H56V80H60Z"/>
-                    <path class="body" d="M40 0C40 0 16 35 20 80V110H60V80C64 35 40 0 40 0Z"/>
-                </svg>
+        <!-- ساحة انطلاق الصواريخ -->
+        <div class="race-arena" id="race-arena">
+            <div class="finish-line-container" id="finish-line"><div class="finish-text">🏁 خط النهاية (5 إجابات صحيحة) 🏁</div></div>
+            
+            <!-- المسار الأول (ذهبي) -->
+            <div class="lane">
+                <div class="rocket-wrapper rank-gold" id="rocket-0">
+                    <div class="step-badge" id="badge-0">0 / 5</div>
+                    <svg class="rocket-svg" viewBox="0 0 100 160" fill="none">
+                        <defs>
+                            <linearGradient id="bodyGold" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#f8fafc"/>
+                                <stop offset="50%" stop-color="#e2e8f0"/>
+                                <stop offset="100%" stop-color="#94a3b8"/>
+                            </linearGradient>
+                            <linearGradient id="noseGold" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#fde047"/>
+                                <stop offset="100%" stop-color="#d97706"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M26 95 L6 135 L28 128 Z" fill="#d97706" stroke="#92400e" stroke-width="1.5"/>
+                        <path d="M74 95 L94 135 L72 128 Z" fill="#b45309" stroke="#78350f" stroke-width="1.5"/>
+                        <path d="M36 132 L32 146 H68 L64 132 Z" fill="#334155" stroke="#0f172a" stroke-width="1.5"/>
+                        <path d="M50 8 C32 32 26 65 26 132 H74 C74 65 68 32 50 8 Z" fill="url(#bodyGold)" stroke="#475569" stroke-width="1.5"/>
+                        <path d="M50 8 C40 22 34 36 31 48 H69 C66 36 60 22 50 8 Z" fill="url(#noseGold)"/>
+                        <rect x="26" y="102" width="48" height="8" fill="#f59e0b"/>
+                        <rect x="48" y="96" width="4" height="40" rx="2" fill="#b45309"/>
+                        <circle cx="50" cy="72" r="12" fill="#0f172a" stroke="#fbbf24" stroke-width="3"/>
+                        <circle cx="46" cy="68" r="3.5" fill="#bae6fd" opacity="0.8"/>
+                    </svg>
+                    <div class="thruster-flame"></div>
+                </div>
+                <div class="launchpad rank-gold"><div class="player-name" id="name-0">---</div><div class="player-rank">المسار الأول</div></div>
             </div>
-            <div class="launchpad rank-silver"><div class="player-name" id="name-1">---</div><div class="player-rank">المركز الثاني</div></div>
-        </div>
 
-        <div class="lane">
-            <div class="rocket-wrapper rank-bronze" id="rocket-2">
-                <svg class="rocket-svg" viewBox="0 0 80 140" fill="none">
-                    <path class="fin" d="M20 80L0 120H24V80H20Z"/><path class="fin" d="M60 80L80 120H56V80H60Z"/>
-                    <path class="body" d="M40 0C40 0 16 35 20 80V110H60V80C64 35 40 0 40 0Z"/>
-                </svg>
+            <!-- المسار الثاني (أزرق) -->
+            <div class="lane">
+                <div class="rocket-wrapper rank-silver" id="rocket-1">
+                    <div class="step-badge" id="badge-1">0 / 5</div>
+                    <svg class="rocket-svg" viewBox="0 0 100 160" fill="none">
+                        <defs>
+                            <linearGradient id="noseBlue" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#7dd3fc"/>
+                                <stop offset="100%" stop-color="#0284c7"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M26 95 L6 135 L28 128 Z" fill="#0284c7" stroke="#075985" stroke-width="1.5"/>
+                        <path d="M74 95 L94 135 L72 128 Z" fill="#0369a1" stroke="#0c4a6e" stroke-width="1.5"/>
+                        <path d="M36 132 L32 146 H68 L64 132 Z" fill="#334155" stroke="#0f172a" stroke-width="1.5"/>
+                        <path d="M50 8 C32 32 26 65 26 132 H74 C74 65 68 32 50 8 Z" fill="url(#bodyGold)" stroke="#475569" stroke-width="1.5"/>
+                        <path d="M50 8 C40 22 34 36 31 48 H69 C66 36 60 22 50 8 Z" fill="url(#noseBlue)"/>
+                        <rect x="26" y="102" width="48" height="8" fill="#38bdf8"/>
+                        <rect x="48" y="96" width="4" height="40" rx="2" fill="#0369a1"/>
+                        <circle cx="50" cy="72" r="12" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+                        <circle cx="46" cy="68" r="3.5" fill="#bae6fd" opacity="0.8"/>
+                    </svg>
+                    <div class="thruster-flame"></div>
+                </div>
+                <div class="launchpad rank-silver"><div class="player-name" id="name-1">---</div><div class="player-rank">المسار الثاني</div></div>
             </div>
-            <div class="launchpad rank-bronze"><div class="player-name" id="name-2">---</div><div class="player-rank">المركز الثالث</div></div>
+
+            <!-- المسار الثالث (أخضر) -->
+            <div class="lane">
+                <div class="rocket-wrapper rank-bronze" id="rocket-2">
+                    <div class="step-badge" id="badge-2">0 / 5</div>
+                    <svg class="rocket-svg" viewBox="0 0 100 160" fill="none">
+                        <defs>
+                            <linearGradient id="noseGreen" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#86efac"/>
+                                <stop offset="100%" stop-color="#16a34a"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M26 95 L6 135 L28 128 Z" fill="#16a34a" stroke="#166534" stroke-width="1.5"/>
+                        <path d="M74 95 L94 135 L72 128 Z" fill="#15803d" stroke="#14532d" stroke-width="1.5"/>
+                        <path d="M36 132 L32 146 H68 L64 132 Z" fill="#334155" stroke="#0f172a" stroke-width="1.5"/>
+                        <path d="M50 8 C32 32 26 65 26 132 H74 C74 65 68 32 50 8 Z" fill="url(#bodyGold)" stroke="#475569" stroke-width="1.5"/>
+                        <path d="M50 8 C40 22 34 36 31 48 H69 C66 36 60 22 50 8 Z" fill="url(#noseGreen)"/>
+                        <rect x="26" y="102" width="48" height="8" fill="#4ade80"/>
+                        <rect x="48" y="96" width="4" height="40" rx="2" fill="#15803d"/>
+                        <circle cx="50" cy="72" r="12" fill="#0f172a" stroke="#4ade80" stroke-width="3"/>
+                        <circle cx="46" cy="68" r="3.5" fill="#bae6fd" opacity="0.8"/>
+                    </svg>
+                    <div class="thruster-flame"></div>
+                </div>
+                <div class="launchpad rank-bronze"><div class="player-name" id="name-2">---</div><div class="player-rank">المسار الثالث</div></div>
+            </div>
         </div>
     </div>
 
     <div class="controls-panel">
-        <button class="btn-launch btn-gold" onclick="launchRocket(0)"><span class="btn-name" id="btn-name-0">---</span><span class="btn-key">مسافة (1)</span></button>
-        <button class="btn-launch btn-silver" onclick="launchRocket(1)"><span class="btn-name" id="btn-name-1">---</span><span class="btn-key">مسافة (2)</span></button>
-        <button class="btn-launch btn-bronze" onclick="launchRocket(2)"><span class="btn-name" id="btn-name-2">---</span><span class="btn-key">مسافة (3)</span></button>
+        <button class="btn-launch btn-gold" onclick="launchRocket(0)"><span class="btn-name" id="btn-name-0">---</span><span class="btn-key">انطلاق 🚀 (1)</span></button>
+        <button class="btn-launch btn-silver" onclick="launchRocket(1)"><span class="btn-name" id="btn-name-1">---</span><span class="btn-key">انطلاق 🚀 (2)</span></button>
+        <button class="btn-launch btn-bronze" onclick="launchRocket(2)"><span class="btn-name" id="btn-name-2">---</span><span class="btn-key">انطلاق 🚀 (3)</span></button>
     </div>
 
     <div id="victory-overlay">
-        <div class="victory-title">أبطال قسم هندسة الملاحة والتوجيه</div>
+        <div class="victory-title">🏆 أبطال قسم هندسة الملاحة والتوجيه 🏆</div>
         <div class="podium-container">
-            <div class="podium-card podium-silver"><div class="medal-img">🥈</div><div class="winner-name" id="final-2nd">---</div></div>
-            <div class="podium-card podium-gold"><div class="medal-img">🥇</div><div class="winner-name" id="final-1st">---</div></div>
-            <div class="podium-card podium-bronze"><div class="medal-img">🥉</div><div class="winner-name" id="final-3rd">---</div></div>
+            <div class="podium-card podium-silver"><div class="medal-img">🥈</div><div class="winner-name" id="final-2nd">---</div><div class="winner-stats" id="stats-2nd"></div></div>
+            <div class="podium-card podium-gold"><div class="medal-img">🥇</div><div class="winner-name" id="final-1st">---</div><div class="winner-stats" id="stats-1st"></div></div>
+            <div class="podium-card podium-bronze"><div class="medal-img">🥉</div><div class="winner-name" id="final-3rd">---</div><div class="winner-stats" id="stats-3rd"></div></div>
         </div>
-        <button onclick="location.reload()" style="margin-top:40px; padding:15px 40px; font-size:1.2rem; font-family:'Tajawal'; font-weight:900; background:var(--neon-blue); color:#000; border:none; border-radius:15px; cursor:pointer;">إغلاق السباق</button>
+        <button onclick="document.getElementById('victory-overlay').style.display='none'" style="margin-top:35px; padding:14px 40px; font-size:1.2rem; font-family:'Tajawal'; font-weight:900; background:var(--neon-blue); color:#000; border:none; border-radius:15px; cursor:pointer;">إغلاق لوحة التتويج</button>
     </div>
 
     <script>
+        const MAX_STEPS = 5;
+
         const starsBg = document.getElementById('stars-bg');
         for(let i=0; i < 150; i++) {
             let star = document.createElement('div'); star.className = 'star';
-            star.style.width = '2px'; star.style.height = '2px'; 
+            star.style.width = (i % 3 === 0 ? 2.5 : 1.5) + 'px'; 
+            star.style.height = star.style.width; 
             star.style.left = Math.random() * 100 + 'vw';
+            star.style.opacity = Math.random() * 0.8 + 0.2;
             star.style.animation = `moveDownStars ${Math.random() * 15 + 10}s linear infinite`;
             starsBg.appendChild(star);
         }
 
-        const allStudents = [
-            "يوسف سداد", "ساره ولام", "سارة ابراهيم", 
-            "عبدالله عبد المحسن", "قاسم محمد", "زينب احمد", 
-            "ساره اياد", "حسين عباس", "ياسر مؤيد", 
-            "طالب 10", "طالب 11", "طالب 12"
-        ];
+        function playSoundEffect(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'tick') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(900, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                    osc.start(); osc.stop(ctx.currentTime + 0.1);
+                } else if (type === 'timeup') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(320, ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(180, ctx.currentTime + 0.7);
+                    gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.75);
+                    osc.start(); osc.stop(ctx.currentTime + 0.75);
+                } else if (type === 'boost') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.35);
+                    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start(); osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'win') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.12);
+                        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.4);
+                        o.connect(g); g.connect(ctx.destination);
+                        o.start(ctx.currentTime + idx * 0.12);
+                        o.stop(ctx.currentTime + idx * 0.12 + 0.4);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function getFinalists() {
+            const teamAssignments = JSON.parse(localStorage.getItem('teamAssignments')) || {};
+            const eliminatedTeams = JSON.parse(localStorage.getItem('eliminatedTeams')) || [];
+            const allTeams = ["الأصفر", "الأزرق", "الأخضر", "الأحمر"];
+            
+            const remainingTeams = allTeams.filter(t => !eliminatedTeams.includes(t));
+            let targetTeam = remainingTeams.length > 0 ? remainingTeams[0] : "الأصفر";
+            
+            let members = [];
+            for (let student in teamAssignments) {
+                if (teamAssignments[student].name === targetTeam) {
+                    members.push(student);
+                }
+            }
+
+            if (members.length === 3) {
+                document.getElementById('finalist-team-subtitle').innerText = `تحدي أبطال الفريق المتأهل: فريق ${targetTeam}`;
+                return members;
+            } else {
+                document.getElementById('finalist-team-subtitle').innerText = `الجولة النهائية لأبطال قسم هندسة الملاحة والتوجيه`;
+                return ["المتسابق الأول", "المتسابق الثاني", "المتسابق الثالث"];
+            }
+        }
+
+        const finalists = getFinalists();
+        const playerColors = ["#fbbf24", "#38bdf8", "#4ade80"];
         
-        let allScores = JSON.parse(localStorage.getItem('contestScores')) || new Array(allStudents.length).fill(0);
-        let combined = allStudents.map((name, index) => ({ name, score: allScores[index] }));
-        combined.sort((a, b) => b.score - a.score);
-        let top3 = combined.slice(0, 3);
+        let playersData = finalists.map((name, idx) => ({
+            name: name,
+            questionsAsked: 0,
+            correctAnswers: 0,
+            color: playerColors[idx]
+        }));
 
-        top3.forEach((player, index) => {
-            document.getElementById(`name-${index}`).innerText = player.name;
-            document.getElementById(`btn-name-${index}`).innerText = player.name;
-        });
-
-        let rocketPositions = [0, 0, 0];
         let isRaceOver = false;
         let questionTimer = null;
 
+        function initUI() {
+            playersData.forEach((p, index) => {
+                document.getElementById(`name-${index}`).innerText = p.name;
+                document.getElementById(`btn-name-${index}`).innerText = p.name;
+            });
+            renderStatsSidebar();
+        }
+
+        function renderStatsSidebar() {
+            const container = document.getElementById('stats-cards-container');
+            container.innerHTML = '';
+            let totalQ = 0;
+
+            playersData.forEach((p, idx) => {
+                totalQ += p.questionsAsked;
+                container.innerHTML += `
+                    <div class="player-stat-card" style="border-right-color: ${p.color};">
+                        <div class="stat-card-top">
+                            <span class="stat-player-name" style="color: ${p.color};">${idx + 1}. ${p.name}</span>
+                            <span class="stat-rocket-badge">🚀 ${p.correctAnswers} / ${MAX_STEPS}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>الأسئلة الموجهة له:</span>
+                            <div class="q-counter-controls">
+                                <button class="q-btn q-btn-minus" onclick="changeQuestionCount(${idx}, -1)">-</button>
+                                <strong style="font-size: 1.15rem; min-width: 22px; text-align: center;">${p.questionsAsked}</strong>
+                                <button class="q-btn q-btn-plus" onclick="changeQuestionCount(${idx}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('total-questions-count').innerText = totalQ;
+        }
+
+        function changeQuestionCount(playerIndex, delta) {
+            playersData[playerIndex].questionsAsked += delta;
+            if (playersData[playerIndex].questionsAsked < 0) playersData[playerIndex].questionsAsked = 0;
+            renderStatsSidebar();
+        }
+
         function startQuestionTimer() {
-            if(isRaceOver) return;
             clearInterval(questionTimer);
             let timeLeft = 5;
             const display = document.getElementById('q-timer');
+            const panel = document.getElementById('timer-panel');
+            
+            display.classList.remove('time-up');
+            panel.classList.remove('time-up-box');
             display.innerText = `0${timeLeft}`;
+            playSoundEffect('tick');
+
             questionTimer = setInterval(() => {
                 timeLeft--;
-                if(timeLeft > 0) display.innerText = `0${timeLeft}`;
-                else { clearInterval(questionTimer); display.innerText = "00"; }
+                if (timeLeft > 0) {
+                    display.innerText = `0${timeLeft}`;
+                    playSoundEffect('tick');
+                } else {
+                    clearInterval(questionTimer);
+                    display.innerText = "00";
+                    display.classList.add('time-up');
+                    panel.classList.add('time-up-box');
+                    playSoundEffect('timeup');
+                }
             }, 1000);
         }
 
         function launchRocket(playerIndex) {
-            if(isRaceOver) return;
-            rocketPositions[playerIndex]++;
-            const maxTravel = document.querySelector('.lane').clientHeight - 150; 
-            const y = (rocketPositions[playerIndex] / 10) * maxTravel;
-            document.getElementById(`rocket-${playerIndex}`).style.transform = `translate3d(0, -${y}px, 0)`;
-            if (rocketPositions[playerIndex] >= 10) declareWinners();
+            if (isRaceOver) return;
+            if (playersData[playerIndex].correctAnswers >= MAX_STEPS) return;
+            
+            clearInterval(questionTimer);
+            document.getElementById('q-timer').classList.remove('time-up');
+            document.getElementById('timer-panel').classList.remove('time-up-box');
+
+            playersData[playerIndex].correctAnswers++;
+            if (playersData[playerIndex].questionsAsked < playersData[playerIndex].correctAnswers) {
+                playersData[playerIndex].questionsAsked = playersData[playerIndex].correctAnswers;
+            }
+
+            const steps = playersData[playerIndex].correctAnswers;
+            const rocketEl = document.getElementById(`rocket-${playerIndex}`);
+            const badgeEl = document.getElementById(`badge-${playerIndex}`);
+
+            playSoundEffect('boost');
+            rocketEl.classList.add('boosting');
+            setTimeout(() => rocketEl.classList.remove('boosting'), 650);
+
+            const arena = document.getElementById('race-arena');
+            const finishLine = document.getElementById('finish-line');
+            
+            const arenaHeight = arena.clientHeight;
+            const finishLineBottomPos = finishLine.offsetTop + finishLine.offsetHeight;
+            const rocketStartBottom = 92;
+            const rocketHeight = rocketEl.offsetHeight;
+            
+            const maxTravel = arenaHeight - finishLineBottomPos - rocketStartBottom - rocketHeight;
+            const y = (steps / MAX_STEPS) * maxTravel;
+            
+            rocketEl.style.transform = `translate3d(0, -${y}px, 0)`;
+            badgeEl.innerText = `${steps} / ${MAX_STEPS}`;
+
+            renderStatsSidebar();
+
+            if (steps >= MAX_STEPS) {
+                setTimeout(declareWinners, 700);
+            }
         }
 
         function declareWinners() {
-            isRaceOver = true; clearInterval(questionTimer);
+            isRaceOver = true;
+            clearInterval(questionTimer);
+            playSoundEffect('win');
+
+            const ranked = [...playersData].sort((a, b) => b.correctAnswers - a.correctAnswers);
+
             document.getElementById('victory-overlay').style.display = 'flex';
-            document.getElementById('final-1st').innerText = top3[0].name;
-            document.getElementById('final-2nd').innerText = top3[1].name;
-            document.getElementById('final-3rd').innerText = top3[2].name;
+            
+            document.getElementById('final-1st').innerText = ranked[0].name;
+            document.getElementById('stats-1st').innerText = `🚀 ${ranked[0].correctAnswers} إجابات صحيحة من ${ranked[0].questionsAsked} سؤال`;
+
+            document.getElementById('final-2nd').innerText = ranked[1].name;
+            document.getElementById('stats-2nd').innerText = `🚀 ${ranked[1].correctAnswers} إجابات صحيحة من ${ranked[1].questionsAsked} سؤال`;
+
+            document.getElementById('final-3rd').innerText = ranked[2].name;
+            document.getElementById('stats-3rd').innerText = `🚀 ${ranked[2].correctAnswers} إجابات صحيحة من ${ranked[2].questionsAsked} سؤال`;
+        }
+
+        function resetFinalRace() {
+            if (confirm("هل أنت متأكد من تصفير مواقع الصواريخ وعدادات الأسئلة؟")) {
+                isRaceOver = false;
+                clearInterval(questionTimer);
+                document.getElementById('q-timer').innerText = "05";
+                document.getElementById('q-timer').classList.remove('time-up');
+                document.getElementById('timer-panel').classList.remove('time-up-box');
+
+                playersData.forEach((p, idx) => {
+                    p.questionsAsked = 0;
+                    p.correctAnswers = 0;
+                    document.getElementById(`rocket-${idx}`).style.transform = `translate3d(0, 0, 0)`;
+                    document.getElementById(`badge-${idx}`).innerText = `0 / ${MAX_STEPS}`;
+                });
+                renderStatsSidebar();
+            }
         }
 
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && !isRaceOver) { e.preventDefault(); startQuestionTimer(); }
             if (isRaceOver) return;
-            if (e.key === '1') launchRocket(0); if (e.key === '2') launchRocket(1); if (e.key === '3') launchRocket(2);
+            if (e.key === '1') launchRocket(0);
+            if (e.key === '2') launchRocket(1);
+            if (e.key === '3') launchRocket(2);
         });
+
+        window.onload = initUI;
     </script>
 </body>
 </html>

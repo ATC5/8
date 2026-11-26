@@ -3,42 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرعة العشوائية - تشكيل التحالفات</title>
+    <title>Navigation and Guidance Challenge - القرعة العشوائية</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
-        body { margin: 0; padding: 20px; font-family: 'Tajawal', sans-serif; color: #ffffff; background-color: #000103; background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; }
+        
+        * { box-sizing: border-box; }
+
+        body { margin: 0; padding: 52px 20px 20px 20px; font-family: 'Tajawal', sans-serif; color: #ffffff; background-color: #000103; background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-y: auto; overflow-x: hidden; }
         .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
         .star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.5; }
         .star-fast { animation: fall 15s linear infinite; } .star-slow { animation: fall 35s linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
-        .header { text-align: center; margin-bottom: 20px; z-index: 10; }
-        .header h1 { font-size: 2.5rem; color: #38bdf8; margin: 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); font-weight: 900; }
-        .header p { font-size: 1.1rem; color: #94a3b8; margin-top: 5px; }
-        .teams-container { display: flex; gap: 20px; justify-content: center; width: 100%; max-width: 1200px; z-index: 10; flex-wrap: wrap; }
-        .team-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 15px; flex: 1; min-width: 220px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        /* شريط اسم المسابقة والسنة أعلى وسط الشاشة */
+        .event-watermark {
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px);
+            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 50px;
+            padding: 5px 20px; display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 700; color: #cbd5e1;
+            letter-spacing: 0.8px; pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            white-space: nowrap;
+        }
+        .event-watermark span.year {
+            color: #fbbf24; font-weight: 900;
+        }
+
+        .header { text-align: center; margin-bottom: 28px; z-index: 10; }
+        .header h1 { font-size: 40px; color: #38bdf8; margin: 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); font-weight: 900; }
+        .header p { font-size: 18px; color: #94a3b8; margin-top: 8px; font-weight: 700; }
+
+        .teams-container { display: flex; gap: 22px; justify-content: center; width: 1320px; max-width: 100%; z-index: 10; flex-wrap: wrap; }
+        .team-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; padding: 20px 18px; flex: 1; min-width: 250px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .team-card.revealed { opacity: 1; transform: translateY(0); }
-        .team-icon { font-size: 2.5rem; margin-bottom: 5px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
-        .team-name { font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; border-bottom: 2px dashed rgba(255,255,255,0.2); padding-bottom: 10px;}
+        .team-icon { font-size: 42px; margin-bottom: 8px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
+        .team-name { font-size: 23px; font-weight: 900; margin-bottom: 18px; border-bottom: 2px dashed rgba(255,255,255,0.2); padding-bottom: 12px;}
         .team-apollo { color: #fbbf24; box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.3);}
         .team-voyager { color: #38bdf8; box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3);}
         .team-artemis { color: #4ade80; box-shadow: inset 0 0 20px rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.3);}
         .team-red { color: #f87171; box-shadow: inset 0 0 20px rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3);}
-        .student-slot { background: rgba(0,0,0,0.5); margin: 8px 0; padding: 10px; border-radius: 10px; font-size: 1.1rem; font-weight: 700; color: #f8fafc; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; min-height: 20px; transition: 0.3s; }
-        .controls { margin-top: 30px; z-index: 10; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        .btn { padding: 12px 30px; font-size: 1.2rem; font-weight: 900; border-radius: 50px; cursor: pointer; font-family: 'Tajawal', sans-serif; border: none; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); text-decoration: none; display: inline-block; }
-        #intro-btn { background: rgba(56, 189, 248, 0.15); border: 1.5px solid #38bdf8; color: #38bdf8; }
-        #intro-btn:hover { background: #38bdf8; color: #000; transform: translateY(-5px); }
+        
+        .student-slot { background: rgba(0,0,0,0.5); margin: 10px 0; padding: 12px; border-radius: 12px; font-size: 18px; font-weight: 700; color: #f8fafc; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; min-height: 46px; transition: 0.3s; }
+        
+        .controls { margin-top: 34px; z-index: 10; display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 14px 34px; font-size: 19px; font-weight: 900; border-radius: 50px; cursor: pointer; font-family: 'Tajawal', sans-serif; border: none; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); text-decoration: none; display: inline-block; }
+        .btn:hover { transform: translateY(-5px); }
         #start-draw { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
-        #start-draw:hover { transform: translateY(-5px); background: linear-gradient(135deg, #f5d76e, #d4af37); }
+        #start-draw:hover { background: linear-gradient(135deg, #f5d76e, #d4af37); }
         #start-draw:disabled { background: #334155; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
         #next-round { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; }
-        #next-round:hover { transform: translateY(-5px); background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+        #next-round:hover { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
         .spinner { animation: spinColor 0.1s infinite alternate; }
         @keyframes spinColor { 0% { color: #94a3b8; } 100% { color: #fff; } }
     </style>
 </head>
 <body>
     <div class="stars-container" id="stars-js"></div>
+
+    <div class="event-watermark" dir="ltr">
+        <span>Navigation and Guidance Challenge</span>
+        <span>•</span>
+        <span class="year">2026</span>
+    </div>
+
     <div class="header">
         <h1>توزيع التحالفات الفضائية</h1>
         <p>جاري تحديد مسارات رواد الفضاء...</p>
@@ -73,11 +101,15 @@
             <div class="student-slot" id="t4-s3">?</div>
         </div>
     </div>
+
     <div class="controls">
-        <a id="intro-btn" href="intro.html" class="btn">شرح الجولات والقوانين 📋</a>
+        <a href="intro.html" class="btn" style="background: linear-gradient(135deg, #38bdf8, #0284c7); color: #000; text-decoration: none;">شرح الجولات والقوانين 📋</a>
         <button id="start-draw" class="btn" onclick="startDraw()">إجراء القرعة 🎲</button>
-        <a id="next-round" href="round1.html" class="btn">الانتقال إلى الجولة الأولى ➔</a>
+        <a id="next-round" href="round1.html" class="btn">Round 1 – Flight Path ➔</a>
     </div>
+
+    <audio id="draw-audio" src="draw.mp3" preload="auto" loop></audio>
+    <audio id="finish-audio" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <script>
         const container = document.getElementById('stars-js');
@@ -104,11 +136,24 @@
             "حسين عباس", "ياسر مؤيد", "مرتضى امجد",
             "سارة غزوان كاسب", "فاطمة حسين مظهر", "يونس محمد ابراهيم"
         ];
-        
+
         const tickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-        const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+        tickSound.volume = 0.25;
 
         function startDraw() {
+            const drawAudio = document.getElementById('draw-audio');
+            const finishAudio = document.getElementById('finish-audio');
+
+            if (finishAudio) {
+                finishAudio.load();
+            }
+
+            if (drawAudio) {
+                drawAudio.currentTime = 0;
+                drawAudio.volume = 1.0;
+                drawAudio.play().catch(e => {});
+            }
+
             const btn = document.getElementById('start-draw');
             btn.disabled = true;
             btn.innerText = "جاري اختيار الفرق...";
@@ -126,7 +171,15 @@
 
             function rollName() {
                 if (currentSlotIndex >= slots.length) {
-                    winSound.play();
+                    if (drawAudio) {
+                        drawAudio.pause();
+                        drawAudio.currentTime = 0;
+                    }
+                    if (finishAudio) {
+                        finishAudio.currentTime = 0;
+                        finishAudio.volume = 1.0;
+                        finishAudio.play().catch(e => {});
+                    }
                     btn.style.display = 'none';
                     document.getElementById('next-round').style.display = 'inline-block';
                     
@@ -149,7 +202,7 @@
                 const spinInterval = setInterval(() => {
                     slot.innerText = students[Math.floor(Math.random() * students.length)];
                     tickSound.currentTime = 0;
-                    tickSound.play().catch(e=>{});
+                    tickSound.play().catch(e => {});
                     spinCount++;
 
                     if (spinCount > 15) { 

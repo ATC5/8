@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المسابقة الكبرى - السباق النهائي</title>
+    <title>Navigation and Guidance Challenge - Round 4</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         
@@ -12,19 +12,20 @@
             --bg-dark: #010409; --neon-blue: #38bdf8; --danger: #ef4444; --success: #4ade80;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            margin: 0; padding: 15px 0; font-family: 'Tajawal', sans-serif; color: #ffffff;
+            margin: 0; padding: 48px 20px 14px 20px; font-family: 'Tajawal', sans-serif; color: #ffffff;
             background-color: var(--bg-dark);
             background-image: radial-gradient(circle at 50% 30%, #071530 0%, #010409 88%);
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            min-height: 100vh; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; gap: 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; overflow-x: hidden; gap: 12px;
         }
 
         .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; }
         .star { position: absolute; background: #fff; border-radius: 50%; top: -10vh; }
         @keyframes moveDownStars { 0% { transform: translateY(0vh); } 100% { transform: translateY(110vh); } }
 
-        /* طبقة المركبة الفضائية الاحترافية (محصورة بالكامل داخل الشاشة) */
         .spacecraft-bg-layer {
             position: fixed; inset: 0;
             pointer-events: none; z-index: -1; overflow: hidden;
@@ -38,7 +39,6 @@
             filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.45));
             animation: safeScreenOrbit 38s ease-in-out infinite alternate;
         }
-        /* مسار دائري/بيضاوي آمن يضمن بقاء المركبة بالكامل داخل الشاشة */
         @keyframes safeScreenOrbit {
             0%   { left: 22%; top: 28%; transform: translate(-50%, -50%) rotate(-10deg) scale(0.92); }
             25%  { left: 52%; top: 22%; transform: translate(-50%, -50%) rotate(4deg) scale(1.0); }
@@ -55,11 +55,25 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none; z-index: 99;
             box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 0 0 150px rgba(15, 23, 42, 0.8);
-            border: 12px solid #060b14; border-radius: 35px; box-sizing: border-box;
+            border: 12px solid #060b14; border-radius: 35px;
         }
 
-        /* الشريط العلوي مع إبراز الشعارين */
-        .top-bar { width: 95%; max-width: 1400px; display: flex; justify-content: space-between; align-items: center; padding: 5px 15px; z-index: 10; box-sizing: border-box; gap: 15px; }
+        /* شريط اسم المسابقة والسنة أعلى وسط الشاشة */
+        .event-watermark {
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(8px);
+            border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 50px;
+            padding: 5px 20px; display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 700; color: #cbd5e1;
+            letter-spacing: 0.8px; pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            white-space: nowrap;
+        }
+        .event-watermark span.year {
+            color: #fbbf24; font-weight: 900;
+        }
+
+        .top-bar { width: 1400px; max-width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; z-index: 10; gap: 15px; }
         
         .logos-group {
             display: flex; align-items: center; gap: 14px;
@@ -67,69 +81,66 @@
             padding: 8px 18px; border-radius: 18px;
             border: 1.5px solid rgba(56, 189, 248, 0.55);
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.08);
+            flex-shrink: 0;
         }
         .logo-badge {
-            height: 68px; width: auto; object-fit: contain;
+            height: 64px; width: 64px; object-fit: contain;
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.35)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
             transition: transform 0.3s;
         }
         .logo-badge:hover { transform: scale(1.06); }
-        .logo-divider { width: 1.5px; height: 48px; background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.6), transparent); }
+        .logo-divider { width: 1.5px; height: 46px; background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.6), transparent); }
         
-        .header-titles { text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: rgba(2, 6, 23, 0.88); padding: 10px 25px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .header-titles h1 { font-size: 1.95rem; margin: 0; font-weight: 900; color: #ffffff; }
-        .header-titles p { font-size: 0.95rem; color: #38bdf8; margin: 0; font-weight: 700; }
+        .header-titles { text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: rgba(2, 6, 23, 0.88); padding: 10px 24px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header-titles h1 { font-size: 28px; margin: 0; font-weight: 900; color: #ffffff; }
+        .header-titles p { font-size: 15px; color: #38bdf8; margin: 0; font-weight: 700; }
 
-        .sidebar { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.9); padding: 8px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); }
-        .nav-btn { color: #94a3b8; padding: 8px 12px; text-decoration: none; font-weight: 700; border-radius: 8px; font-size: 0.85rem; transition: 0.3s; }
+        .sidebar { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.9); padding: 8px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); flex-shrink: 0; }
+        .nav-btn { color: #94a3b8; padding: 8px 11px; text-decoration: none; font-weight: 700; border-radius: 8px; font-size: 13px; transition: 0.3s; white-space: nowrap; }
         .nav-btn.active { background: var(--neon-blue); color: #020617; }
         .nav-btn:hover { background: rgba(56, 189, 248, 0.2); color: #fff; }
 
-        /* لوحة المؤقت */
-        .moderator-panel { z-index: 10; display: flex; align-items: center; justify-content: center; gap: 15px; background: rgba(15, 23, 42, 0.95); padding: 8px 25px; border-radius: 50px; border: 2px solid var(--neon-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); transition: 0.3s; }
+        .moderator-panel { z-index: 10; display: flex; align-items: center; justify-content: center; gap: 15px; background: rgba(15, 23, 42, 0.95); padding: 7px 24px; border-radius: 50px; border: 2px solid var(--neon-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); transition: 0.3s; }
         .moderator-panel.time-up-box { border-color: var(--danger); box-shadow: 0 0 30px rgba(239, 68, 68, 0.6); }
-        .timer-label { font-size: 1rem; color: #cbd5e1; font-weight: 700; }
-        .timer-display { font-size: 2.2rem; font-weight: 900; color: var(--neon-blue); min-width: 70px; text-align: center; line-height: 1; font-family: 'Courier New', Courier, monospace; transition: 0.3s; }
+        .timer-label { font-size: 16px; color: #cbd5e1; font-weight: 700; }
+        .timer-display { font-size: 34px; font-weight: 900; color: var(--neon-blue); min-width: 68px; text-align: center; line-height: 1; font-family: 'Courier New', Courier, monospace; transition: 0.3s; }
         .timer-display.time-up { color: var(--danger) !important; text-shadow: 0 0 20px var(--danger); animation: pulseRed 0.6s infinite alternate; }
         @keyframes pulseRed { from { transform: scale(1); } to { transform: scale(1.15); } }
 
-        .start-timer-btn { background: transparent; color: var(--neon-blue); border: 2px solid var(--neon-blue); padding: 7px 18px; border-radius: 20px; font-family: 'Tajawal'; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
+        .start-timer-btn { background: transparent; color: var(--neon-blue); border: 2px solid var(--neon-blue); padding: 6px 18px; border-radius: 20px; font-family: 'Tajawal'; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 15px; }
         .start-timer-btn:hover { background: var(--neon-blue); color: #000; }
 
-        /* تقسيم الشاشة الرئيسية */
-        .main-stage { width: 95%; max-width: 1400px; display: flex; gap: 20px; flex-grow: 1; z-index: 10; align-items: stretch; }
+        .main-stage { width: 1400px; max-width: 100%; display: flex; gap: 20px; z-index: 10; align-items: stretch; }
 
-        /* لوحة البيانات الجانبية */
         .stats-sidebar {
-            width: 320px; background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(56, 189, 248, 0.35);
+            width: 320px; flex-shrink: 0; background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(56, 189, 248, 0.35);
             border-radius: 20px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
         }
         .stats-header { text-align: center; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
-        .stats-header h2 { margin: 0; font-size: 1.25rem; color: var(--neon-blue); font-weight: 900; }
-        .total-q-badge { display: inline-block; margin-top: 6px; background: rgba(56, 189, 248, 0.15); color: #fff; padding: 4px 12px; border-radius: 15px; font-size: 0.9rem; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.4); }
+        .stats-header h2 { margin: 0; font-size: 20px; color: var(--neon-blue); font-weight: 900; }
+        .total-q-badge { display: inline-block; margin-top: 6px; background: rgba(56, 189, 248, 0.15); color: #fff; padding: 4px 12px; border-radius: 15px; font-size: 14px; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.4); }
 
         .player-stat-card {
             background: rgba(2, 6, 23, 0.85); border-radius: 14px; padding: 12px; margin-bottom: 12px;
             border-right: 4px solid var(--neon-blue); display: flex; flex-direction: column; gap: 8px;
         }
         .stat-card-top { display: flex; justify-content: space-between; align-items: center; }
-        .stat-player-name { font-size: 1.15rem; font-weight: 900; color: #fff; }
-        .stat-rocket-badge { font-size: 0.85rem; background: rgba(74, 222, 128, 0.15); color: var(--success); padding: 3px 10px; border-radius: 10px; font-weight: 900; border: 1px solid rgba(74, 222, 128, 0.4); }
+        .stat-player-name { font-size: 18px; font-weight: 900; color: #fff; }
+        .stat-rocket-badge { font-size: 14px; background: rgba(74, 222, 128, 0.15); color: var(--success); padding: 3px 10px; border-radius: 10px; font-weight: 900; border: 1px solid rgba(74, 222, 128, 0.4); }
 
-        .stat-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 6px 10px; border-radius: 8px; font-size: 0.95rem; }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 6px 10px; border-radius: 8px; font-size: 15px; }
         .q-counter-controls { display: flex; align-items: center; gap: 8px; }
-        .q-btn { width: 26px; height: 26px; border-radius: 6px; border: none; font-weight: 900; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .q-btn { width: 26px; height: 26px; border-radius: 6px; border: none; font-weight: 900; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .q-btn-plus { background: var(--neon-blue); color: #000; }
         .q-btn-minus { background: rgba(255,255,255,0.15); color: #fff; }
         .q-btn:active { transform: scale(0.85); }
 
-        .reset-race-btn { width: 100%; padding: 10px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; border-radius: 10px; font-family: 'Tajawal'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .reset-race-btn { width: 100%; padding: 10px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; border-radius: 10px; font-family: 'Tajawal'; font-weight: 900; font-size: 15px; cursor: pointer; transition: 0.3s; }
         .reset-race-btn:hover { background: var(--danger); color: #fff; }
 
-        /* ساحة السباق (شفافة قليلاً لإظهار المركبة الفضائية خلفها) */
         .race-arena {
-            flex-grow: 1; height: 540px; background: rgba(2, 6, 23, 0.52);
+            flex-grow: 1; height: 530px; background: rgba(2, 6, 23, 0.52);
             border: 2px solid rgba(56, 189, 248, 0.35); border-radius: 20px;
             position: relative; display: flex; justify-content: space-evenly;
             overflow: hidden; box-shadow: inset 0 0 50px rgba(56,189,248,0.12);
@@ -137,16 +148,15 @@
         }
         
         .finish-line-container {
-            position: absolute; top: 45px; left: 0; width: 100%; height: 34px; z-index: 5;
+            position: absolute; top: 42px; left: 0; width: 100%; height: 34px; z-index: 5;
             display: flex; justify-content: center; align-items: center;
             border-bottom: 3px dashed #4ade80;
             background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.18), transparent);
         }
-        .finish-text { color: #4ade80; font-weight: 900; font-size: 1.35rem; text-shadow: 0 0 12px #4ade80; letter-spacing: 1px; }
+        .finish-text { color: #4ade80; font-weight: 900; font-size: 21px; text-shadow: 0 0 12px #4ade80; letter-spacing: 1px; }
         
         .lane { position: relative; width: 28%; height: 100%; display: flex; justify-content: center; border-left: 1px dashed rgba(56,189,248,0.18); border-right: 1px dashed rgba(56,189,248,0.18); background: linear-gradient(180deg, rgba(56,189,248,0.01), rgba(56,189,248,0.05)); }
         
-        /* الصاروخ والانطلاق الديناميكي */
         .rocket-wrapper {
             position: absolute; bottom: 92px; width: 90px; height: 145px;
             display: flex; flex-direction: column; align-items: center;
@@ -175,42 +185,40 @@
         .step-badge {
             position: absolute; top: -24px; background: rgba(2, 6, 23, 0.9); color: #fff;
             border: 1px solid rgba(56, 189, 248, 0.5); padding: 2px 10px; border-radius: 12px;
-            font-size: 0.85rem; font-weight: 900; white-space: nowrap;
+            font-size: 14px; font-weight: 900; white-space: nowrap;
             box-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
 
         .launchpad { position: absolute; bottom: 0; width: 100%; height: 85px; background: rgba(15,23,42,0.96); border-top: 2px solid rgba(56, 189, 248, 0.35); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 30; }
-        .player-name { font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .player-rank { font-size: 0.8rem; font-weight: 700; padding: 3px 12px; border-radius: 15px; }
+        .player-name { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .player-rank { font-size: 13px; font-weight: 700; padding: 3px 12px; border-radius: 15px; }
 
         .rank-gold .player-rank { background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid var(--gold); }
         .rank-silver .player-rank { background: rgba(56, 189, 248, 0.15); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
         .rank-bronze .player-rank { background: rgba(74, 222, 128, 0.15); color: var(--success); border: 1px solid var(--success); }
 
-        /* أزرار الانطلاق السفلية */
-        .controls-panel { width: 95%; max-width: 1400px; padding: 15px 25px; background: rgba(2, 6, 23, 0.92); border-radius: 20px; z-index: 100; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; justify-content: center; gap: 25px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .btn-launch { flex: 1; max-width: 340px; padding: 14px 20px; border-radius: 15px; border: 2px solid; background: rgba(15, 23, 42, 0.95); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; font-family: 'Tajawal'; }
+        .controls-panel { width: 1400px; max-width: 100%; padding: 13px 25px; background: rgba(2, 6, 23, 0.92); border-radius: 20px; z-index: 100; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; justify-content: center; gap: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .btn-launch { flex: 1; max-width: 340px; padding: 12px 20px; border-radius: 15px; border: 2px solid; background: rgba(15, 23, 42, 0.95); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; font-family: 'Tajawal'; }
         .btn-launch:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); }
         .btn-launch:active { transform: translateY(3px); }
-        .btn-launch .btn-key { background: rgba(56,189,248,0.2); padding: 5px 12px; border-radius: 8px; font-weight: 900; color: var(--neon-blue); font-size: 0.9rem; }
-        .btn-launch .btn-name { font-size: 1.2rem; font-weight: 900; }
+        .btn-launch .btn-key { background: rgba(56,189,248,0.2); padding: 5px 12px; border-radius: 8px; font-weight: 900; color: var(--neon-blue); font-size: 14px; }
+        .btn-launch .btn-name { font-size: 19px; font-weight: 900; }
         .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn-silver { border-color: var(--neon-blue); color: var(--neon-blue); }
         .btn-bronze { border-color: var(--success); color: var(--success); }
 
-        /* شاشة التتويج */
         #victory-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.96); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(12px); }
-        .victory-title { font-size: 3rem; font-weight: 900; background: linear-gradient(to right, #fbbf24, #fff, #fbbf24); -webkit-background-clip: text; color: transparent; margin-bottom: 35px; text-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
+        .victory-title { font-size: 46px; font-weight: 900; background: linear-gradient(to right, #fbbf24, #fff, #fbbf24); -webkit-background-clip: text; color: transparent; margin-bottom: 35px; text-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
         .podium-container { display: flex; align-items: flex-end; gap: 30px; height: 340px; }
         .podium-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 1)); border: 2px solid transparent; border-radius: 20px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 210px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
         .podium-gold { height: 290px; border-color: var(--gold); box-shadow: 0 0 50px rgba(251, 191, 36, 0.4); }
         .podium-silver { height: 230px; border-color: var(--silver); }
         .podium-bronze { height: 180px; border-color: var(--bronze); }
-        .medal-img { font-size: 4.5rem; margin-bottom: 10px; }
-        .winner-name { font-size: 1.6rem; font-weight: 900; color: #fff; text-align: center; }
-        .winner-stats { font-size: 0.95rem; color: #94a3b8; margin-top: 8px; }
+        .medal-img { font-size: 70px; margin-bottom: 10px; }
+        .winner-name { font-size: 25px; font-weight: 900; color: #fff; text-align: center; }
+        .winner-stats { font-size: 15px; color: #94a3b8; margin-top: 8px; }
 
-        @media (max-width: 1024px) { .main-stage { flex-direction: column; } .stats-sidebar { width: 100%; box-sizing: border-box; } .top-bar { flex-direction: column; gap: 10px; } .controls-panel { flex-direction: column; } .btn-launch { max-width: 100%; } }
+        @media (max-width: 1024px) { .main-stage { flex-direction: column; } .stats-sidebar { width: 100%; } .top-bar { flex-direction: column; gap: 10px; } .controls-panel { flex-direction: column; } .btn-launch { max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -218,30 +226,31 @@
     <div class="cockpit-window"></div>
     <div class="stars-container" id="stars-bg"></div>
 
-    <!-- المركبة الفضائية الاحترافية عالية التفاصيل (مكوك مداري متكامل داخل الشاشة) -->
+    <div class="event-watermark" dir="ltr">
+        <span>Navigation and Guidance Challenge</span>
+        <span>•</span>
+        <span class="year">2026</span>
+    </div>
+
     <div class="spacecraft-bg-layer">
         <svg class="orbiting-spacecraft" viewBox="0 0 640 380" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <!-- تدرج هيكل المكوك المعدني -->
                 <linearGradient id="shuttleBody" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="#ffffff"/>
                     <stop offset="50%" stop-color="#cbd5e1"/>
                     <stop offset="85%" stop-color="#64748b"/>
                     <stop offset="100%" stop-color="#1e293b"/>
                 </linearGradient>
-                <!-- درع الحماية الحراري الأسود -->
                 <linearGradient id="heatShield" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stop-color="#334155"/>
                     <stop offset="50%" stop-color="#0f172a"/>
                     <stop offset="100%" stop-color="#020617"/>
                 </linearGradient>
-                <!-- الألواح الشمسية القابلة للطي -->
                 <linearGradient id="wingSolar" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stop-color="#0284c7"/>
                     <stop offset="50%" stop-color="#1d4ed8"/>
                     <stop offset="100%" stop-color="#1e1b4b"/>
                 </linearGradient>
-                <!-- لهب المحركات الأيونية -->
                 <linearGradient id="ionFlame" x1="1" y1="0" x2="0" y2="0">
                     <stop offset="0%" stop-color="#ffffff"/>
                     <stop offset="30%" stop-color="#38bdf8"/>
@@ -253,7 +262,6 @@
                 </pattern>
             </defs>
 
-            <!-- الألواح الشمسية الممتدة من وحدة الشحن (أعلى وأسفل) -->
             <g transform="translate(260, 25)">
                 <rect x="0" y="0" width="95" height="75" rx="3" fill="url(#wingSolar)" stroke="#38bdf8" stroke-width="1.5"/>
                 <rect x="0" y="0" width="95" height="75" rx="3" fill="url(#solarCells)"/>
@@ -265,51 +273,37 @@
                 <rect x="44" y="0" width="7" height="25" fill="#94a3b8"/>
             </g>
 
-            <!-- لهب الدفع الأيوني من المحركات الخلفية -->
             <g class="ion-glow">
                 <ellipse cx="95" cy="172" rx="65" ry="12" fill="url(#ionFlame)"/>
                 <ellipse cx="90" cy="190" rx="75" ry="15" fill="url(#ionFlame)"/>
                 <ellipse cx="95" cy="208" rx="65" ry="12" fill="url(#ionFlame)"/>
             </g>
 
-            <!-- أجنحة الدلتا الرئيسية (Delta Wings) مع الحواف الحرارية -->
             <path d="M165 145 L250 75 L385 155 L385 225 L250 305 L165 235 Z" fill="url(#heatShield)" stroke="#475569" stroke-width="2"/>
             <path d="M180 150 L252 90 L370 160 L370 220 L252 290 L180 230 Z" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
-            <!-- خطوط انسيابية على الأجنحة -->
             <line x1="210" y1="130" x2="340" y2="162" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.4"/>
             <line x1="210" y1="250" x2="340" y2="218" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.4"/>
 
-            <!-- فوهات المحركات الثلاث الخلفية (RS-25) -->
             <path d="M165 162 L142 156 L142 184 L165 178 Z" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
             <path d="M165 178 L136 172 L136 208 L165 202 Z" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.5"/>
             <path d="M165 202 L142 196 L142 224 L165 218 Z" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
 
-            <!-- جسم المركبة الأسطواني الرئيسي (Fuselage) -->
             <path d="M165 150 L430 150 C485 150 535 168 555 190 C535 212 485 230 430 230 L165 230 Z" fill="url(#shuttleBody)" stroke="#94a3b8" stroke-width="2"/>
 
-            <!-- وحدة الشحن المفتوحة في المنتصف (Payload Bay) -->
             <rect x="235" y="160" width="165" height="60" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
-            <!-- قمر صناعي / حمولة علمية داخل وحدة الشحن -->
             <rect x="275" y="170" width="85" height="40" rx="5" fill="#d97706" stroke="#fde047" stroke-width="1.2"/>
             <line x1="255" y1="190" x2="380" y2="190" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 3"/>
-            <!-- الذراع الآلية (Canadarm) -->
             <polyline points="245,165 265,142 315,148" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
             <circle cx="265" cy="142" r="3" fill="#38bdf8"/>
 
-            <!-- قمرة القيادة ونوافذ الطاقم الأمامية -->
             <path d="M430 154 C465 154 495 168 510 190 C495 212 465 226 430 226 Z" fill="#1e293b"/>
-            <!-- نوافذ قمرة القيادة الزجاجية -->
             <path d="M462 166 L482 173 L478 183 L458 178 Z" fill="#38bdf8" stroke="#bae6fd" stroke-width="1"/>
             <path d="M485 176 L496 186 L496 194 L485 204 L481 190 Z" fill="#0284c7" stroke="#bae6fd" stroke-width="1"/>
             <path d="M462 214 L482 207 L478 197 L458 202 Z" fill="#38bdf8" stroke="#bae6fd" stroke-width="1"/>
 
-            <!-- مقدمة المكوك الحرارية (Nose Cap) -->
             <path d="M522 169 C540 176 550 183 555 190 C550 197 540 204 522 211 C526 197 526 183 522 169 Z" fill="#090d16" stroke="#475569" stroke-width="1"/>
-
-            <!-- الزعنفة الذيلية الرأسية -->
             <rect x="160" y="187" width="65" height="6" rx="3" fill="#f8fafc" stroke="#334155" stroke-width="1"/>
 
-            <!-- أضواء ملاحية نابضة -->
             <circle class="nav-beacon" cx="250" cy="78" r="4" fill="#ef4444"/>
             <circle class="nav-beacon" cx="250" cy="302" r="4" fill="#4ade80"/>
             <circle class="nav-beacon" cx="552" cy="190" r="3.5" fill="#38bdf8"/>
@@ -317,7 +311,6 @@
     </div>
 
     <div class="top-bar">
-        <!-- شعار الجامعة وشعار القسم معاً وبشكل بارز -->
         <div class="logos-group">
             <img class="logo-badge" src="IMG/UOT.png" alt="شعار الجامعة التكنولوجية" title="الجامعة التكنولوجية">
             <div class="logo-divider"></div>
@@ -325,16 +318,16 @@
         </div>
 
         <div class="header-titles">
-            <h1>السباق الفضائي الحاسم (5 مراحل)</h1>
+            <h1>Round 4 – Air Navigation Mastery</h1>
             <p id="finalist-team-subtitle">جاري تحميل أبطال الفريق المتأهل...</p>
         </div>
 
         <div class="sidebar">
             <a href="index.html" class="nav-btn">القرعة 🎲</a>
-            <a href="round1.html" class="nav-btn">الأسئلة</a>
-            <a href="round2.html" class="nav-btn">الصور</a>
-            <a href="round_bet.html" class="nav-btn">الرهان</a>
-            <a href="round3.html" class="nav-btn active">النهائي</a>
+            <a href="round1.html" class="nav-btn">Round 1 – Flight Path</a>
+            <a href="round2.html" class="nav-btn">Round 2 – Navigation Challenge</a>
+            <a href="round_bet.html" class="nav-btn">Round 3 – Sky Explorers</a>
+            <a href="round3.html" class="nav-btn active">Round 4 – Air Navigation Mastery</a>
         </div>
     </div>
 
@@ -345,7 +338,6 @@
     </div>
 
     <div class="main-stage">
-        <!-- لوحة الإحصائيات والبيانات الجانبية -->
         <div class="stats-sidebar">
             <div>
                 <div class="stats-header">
@@ -357,11 +349,9 @@
             <button class="reset-race-btn" onclick="resetFinalRace()">🔄 إعادة ضبط السباق والعدادات</button>
         </div>
 
-        <!-- ساحة انطلاق الصواريخ -->
         <div class="race-arena" id="race-arena">
             <div class="finish-line-container" id="finish-line"><div class="finish-text">🏁 خط النهاية (5 إجابات صحيحة) 🏁</div></div>
             
-            <!-- المسار الأول (ذهبي) -->
             <div class="lane">
                 <div class="rocket-wrapper rank-gold" id="rocket-0">
                     <div class="step-badge" id="badge-0">0 / 5</div>
@@ -392,7 +382,6 @@
                 <div class="launchpad rank-gold"><div class="player-name" id="name-0">---</div><div class="player-rank">المسار الأول</div></div>
             </div>
 
-            <!-- المسار الثاني (أزرق) -->
             <div class="lane">
                 <div class="rocket-wrapper rank-silver" id="rocket-1">
                     <div class="step-badge" id="badge-1">0 / 5</div>
@@ -418,7 +407,6 @@
                 <div class="launchpad rank-silver"><div class="player-name" id="name-1">---</div><div class="player-rank">المسار الثاني</div></div>
             </div>
 
-            <!-- المسار الثالث (أخضر) -->
             <div class="lane">
                 <div class="rocket-wrapper rank-bronze" id="rocket-2">
                     <div class="step-badge" id="badge-2">0 / 5</div>
@@ -459,7 +447,7 @@
             <div class="podium-card podium-gold"><div class="medal-img">🥇</div><div class="winner-name" id="final-1st">---</div><div class="winner-stats" id="stats-1st"></div></div>
             <div class="podium-card podium-bronze"><div class="medal-img">🥉</div><div class="winner-name" id="final-3rd">---</div><div class="winner-stats" id="stats-3rd"></div></div>
         </div>
-        <button onclick="document.getElementById('victory-overlay').style.display='none'" style="margin-top:35px; padding:14px 40px; font-size:1.2rem; font-family:'Tajawal'; font-weight:900; background:var(--neon-blue); color:#000; border:none; border-radius:15px; cursor:pointer;">إغلاق لوحة التتويج</button>
+        <button onclick="document.getElementById('victory-overlay').style.display='none'" style="margin-top:35px; padding:14px 40px; font-size:19px; font-family:'Tajawal'; font-weight:900; background:var(--neon-blue); color:#000; border:none; border-radius:15px; cursor:pointer;">إغلاق لوحة التتويج</button>
     </div>
 
     <script>
@@ -582,7 +570,7 @@
                             <span>الأسئلة الموجهة له:</span>
                             <div class="q-counter-controls">
                                 <button class="q-btn q-btn-minus" onclick="changeQuestionCount(${idx}, -1)">-</button>
-                                <strong style="font-size: 1.15rem; min-width: 22px; text-align: center;">${p.questionsAsked}</strong>
+                                <strong style="font-size: 18px; min-width: 22px; text-align: center;">${p.questionsAsked}</strong>
                                 <button class="q-btn q-btn-plus" onclick="changeQuestionCount(${idx}, 1)">+</button>
                             </div>
                         </div>

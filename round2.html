@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المسابقة الكبرى - الجولة الثانية</title>
+    <title>Navigation and Guidance Challenge - Round 2</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap');
         
         :root { --metal-gradient: linear-gradient(135deg, #e2e8f0 0%, #8c98a9 40%, #2d3748 100%); --neon-blue: #38bdf8; }
 
+        * { box-sizing: border-box; }
+
         body { 
-            margin: 0; padding: 20px 10px; font-family: 'Tajawal', sans-serif; color: #ffffff; 
+            margin: 0; padding: 52px 20px 20px 20px; font-family: 'Tajawal', sans-serif; color: #ffffff; 
             background-color: #000103; background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #000 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            min-height: 100vh; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; overflow-x: hidden; 
         }
         
         .stars-container { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
@@ -32,70 +34,85 @@
         .solar-panel { position: absolute; width: 140px; height: 70px; background: #06406e; border: 2px solid #475569; }
         .panel-left { transform: translate(-180px, -35px) rotateX(30deg); } .panel-right { transform: translate(40px, -35px) rotateX(-30deg); }
         
-        .sidebar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 12px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
-        .nav-btn { background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent; padding: 10px 12px; font-family: 'Tajawal', sans-serif; font-size: 0.9rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
+        .sidebar { position: fixed; right: 24px; top: 50%; transform: translateY(-50%); width: 215px; background: rgba(20, 20, 25, 0.78); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 14px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
+        .nav-btn { background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid transparent; padding: 10px 12px; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; }
         .nav-btn:hover { background: rgba(212, 175, 55, 0.1); color: #fff; }
-        .nav-btn.active { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transform: scale(1.05); }
+        .nav-btn.active { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transform: scale(1.03); }
         .btn-tie { background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff !important; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); }
-        .btn-danger { color: #ef4444; border-top: 1px solid #444; font-size: 0.85rem; }
-        .btn-warning { color: #f97316; border-top: 1px solid #444; font-size: 0.85rem; }
+        .btn-danger { color: #ef4444; border-top: 1px solid #444; font-size: 13px; }
+        .btn-warning { color: #f97316; border-top: 1px solid #444; font-size: 13px; }
 
-        .side-logo { position: absolute; top: 20px; width: 8vw; max-width: 80px; min-width: 60px; height: auto; z-index: 100; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
-        .logo-right { right: 150px; } .logo-left { left: 40px; width: 10vw; max-width: 90px;}
+        .side-logo { position: fixed; top: 24px; width: 85px; height: 85px; object-fit: contain; z-index: 100; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+        .logo-right { right: 255px; } .logo-left { left: 30px; width: 92px; height: 92px; }
 
-        .main-container { text-align: center; background: rgba(20, 20, 25, 0.5); backdrop-filter: blur(25px); padding: 20px 30px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2); width: 95%; max-width: 1200px; z-index: 10; margin-right: 120px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        h1 { font-size: 2rem; margin-top: 0; margin-bottom: 5px; color: #d4af37; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .subtitle { font-size: 1rem; color: #94a3b8; margin-bottom: 15px; }
+        /* شريط اسم المسابقة والسنة أعلى وسط الشاشة */
+        .event-watermark {
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px);
+            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 50px;
+            padding: 5px 20px; display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 700; color: #cbd5e1;
+            letter-spacing: 0.8px; pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            white-space: nowrap;
+        }
+        .event-watermark span.year {
+            color: #fbbf24; font-weight: 900;
+        }
 
-        #image-box { width: 100%; height: 260px; background: rgba(0, 0, 0, 0.7); border-radius: 12px; border: 2px solid rgba(212, 175, 55, 0.2); margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .main-container { text-align: center; background: rgba(20, 20, 25, 0.55); backdrop-filter: blur(25px); padding: 20px 36px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.25); width: 1220px; max-width: calc(100vw - 290px); z-index: 10; margin-right: 220px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        h1 { font-size: 32px; margin-top: 0; margin-bottom: 4px; color: #d4af37; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .subtitle { font-size: 16px; color: #94a3b8; margin-bottom: 14px; }
+
+        #image-box { width: 100%; height: 270px; background: rgba(0, 0, 0, 0.7); border-radius: 12px; border: 2px solid rgba(212, 175, 55, 0.2); margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         #display-img { max-width: 98%; max-height: 98%; object-fit: contain; display: none; border-radius: 8px; }
-        .placeholder-text { font-size: 1.4rem; color: #94a3b8; font-weight: bold; }
+        .placeholder-text { font-size: 22px; color: #94a3b8; font-weight: bold; }
 
-        .qa-container { background: rgba(0,0,0,0.7); border-radius: 12px; padding: 15px; margin: 10px 0; min-height: 60px; display: none; border: 1px solid rgba(255, 255, 255, 0.1); }
-        #question-text { font-size: 1.4rem; color: #f8fafc; font-weight: 700; margin-bottom: 10px; }
-        #answer-text { font-size: 1.3rem; color: #4ade80; font-weight: 900; margin-top: 10px; display: none; border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 10px; }
+        .qa-container { background: rgba(0,0,0,0.7); border-radius: 12px; padding: 14px 20px; margin: 10px 0; min-height: 60px; display: none; border: 1px solid rgba(255, 255, 255, 0.1); }
+        #question-text { font-size: 22px; color: #f8fafc; font-weight: 700; margin-bottom: 8px; }
+        #answer-text { font-size: 20px; color: #4ade80; font-weight: 900; margin-top: 10px; display: none; border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 10px; }
 
-        .timer-display { font-size: 2rem; font-weight: 900; color: var(--neon-blue); letter-spacing: 2px; margin-top: 5px; display: none; text-shadow: 0 0 15px var(--neon-blue); }
+        .timer-display { font-size: 32px; font-weight: 900; color: var(--neon-blue); letter-spacing: 2px; margin-top: 6px; display: none; text-shadow: 0 0 15px var(--neon-blue); font-family: 'Courier New', Courier, monospace; }
         .timer-warning { color: #ef4444; animation: pulseWarning 1s infinite; text-shadow: 0 0 20px #ef4444; }
         @keyframes pulseWarning { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        .controls { display: flex; gap: 12px; justify-content: center; margin-top: 15px; }
-        .action-btn { border: none; padding: 10px 25px; font-size: 1.1rem; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+        .controls { display: flex; gap: 15px; justify-content: center; margin-top: 14px; }
+        .action-btn { border: none; padding: 10px 30px; font-size: 18px; font-weight: 900; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
         #draw-btn { background: linear-gradient(135deg, #d4af37, #b8860b); color: #000; }
         #draw-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); }
         #ans-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: none; }
 
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 20px 0 15px 0; }
-        .scoreboard-title { font-size: 1.3rem; color: #d4af37; margin-bottom: 15px; font-weight: 900; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); margin: 18px 0 14px 0; }
+        .scoreboard-title { font-size: 21px; color: #d4af37; margin-bottom: 14px; font-weight: 900; }
         
-        #scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .team-card { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 10px; transition: 0.3s; box-shadow: 0 5px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;}
-        .team-card:hover:not(.eliminated) { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(212,175,55,0.3); }
-        .team-members { margin-bottom: 10px; min-height: 50px; display:flex; flex-direction:column; gap:3px;}
-        .member-name { font-size: 0.85rem; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 4px; }
+        #scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .team-card { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 12px; transition: 0.3s; box-shadow: 0 5px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;}
+        .team-card:hover:not(.eliminated) { transform: translateY(-4px); box-shadow: 0 8px 15px rgba(212,175,55,0.3); }
+        .team-members { margin-bottom: 10px; min-height: 60px; display:flex; flex-direction:column; gap:4px;}
+        .member-name { font-size: 14px; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 5px; }
         
         .eliminated { opacity: 0.5; filter: grayscale(1); border-color: #ef4444 !important; }
-        .eliminated-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: rgba(239, 68, 68, 0.9); color: white; padding: 5px 15px; font-size: 1.2rem; font-weight: 900; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 0 20px rgba(239,68,68,0.8); z-index: 10; pointer-events: none; white-space: nowrap;}
+        .eliminated-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: rgba(239, 68, 68, 0.9); color: white; padding: 5px 15px; font-size: 18px; font-weight: 900; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 0 20px rgba(239,68,68,0.8); z-index: 10; pointer-events: none; white-space: nowrap;}
 
         .audience-btn {
             background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4);
-            color: var(--neon-blue); padding: 6px; border-radius: 6px; cursor: pointer;
-            font-family: 'Tajawal', sans-serif; font-size: 0.85rem; font-weight: 900; transition: 0.3s;
-            margin-bottom: 10px; width: 100%; box-sizing: border-box;
+            color: var(--neon-blue); padding: 7px; border-radius: 8px; cursor: pointer;
+            font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 900; transition: 0.3s;
+            margin-bottom: 10px; width: 100%;
         }
         .audience-btn:hover:not(:disabled) { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
         .audience-btn:disabled { background: rgba(255,255,255,0.05); color: #64748b; border-color: rgba(255,255,255,0.1); cursor: not-allowed; }
 
-        .score-controls { display: flex; justify-content: space-around; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 6px; border-radius: 8px; }
-        .score-btn { width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
+        .score-controls { display: flex; justify-content: space-around; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 7px; border-radius: 10px; }
+        .score-btn { width: 34px; height: 34px; border-radius: 50%; border: none; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
         .score-btn:active:not(:disabled) { transform: scale(0.8); }
         .btn-plus { background: #d4af37; color: #000; }
         .btn-minus { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .score-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
-        .score-value { font-size: 1.4rem; font-weight: 900; color: #fbd786; }
+        .score-value { font-size: 24px; font-weight: 900; color: #fbd786; }
 
-        @media (max-width: 1100px) { #scoreboard { grid-template-columns: repeat(2, 1fr); } .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; width: 100%;} .main-container { margin-right: 0; width: 100%; padding: 15px; } .logo-right, .logo-left { display: none; } }
-        @media (max-width: 600px) { #scoreboard { grid-template-columns: 1fr; } h1 { font-size: 1.6rem; } }
+        @media (max-width: 1100px) { #scoreboard { grid-template-columns: repeat(2, 1fr); } .sidebar { position: static; transform: none; flex-direction: row; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; width: 100%;} .main-container { margin-right: 0; max-width: 100%; padding: 15px; } .logo-right, .logo-left { display: none; } }
+        @media (max-width: 600px) { #scoreboard { grid-template-columns: 1fr; } h1 { font-size: 26px; } }
     </style>
 </head>
 <body>
@@ -110,33 +127,39 @@
         </div>
     </div>
 
+    <div class="event-watermark" dir="ltr">
+        <span>Navigation and Guidance Challenge</span>
+        <span>•</span>
+        <span class="year">2026</span>
+    </div>
+
     <div id="tiebreaker-overlay" style="display:none; position:fixed; inset:0; background:rgba(2,6,23,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(15px);">
-        <h1 style="color:#d4af37; font-size:3rem; margin-bottom:10px; text-shadow:0 0 20px rgba(212,175,55,0.5);">⚔️ جولة كسر التعادل ⚔️</h1>
+        <h1 style="color:#d4af37; font-size:42px; margin-bottom:10px; text-shadow:0 0 20px rgba(212,175,55,0.5);">⚔️ جولة كسر التعادل ⚔️</h1>
         
         <div id="tie-step-1" style="display:flex; flex-direction:column; align-items:center; width: 100%;">
-            <p style="font-size:1.5rem; color:#cbd5e1; margin-bottom: 20px;">اختر الفرق المتعادلة للمنافسة:</p>
+            <p style="font-size:22px; color:#cbd5e1; margin-bottom: 20px;">اختر الفرق المتعادلة للمنافسة:</p>
             <div id="tie-teams-list" style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center; margin-bottom:30px;"></div>
-            <button onclick="startTieBreaker()" style="padding:15px 40px; font-size:1.3rem; background:linear-gradient(135deg, #38bdf8, #2563eb); color:#fff; font-family:'Tajawal'; font-weight:900; border:none; border-radius:12px; cursor:pointer; box-shadow:0 10px 20px rgba(56,189,248,0.4); transition:0.3s;">بدء التحدي الفاصل 🔥</button>
-            <button onclick="closeTieBreaker()" style="margin-top:20px; background:transparent; color:#ef4444; font-family:'Tajawal'; font-weight:bold; font-size:1.1rem; border:none; cursor:pointer;">إلغاء وإغلاق</button>
+            <button onclick="startTieBreaker()" style="padding:14px 38px; font-size:20px; background:linear-gradient(135deg, #38bdf8, #2563eb); color:#fff; font-family:'Tajawal'; font-weight:900; border:none; border-radius:12px; cursor:pointer; box-shadow:0 10px 20px rgba(56,189,248,0.4); transition:0.3s;">بدء التحدي الفاصل 🔥</button>
+            <button onclick="closeTieBreaker()" style="margin-top:20px; background:transparent; color:#ef4444; font-family:'Tajawal'; font-weight:bold; font-size:17px; border:none; cursor:pointer;">إلغاء وإغلاق</button>
         </div>
 
-        <div id="tie-step-2" style="display:none; flex-direction:column; align-items:center; width:95%; max-width:900px;">
-            <div style="background:rgba(0,0,0,0.6); border:2px solid #38bdf8; padding:20px; border-radius:20px; width:100%; text-align:center; margin-bottom:30px; box-shadow:inset 0 0 30px rgba(56,189,248,0.2);">
-                <p style="color:#94a3b8; font-size:1.2rem; margin-top:0; margin-bottom: 10px;">أول فريق يعطي الناتج الصحيح يربح الجولة!</p>
-                <img src="IMG/tiebreaker.jpg" alt="سؤال كسر التعادل" style="max-width:100%; max-height:350px; border-radius:10px; border:2px solid rgba(56,189,248,0.5); display:block; margin: 0 auto;">
+        <div id="tie-step-2" style="display:none; flex-direction:column; align-items:center; width:900px; max-width:95%;">
+            <div style="background:rgba(0,0,0,0.6); border:2px solid #38bdf8; padding:24px; border-radius:20px; width:100%; text-align:center; margin-bottom:25px; box-shadow:inset 0 0 30px rgba(56,189,248,0.2);">
+                <p style="color:#94a3b8; font-size:18px; margin-top:0; margin-bottom: 10px;">أول فريق يعطي الناتج الصحيح يربح الجولة!</p>
+                <img src="IMG/tiebreaker.jpg" alt="سؤال كسر التعادل" style="max-width:100%; max-height:340px; border-radius:10px; border:2px solid rgba(56,189,248,0.5); display:block; margin: 0 auto;">
             </div>
 
             <div id="tie-competing-teams" style="display:flex; justify-content:space-around; flex-wrap:wrap; width:100%; gap:20px;"></div>
-            <button onclick="closeTieBreaker()" style="margin-top:30px; padding:12px 30px; font-size:1.2rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:#fff; font-family:'Tajawal'; font-weight:bold; border-radius:10px; cursor:pointer;">إنهاء وإغلاق</button>
+            <button onclick="closeTieBreaker()" style="margin-top:30px; padding:12px 30px; font-size:18px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:#fff; font-family:'Tajawal'; font-weight:bold; border-radius:10px; cursor:pointer;">إنهاء وإغلاق</button>
         </div>
     </div>
     
     <div class="sidebar">
         <a href="index.html" class="nav-btn" style="background: rgba(255,255,255,0.1); border: 1px solid #fff;">العودة للقرعة 🎲</a>
-        <a href="round1.html" class="nav-btn">الجولة الأولى (الأسئلة)</a>
-        <a href="round2.html" class="nav-btn active">الجولة الثانية (الصور)</a>
-        <a href="round_bet.html" class="nav-btn">الجولة الثالثة (الرهان)</a>
-        <a href="round3.html" class="nav-btn">الجولة  (النهائي)</a>
+        <a href="round1.html" class="nav-btn">Round 1 – Flight Path</a>
+        <a href="round2.html" class="nav-btn active">Round 2 – Navigation Challenge</a>
+        <a href="round_bet.html" class="nav-btn">Round 3 – Sky Explorers</a>
+        <a href="round3.html" class="nav-btn">Round 4 – Air Navigation Mastery</a>
         <button class="nav-btn btn-tie" onclick="openTieBreaker()">كسر التعادل ⚔️</button>
         <button class="nav-btn btn-warning" onclick="eliminateLowestScoreTeam()">استبعاد الفريق الخاسر 🏁</button>
         <button class="nav-btn btn-danger" onclick="resetScores()">تصفير النقاط والمساعدات</button>
@@ -146,8 +169,8 @@
     <img class="side-logo logo-left" src="IMG/UOT2.PNG" alt="شعار القسم">
 
     <div class="main-container">
-        <h1>مسابقة هندسة الملاحة والتوجيه</h1>
-        <div class="subtitle">الجامعة التكنولوجية - الكلية الكهروميكانيكية</div>
+        <h1>Round 2 – Navigation Challenge</h1>
+        <div class="subtitle">مسابقة هندسة الملاحة والتوجيه | الجامعة التكنولوجية - الكلية الكهروميكانيكية</div>
         
         <div id="image-box">
             <div class="placeholder-text" id="placeholder">اضغط لعرض الصورة</div>
@@ -156,7 +179,7 @@
 
         <div class="qa-container" id="qa-box">
             <div id="question-text"></div>
-            <div id="timer-display" class="timer-display">00:45</div>
+            <div id="timer-display" class="timer-display">00:30</div>
             <div id="answer-text"></div>
         </div>
         
@@ -235,7 +258,7 @@
                 const isEliminated = eliminatedTeams.includes(tName); 
                 
                 let membersHtml = tInfo.members.map(m => `<div class="member-name">${m}</div>`).join('');
-                if(!membersHtml) membersHtml = '<div style="color:#64748b; font-size:0.85rem;">الرجاء إجراء القرعة أولاً</div>';
+                if(!membersHtml) membersHtml = '<div style="color:#64748b; font-size:14px;">الرجاء إجراء القرعة أولاً</div>';
 
                 let lifelineBtnHtml = hasLifeline && !isEliminated ? 
                     `<button class="audience-btn" onclick="askAudience('${tName}')">استعانة بالجمهور 👥</button>` : 
@@ -248,7 +271,7 @@
                 board.innerHTML += `
                     <div class="${cardClass}" style="border-top: 4px solid ${tInfo.color};">
                         ${badgeHtml}
-                        <div style="font-size: 1.2rem; color: ${tInfo.color}; margin-bottom: 8px; font-weight:900;">
+                        <div style="font-size: 20px; color: ${tInfo.color}; margin-bottom: 8px; font-weight:900;">
                             ${tInfo.icon} فريق ${tName}
                         </div>
                         <div class="team-members">
@@ -290,7 +313,7 @@
 
         function askAudience(teamName) {
             if(eliminatedTeams.includes(teamName)) return; 
-            if(confirm(`تفعيل الاستعانة بالجمهور لفريق ${teamName}؟ (المدة 45 ثانية)`)) {
+            if(confirm(`تفعيل الاستعانة بالجمهور لفريق ${teamName}؟ (المدة 30 ثانية)`)) {
                 teamLifelines[teamName] = false;
                 localStorage.setItem('teamLifelines', JSON.stringify(teamLifelines));
                 renderScoreboard();
@@ -302,7 +325,7 @@
                 const qText = document.getElementById('question-text');
                 const oldAlert = document.getElementById('aud-alert');
                 if(oldAlert) oldAlert.remove();
-                qText.innerHTML += `<div id="aud-alert" style="color: #f43f5e; font-size: 1.3rem; font-weight: 900; margin-top: 10px; animation: pulseWarning 1s infinite;">🚨 فريق ${teamName} يستعين بالجمهور! 🚨</div>`;
+                qText.innerHTML += `<div id="aud-alert" style="color: #f43f5e; font-size: 20px; font-weight: 900; margin-top: 10px; animation: pulseWarning 1s infinite;">🚨 فريق ${teamName} يستعين بالجمهور! 🚨</div>`;
                 winSound.currentTime = 0; winSound.play().catch(e=>{});
             }
         }
@@ -330,7 +353,7 @@
             teamNames.forEach(t => {
                 if(!eliminatedTeams.includes(t)) {
                     let color = teamData[t].color;
-                    list.innerHTML += `<label style="background:rgba(0,0,0,0.5); border:1px solid ${color}; padding:15px 25px; border-radius:12px; cursor:pointer; font-size:1.3rem; display:flex; align-items:center; gap:15px; color:#fff; font-family:'Tajawal'; font-weight:bold; transition:0.2s;">
+                    list.innerHTML += `<label style="background:rgba(0,0,0,0.5); border:1px solid ${color}; padding:14px 24px; border-radius:12px; cursor:pointer; font-size:20px; display:flex; align-items:center; gap:15px; color:#fff; font-family:'Tajawal'; font-weight:bold; transition:0.2s;">
                         <input type="checkbox" value="${t}" class="tie-team-cb" style="width:22px; height:22px; accent-color:${color};"> 
                         ${teamData[t].icon} فريق ${t} (${teamScores[t] || 0} نقطة)
                     </label>`;
@@ -358,9 +381,9 @@
                 const tInfo = teamData[tName];
                 arena.innerHTML += `
                     <div style="background:rgba(15,23,42,0.9); border:2px solid ${tInfo.color}; padding:20px; border-radius:15px; text-align:center; flex:1; min-width:200px;">
-                        <div style="font-size:1.6rem; color:${tInfo.color}; font-weight:900; margin-bottom:20px;">${tInfo.icon} ${tName}</div>
-                        <button onclick="winTie('${tName}')" style="background:#4ade80; color:#000; border:none; padding:12px; border-radius:10px; width:100%; font-family:'Tajawal'; font-weight:900; cursor:pointer; margin-bottom:12px; font-size:1.2rem; box-shadow:0 5px 15px rgba(74,222,128,0.3);">أجاب صحيحاً (+1) 🏆</button>
-                        <button onclick="eliminateTie('${tName}')" style="background:transparent; border:1px solid #ef4444; color:#ef4444; padding:10px; border-radius:10px; width:100%; font-family:'Tajawal'; font-weight:bold; cursor:pointer; font-size:1.1rem; transition:0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">استبعاد الفريق ❌</button>
+                        <div style="font-size:24px; color:${tInfo.color}; font-weight:900; margin-bottom:20px;">${tInfo.icon} ${tName}</div>
+                        <button onclick="winTie('${tName}')" style="background:#4ade80; color:#000; border:none; padding:12px; border-radius:10px; width:100%; font-family:'Tajawal'; font-weight:900; cursor:pointer; margin-bottom:12px; font-size:18px; box-shadow:0 5px 15px rgba(74,222,128,0.3);">أجاب صحيحاً (+1) 🏆</button>
+                        <button onclick="eliminateTie('${tName}')" style="background:transparent; border:1px solid #ef4444; color:#ef4444; padding:10px; border-radius:10px; width:100%; font-family:'Tajawal'; font-weight:bold; cursor:pointer; font-size:17px; transition:0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">استبعاد الفريق ❌</button>
                     </div>
                 `;
             });
@@ -415,13 +438,13 @@
         shuffleArray(imagePool);
         let currentIndex = 0;
         let countdownInterval;
-        let timeLeft = 45;
+        let timeLeft = 30;
 
         function startTimer() {
             clearInterval(countdownInterval);
-            timeLeft = 45;
+            timeLeft = 30;
             const timerEl = document.getElementById('timer-display');
-            timerEl.innerText = "00:45";
+            timerEl.innerText = "00:30";
             timerEl.classList.remove('timer-warning');
             timerEl.style.display = 'block'; 
 
